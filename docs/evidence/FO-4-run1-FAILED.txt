@@ -1,0 +1,8 @@
+date: 2026-11-19T16:18:32Z
+leader before: pg-ha-1 (timeline 5), API server address: 172.18.0.5
+PASS: method check: pg-ha-1 can reach the API server before the partition
+PASS: probe writing before the partition (28 acknowledged writes)
+cutting pg-ha-1 off from the Kubernetes API at 1795105130390
+PASS: pg-ha-1 can no longer reach the Kubernetes API
+leader after: pg-ha-1
+FAIL: no replica was promoted while pg-ha-1 was partitioned
