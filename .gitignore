@@ -1,0 +1,8 @@
+*.pem
+*.key
+*.env
+!versions.env
+secrets/
+.kube/
+kubeconfig*
+docs/ai-process/raw/
