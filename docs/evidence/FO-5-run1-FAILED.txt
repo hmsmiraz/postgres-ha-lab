@@ -1,0 +1,6 @@
+date: 2026-11-19T18:08:30Z
+leader before: pg-ha-2 (timeline 6) on kind-worker3, replicas: pg-ha-0 pg-ha-1
+PASS: baseline row replicated to both replicas
+cutting replication between pg-ha-2 and its replicas (API access stays up)
+FAIL: the cut did not work: pg-ha-0 already has 5 divergent row(s)
+cleanup: removing the replication cut
