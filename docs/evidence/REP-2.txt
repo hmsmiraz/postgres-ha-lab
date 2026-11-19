@@ -1,0 +1,8 @@
+date: 2026-11-19T16:00:25Z
+leader: pg-ha-1
+synchronous_standby_names = "pg-ha-0"
+PASS: synchronous_standby_names is set
+PASS: synchronous_commit = on
+PASS: exactly 1 sync standby in pg_stat_replication
+PASS: sync standby had flushed the WAL when COMMIT returned
+ALL CHECKS PASSED
