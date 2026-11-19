@@ -1,0 +1,37 @@
+date: 2026-11-19T16:15:45Z
+leader before: pg-ha-0, pvc data-pg-ha-0, uid b9388c40-9006-4e3c-bfad-76f9a9d41e70, timeline 4
+PASS: probe writing before the failure (28 acknowledged writes)
+deleting pvc data-pg-ha-0 and force-deleting pod pg-ha-0 at 1795104957563
+PASS: writes through pg-primary resumed without any manual change
+leader after: pg-ha-1
+PASS: replica pg-ha-1 was promoted automatically
++ Cluster: pg-ha (7709910619747762213) ----+-----------+----+-------------+-----+------------+-----+
+| Member  | Host            | Role         | State     | TL | Receive LSN | Lag | Replay LSN | Lag |
++---------+-----------------+--------------+-----------+----+-------------+-----+------------+-----+
+| pg-ha-0 | 192.168.162.136 | Replica      | streaming |  5 |   0/7000BD8 |   0 |  0/7000BD8 |   0 |
+| pg-ha-1 | 192.168.110.134 | Leader       | running   |  5 |             |     |            |     |
+| pg-ha-2 | 192.168.195.195 | Sync Standby | streaming |  5 |   0/50DBD00 |   0 |  0/50DBD00 |   0 |
++---------+-----------------+--------------+-----------+----+-------------+-----+------------+-----+
+pvc uid after: cfe9f4cf-9adc-4926-8779-6c269b030fd0
+PASS: storage was really replaced (new PVC uid)
+old primary pg-ha-0 now has role: Replica
+PASS: old pod pg-ha-0 re-cloned and rejoined as a replica
+--- how pg-ha-0 got its data (from its log) ---
+2026-11-19 16:16:04,828 INFO: released leader key voluntarily as data dir empty and currently leader
+2026-11-19 16:16:04,830 INFO: trying to bootstrap from leader 'pg-ha-1'
+2026-11-19 16:16:05,059 INFO: bootstrap from leader 'pg-ha-1' in progress
+pg_basebackup: error: backup failed: ERROR:  the standby was promoted during online backup
+pg_basebackup: removing data directory "/pgdata/data"
+2026-11-19 16:16:05,202 ERROR: Error when fetching backup: pg_basebackup exited with code=1
+2026-11-19 16:16:05,941 INFO: bootstrap from leader 'pg-ha-1' in progress
+2026-11-19 16:16:08,244 INFO: bootstrap from leader 'pg-ha-1' in progress
+acknowledged writes: 157, failed attempts: 16
+largest gap between acknowledged writes (RTO): 8021 ms
+PASS: RTO 8021 ms is within the 90 s target
+DIAG: acknowledged in log: 157, rows read from table: 160
+DIAG: first missing: 
+PASS: no acknowledged write was lost (0 missing out of 157)
+timeline before: 4, after: 5
+PASS: timeline advanced (4 -> 5)
+PASS: exactly one pod accepts writes
+ALL CHECKS PASSED
