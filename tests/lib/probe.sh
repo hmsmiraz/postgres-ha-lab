@@ -15,7 +15,7 @@ sql_primary() {
   for pod in pg-ha-0 pg-ha-1 pg-ha-2; do
     # Single quotes are intended: the variables expand inside the pod.
     # shellcheck disable=SC2016
-    if out=$(kubectl -n "$NS" exec -i "$pod" -c postgres -- sh -c \
+    if out=$(timeout 20 kubectl -n "$NS" exec -i "$pod" -c postgres -- sh -c \
       'PGCONNECT_TIMEOUT=2 PGPASSWORD="$APP_PASSWORD" psql -h pg-primary -U app -d appdb -Atq -v ON_ERROR_STOP=1' \
       <<<"$1" 2>/dev/null); then
       echo "$out"
@@ -29,7 +29,7 @@ sql_primary() {
 cluster_json() {
   local pod
   for pod in pg-ha-0 pg-ha-1 pg-ha-2; do
-    kubectl -n "$NS" exec "$pod" -c postgres -- \
+    timeout 20 kubectl -n "$NS" exec "$pod" -c postgres -- \
       patronictl -c /etc/patroni/patroni.yml list -f json 2>/dev/null && return 0
   done
   return 1
@@ -38,7 +38,7 @@ cluster_json() {
 cluster_table() {
   local pod
   for pod in pg-ha-0 pg-ha-1 pg-ha-2; do
-    kubectl -n "$NS" exec "$pod" -c postgres -- \
+    timeout 20 kubectl -n "$NS" exec "$pod" -c postgres -- \
       patronictl -c /etc/patroni/patroni.yml list 2>/dev/null && return 0
   done
   return 1
@@ -63,7 +63,7 @@ current_leader() { cluster_json | jq -r '.[] | select(.Role == "Leader") | .Memb
 writable_primaries() {
   local pod n=0 r
   for pod in pg-ha-0 pg-ha-1 pg-ha-2; do
-    r=$(kubectl -n "$NS" exec "$pod" -c postgres -- psql -U postgres -Atqc "select pg_is_in_recovery()" 2>/dev/null || true)
+    r=$(timeout 20 kubectl -n "$NS" exec "$pod" -c postgres -- psql -U postgres -Atqc "select pg_is_in_recovery()" 2>/dev/null || true)
     if [ "$r" = "f" ]; then n=$((n + 1)); fi
   done
   echo "$n"
@@ -102,5 +102,30 @@ acked_missing() {
   sql_primary "select ts_ms from fo_probe" | sort -u > "$rows"
   n=$(comm -23 "$acked" "$rows" | wc -l)
   rm -f "$acked" "$rows"
+  echo "$n"
+}
+
+# Like acked_missing, but retries the table read and says so when it cannot read at all.
+# Prints the number of missing acknowledged writes, or "unreadable". Diagnostics go to stderr.
+acked_missing_verbose() {
+  local acked rows raw ok=0 i n
+  acked=$(mktemp); rows=$(mktemp); raw=$(mktemp)
+  awk '$1=="ok" {print $2}' "$1" | sort -u > "$acked"
+  for i in $(seq 1 12); do
+    if sql_primary "select ts_ms from fo_probe" > "$raw"; then ok=1; break; fi
+    echo "DIAG: could not read fo_probe (attempt $i), retrying in 5 s" >&2
+    sleep 5
+  done
+  if [ "$ok" != 1 ]; then
+    echo "DIAG: fo_probe could not be read at all" >&2
+    rm -f "$acked" "$rows" "$raw"
+    echo "unreadable"
+    return 0
+  fi
+  sort -u "$raw" > "$rows"
+  echo "DIAG: acknowledged in log: $(wc -l < "$acked"), rows read from table: $(wc -l < "$rows")" >&2
+  echo "DIAG: first missing: $(comm -23 "$acked" "$rows" | head -3 | tr '\n' ' ')" >&2
+  n=$(comm -23 "$acked" "$rows" | wc -l)
+  rm -f "$acked" "$rows" "$raw"
   echo "$n"
 }

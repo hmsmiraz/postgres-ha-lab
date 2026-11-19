@@ -1,0 +1,13 @@
+date: 2026-11-19T16:08:18Z
+leader before: pg-ha-1 on node kind-worker2
+PASS: probe writing before the failure (30 acknowledged writes)
+powering off node kind-worker2 (docker kill) at 1795104509353
+PASS: writes through pg-primary resumed without any manual change
+leader after: pg-ha-2
+PASS: replica pg-ha-2 was promoted automatically (the old primary's node is down)
+acknowledged writes: 44, failed attempts: 30
+time from node power-off to first successful write: 25359 ms
+largest gap between acknowledged writes (RTO): 25590 ms
+PASS: RTO 25590 ms is within the 90 s target
+FAIL: 44 acknowledged write(s) are missing after failover
+cleanup: starting kind-worker2 again
