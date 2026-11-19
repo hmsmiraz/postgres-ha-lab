@@ -1,0 +1,12 @@
+date: 2026-11-19T15:30:13Z
+NAME                 STATUS   ROLES           AGE   VERSION   INTERNAL-IP   EXTERNAL-IP   OS-IMAGE                       KERNEL-VERSION                              CONTAINER-RUNTIME
+kind-control-plane   Ready    control-plane   36m   v1.37.0   172.18.0.5    <none>        Debian GNU/Linux 13 (trixie)   6.18.58.1-microsoft-standard-WSL2 (amd64)   containerd://2.3.4
+kind-worker          Ready    <none>          36m   v1.37.0   172.18.0.2    <none>        Debian GNU/Linux 13 (trixie)   6.18.58.1-microsoft-standard-WSL2 (amd64)   containerd://2.3.4
+kind-worker2         Ready    <none>          36m   v1.37.0   172.18.0.4    <none>        Debian GNU/Linux 13 (trixie)   6.18.58.1-microsoft-standard-WSL2 (amd64)   containerd://2.3.4
+kind-worker3         Ready    <none>          36m   v1.37.0   172.18.0.3    <none>        Debian GNU/Linux 13 (trixie)   6.18.58.1-microsoft-standard-WSL2 (amd64)   containerd://2.3.4
+PASS: 4 nodes Ready
+PASS: 3 workers in 3 distinct zones
+PASS: calico-node running on every node
+PASS: baseline: client reaches server
+PASS: NetworkPolicy enforced: traffic blocked after default-deny
+ALL CHECKS PASSED
