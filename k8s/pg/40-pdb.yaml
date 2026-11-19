@@ -1,0 +1,11 @@
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: pg-ha
+  namespace: pg-ha
+spec:
+  minAvailable: 2
+  selector:
+    matchLabels:
+      application: pg-ha
+      cluster-name: pg-ha

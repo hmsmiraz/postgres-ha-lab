@@ -1,0 +1,48 @@
+# Stable read-write endpoint: always the current primary.
+apiVersion: v1
+kind: Service
+metadata:
+  name: pg-primary
+  namespace: pg-ha
+spec:
+  selector:
+    application: pg-ha
+    cluster-name: pg-ha
+    role: primary
+  ports:
+    - name: postgres
+      port: 5432
+      targetPort: 5432
+---
+# Read-only endpoint: replicas only.
+apiVersion: v1
+kind: Service
+metadata:
+  name: pg-replica
+  namespace: pg-ha
+spec:
+  selector:
+    application: pg-ha
+    cluster-name: pg-ha
+    role: replica
+  ports:
+    - name: postgres
+      port: 5432
+      targetPort: 5432
+---
+# Stable per-pod DNS names for the StatefulSet.
+apiVersion: v1
+kind: Service
+metadata:
+  name: pg-ha-headless
+  namespace: pg-ha
+spec:
+  clusterIP: None
+  selector:
+    application: pg-ha
+    cluster-name: pg-ha
+  ports:
+    - name: postgres
+      port: 5432
+    - name: patroni
+      port: 8008
