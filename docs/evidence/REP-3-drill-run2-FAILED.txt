@@ -1,0 +1,15 @@
+date: 2026-11-20T14:09:57Z
+leader: pg-ha-0 on kind-worker (192.168.162.136); drill replica: pg-ha-2 (192.168.195.196), slot pg_ha_2
+replica replay position: 0/21000168, WAL file it needs: 000000070000000000000021
+slot before: reserved|-|true|safe_wal_size=1090518680
+pg_wal size before: 449 MB
+PASS: max_slot_wal_keep_size lowered to 128MB for the drill
+NOTICE:  relation "slot_probe" already exists, skipping
+cutting pg-ha-2 off from the primary (nftables)
+generating 24 WAL segments (about 384 MB) while pg-ha-2 is cut off
+PASS: the primary kept accepting writes while pg-ha-2 was cut off
+slot before checkpoint: unreserved|-|true|safe_wal_size=-251658240
+pg_wal size before checkpoint: 513 MB
+PASS: the slot is past the cap (unreserved)
+FAIL: command failed at line 18: timeout 180 kubectl -n "$NS" exec "$leader" -c postgres -- psql -U postgres -Atq -c checkpoint > /dev/null
+cleanup: restoring max_slot_wal_keep_size=1GB

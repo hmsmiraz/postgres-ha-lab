@@ -1,0 +1,11 @@
+date: 2026-11-20T13:55:25Z
+leader: pg-ha-0 on kind-worker (192.168.162.136); drill replica: pg-ha-2 (192.168.195.196), slot pg_ha_2
+slot before: reserved|-|true
+pg_wal size before: 65 MB
+PASS: max_slot_wal_keep_size lowered to 128MB for the drill
+cutting pg-ha-2 off from the primary (nftables)
+generating 24 WAL segments (about 384 MB) while pg-ha-2 is cut off
+PASS: the primary kept accepting writes while pg-ha-2 was cut off
+slot before checkpoint: unreserved|-|true
+pg_wal size before checkpoint: 433 MB
+cleanup: restoring max_slot_wal_keep_size=1GB
