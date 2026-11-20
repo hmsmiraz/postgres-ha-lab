@@ -40,3 +40,9 @@ Consequences:
   for the old primary to return or for an operator to promote a replica by hand, accepting data loss.
 - Alternatives considered, not adopted: synchronous_mode_strict (writes block instead of falling
   back to async) and synchronous_mode off (failover always possible, RPO above 0).
+
+Second run (tests/rep-degraded-sync.sh, ADR1-degraded.txt), same contract asserted:
+- Patroni switched to asynchronous 65 s after the cut; longest commit stall 63.6 s.
+- With the primary's node powered off for 90 s, neither replica promoted itself (8 "not the healthiest
+  node" log lines on each); 56 s after the node restart a writable primary was back (the old one).
+- 45 of 45 acknowledged writes survived; all three nodes held the same 46 rows afterwards.

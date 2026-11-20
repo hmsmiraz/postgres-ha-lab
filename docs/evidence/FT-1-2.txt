@@ -1,0 +1,51 @@
+date: 2026-11-20T15:03:56Z
+--- FT-1: placement ---
+PASS: required pod anti-affinity (one pod per node) is configured
+PASS: zone topology spread constraint (DoNotSchedule) is configured
+pod -> node -> zone:
+  pg-ha-0 -> kind-worker -> zone-a
+  pg-ha-1 -> kind-worker2 -> zone-b
+  pg-ha-2 -> kind-worker3 -> zone-c
+PASS: 3 pods on 3 distinct nodes
+PASS: 3 pods in 3 distinct zones
+scaling to 4 replicas to prove anti-affinity is enforced
+scheduler message for the 4th pod: 0/4 nodes are available: 1 node(s) had untolerated taint(s), 3 node(s) didn't match pod anti-affinity rules. preemption: 0/4 nodes are available: 1 Preemption is not helpful for scheduling, 3 No preemption victims found for incoming pod.
+PASS: a 4th pod cannot be scheduled: anti-affinity is enforced
+--- FT-2: disruption budget, resources, probes ---
+PASS: PodDisruptionBudget minAvailable = 2
+PASS: resource requests and a memory limit are set
+PASS: startup, liveness and readiness probes are set
+PASS: terminationGracePeriodSeconds = 60
+leader pg-ha-0 (untouched); async replica pg-ha-1 on kind-worker2; sync standby pg-ha-2 on kind-worker3
+draining kind-worker2 (one replica goes out)
+node/kind-worker2 cordoned
+Warning: ignoring DaemonSet-managed Pods: kube-system/calico-node-fc2qv, kube-system/kube-proxy-64jkw
+evicting pod pg-ha/pg-ha-1
+pod/pg-ha-1 evicted
+node/kind-worker2 drained
+PASS: the PDB allowed one replica to be evicted
+PDB disruptionsAllowed with one replica out: 0
+PASS: PDB now allows 0 further disruptions
+PASS: the cluster still serves writes while a replica is out
+trying to drain kind-worker3 (hosts the sync standby pg-ha-2) while pg-ha-1 is out
+There are pending pods in node "kind-worker3" when an error occurred: error when evicting pods/"pg-ha-2" -n "pg-ha": global timeout reached: 40s
+pod/pg-ha-2
+error: unable to drain node "kind-worker3" due to error: error when evicting pods/"pg-ha-2" -n "pg-ha": global timeout reached: 40s, continuing command...
+There are pending nodes to be drained:
+ kind-worker3
+error when evicting pods/"pg-ha-2" -n "pg-ha": global timeout reached: 40s
+PASS: the PDB blocked a second drain (it would have left fewer than 2 pods available)
+PASS: the sync standby pg-ha-2 is untouched and still Running
+uncordoning both nodes
++ Cluster: pg-ha (7709910619747762213) ----+-----------+----+-------------+-----+------------+-----+
+| Member  | Host            | Role         | State     | TL | Receive LSN | Lag | Replay LSN | Lag |
++---------+-----------------+--------------+-----------+----+-------------+-----+------------+-----+
+| pg-ha-0 | 192.168.162.138 | Leader       | running   |  9 |             |     |            |     |
+| pg-ha-1 | 192.168.110.135 | Replica      | streaming |  9 |  0/7E005E30 |   0 | 0/7E005E30 |   0 |
+| pg-ha-2 | 192.168.195.196 | Sync Standby | streaming |  9 |  0/7E005E30 |   0 | 0/7E005E30 |   0 |
++---------+-----------------+--------------+-----------+----+-------------+-----+------------+-----+
+PASS: cluster is back to 1 leader + 2 streaming replicas
+NAME    MIN AVAILABLE   MAX UNAVAILABLE   ALLOWED DISRUPTIONS   AGE
+pg-ha   2               N/A               1                     23h
+PASS: exactly one pod accepts writes
+ALL CHECKS PASSED
