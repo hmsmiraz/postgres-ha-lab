@@ -1,0 +1,27 @@
+date: 2026-11-20T14:41:02Z
+leader: pg-ha-0 on kind-worker; replicas: pg-ha-1 pg-ha-2; synchronous_standby_names before: "pg-ha-1"
+PASS: writer acknowledging writes before the cut (10 acks)
+cut: pg-ha-0 is cut off from pg-ha-1 pg-ha-2 (API access stays up) at 20:41:15
+t+5s synchronous_standby_names='"pg-ha-1"' acks=12
+t+11s synchronous_standby_names='"pg-ha-1"' acks=12
+t+17s synchronous_standby_names='"pg-ha-1"' acks=12
+t+22s synchronous_standby_names='"pg-ha-1"' acks=12
+t+28s synchronous_standby_names='"pg-ha-1"' acks=12
+t+33s synchronous_standby_names='"pg-ha-1"' acks=12
+t+39s synchronous_standby_names='"pg-ha-1"' acks=12
+t+44s synchronous_standby_names='"pg-ha-1"' acks=12
+t+50s synchronous_standby_names='"pg-ha-1"' acks=12
+t+55s synchronous_standby_names='"pg-ha-1"' acks=12
+t+61s synchronous_standby_names='' acks=14
+MEASURED: Patroni switched to asynchronous (empty synchronous_standby_names) 61 s after the cut
+PASS: Patroni fell back to asynchronous replication on its own
+acknowledged writes in the 15 s after the switch: 25
+PASS: writes resumed after the fall back (the primary stays available)
+MEASURED: longest gap between acknowledged writes: 61056 ms
+rows on pg-ha-1: 12, rows on the primary pg-ha-0: 40
+rows on pg-ha-2: 13, rows on the primary pg-ha-0: 40
+PASS: the replicas are behind: writes acknowledged in the degraded state exist only on the primary
+powering off node kind-worker (docker kill) at 20:42:32
+leader after: pg-ha-0
+FAIL: no replica was promoted
+cleanup: starting kind-worker again

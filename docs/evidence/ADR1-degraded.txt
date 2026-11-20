@@ -1,0 +1,50 @@
+date: 2026-11-20T14:54:37Z
+leader: pg-ha-0 on kind-worker; replicas: pg-ha-1 pg-ha-2; synchronous_standby_names before: "pg-ha-1"
+PASS: writer acknowledging writes before the cut (9 acks)
+cut: pg-ha-0 is cut off from pg-ha-1 pg-ha-2 (API access stays up) at 20:54:50
+t+6s synchronous_standby_names='"pg-ha-1"' acks=11
+t+11s synchronous_standby_names='"pg-ha-1"' acks=11
+t+17s synchronous_standby_names='"pg-ha-1"' acks=11
+t+22s synchronous_standby_names='"pg-ha-1"' acks=11
+t+28s synchronous_standby_names='"pg-ha-1"' acks=11
+t+33s synchronous_standby_names='"pg-ha-1"' acks=11
+t+38s synchronous_standby_names='"pg-ha-1"' acks=11
+t+44s synchronous_standby_names='"pg-ha-1"' acks=11
+t+50s synchronous_standby_names='"pg-ha-1"' acks=11
+t+55s synchronous_standby_names='"pg-ha-1"' acks=11
+t+60s synchronous_standby_names='"pg-ha-1"' acks=11
+t+66s synchronous_standby_names='' acks=17
+MEASURED: Patroni switched to asynchronous 65 s after the cut
+PASS: Patroni fell back to asynchronous replication on its own
+acknowledged writes in the 15 s after the switch: 26
+PASS: writes resumed after the fall back
+MEASURED: longest gap between acknowledged writes (commit stall): 63634 ms
+rows on pg-ha-1: 11, rows on the primary pg-ha-0: 44
+rows on pg-ha-2: 12, rows on the primary pg-ha-0: 44
+PASS: the replicas are behind: writes acknowledged in the degraded state exist only on the primary
+powering off node kind-worker (docker kill) at 20:56:12
+acknowledged writes in total: 45
+holding the node down for 90 s and watching whether a replica promotes itself
+log lines 'not the healthiest node' on pg-ha-1 during the hold: 8
+log lines 'not the healthiest node' on pg-ha-2 during the hold: 8
+PASS: no replica promoted itself during 90 s (Patroni refuses to fail over to a non-synchronous replica)
+starting node kind-worker again at 20:57:50
+MEASURED: seconds from restarting the node to a writable primary: 56
+writable primary after the restart: pg-ha-0 (the old primary was pg-ha-0)
+PASS: a writable primary is back without any manual step
+acknowledged writes: 45, rows on the new primary: 46, acknowledged writes missing: 0
+PASS: no acknowledged write was lost
++ Cluster: pg-ha (7709910619747762213) ----+-----------+----+-------------+-----+------------+-----+
+| Member  | Host            | Role         | State     | TL | Receive LSN | Lag | Replay LSN | Lag |
++---------+-----------------+--------------+-----------+----+-------------+-----+------------+-----+
+| pg-ha-0 | 192.168.162.138 | Leader       | running   |  9 |             |     |            |     |
+| pg-ha-1 | 192.168.110.134 | Replica      | streaming |  9 |  0/7E0001A8 |   0 | 0/7E0000D8 |   0 |
+| pg-ha-2 | 192.168.195.196 | Sync Standby | streaming |  9 |  0/7E0000A0 |   0 | 0/7E0000A0 |   0 |
++---------+-----------------+--------------+-----------+----+-------------+-----+------------+-----+
+rows on pg-ha-0: 46 (expected 46)
+rows on pg-ha-1: 46 (expected 46)
+rows on pg-ha-2: 46 (expected 46)
+PASS: all three nodes hold the same rows
+PASS: synchronous mode came back on its own (synchronous_standby_names="pg-ha-2")
+PASS: exactly one pod accepts writes
+ALL CHECKS PASSED

@@ -33,3 +33,12 @@ Each item says how it was found. Items marked "not tested" are open questions, n
 ## Environment
 - All "nodes" run on one laptop (kind), so failures are simulated, not independent. Zones are labels.
 - Node loss is `docker kill` of a kind node; network partitions are nftables drops on the node.
+
+## Degraded synchronous mode
+- If both replicas are unreachable, commits stall for about wal_sender_timeout (61 s measured) before
+  Patroni falls back to asynchronous. If the primary is then lost, no replica is promoted
+  automatically (Patroni synchronous mode); recovery waits for the old primary to return, or for a
+  manual promotion that accepts data loss. Measured in tests/rep-degraded-sync.sh. This is a
+  deliberate trade of availability for RPO 0.
+- A silent partition of a replica delays the primary's detection by wal_sender_timeout; a shorter
+  value was not tested.
