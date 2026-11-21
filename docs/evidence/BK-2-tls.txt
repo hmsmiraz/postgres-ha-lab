@@ -1,0 +1,19 @@
+EXPECTED RED LINES: none.
+---- raw output below, unchanged ----
+date: 2026-11-21T15:12:56Z
+PASS: generator script is present and executable
+PASS: first run created two Secrets
+PASS: both Secrets hold exactly ca.crt, tls.crt and tls.key (no CA private key in the cluster)
+PASS: six files are non-empty, one shared CA, two different private keys
+PASS: server certificate verifies for server use and client certificate for client use
+PASS: negative control: an unrelated CA verifies neither certificate
+PASS: negative control: each certificate is rejected for the other purpose
+PASS: server certificate names exactly the three pod DNS names; a foreign hostname is rejected
+PASS: keys match their certificates; a mismatched pair is detected
+PASS: client certificate name is CN=pgbackrest-backup
+PASS: ca.crt is a CA; server and client certificates are not
+PASS: certificates are valid for more than 30 days
+PASS: no key material is left on disk by the generator
+PASS: no key content in the generator output (both scanners fired on planted input)
+PASS: second run keeps both Secrets unchanged and prints no key content
+ALL CHECKS PASSED
