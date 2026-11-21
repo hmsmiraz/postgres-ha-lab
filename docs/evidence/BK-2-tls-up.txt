@@ -1,0 +1,34 @@
+EXPECTED RED LINES: none. Both generator runs are in one file: the second run must print keeping it twice. Only key names, public certificate names and dates are printed, never key content.
+---- raw output below, unchanged ----
+date: 2026-11-21T16:07:15Z
+precheck: neither TLS Secret exists
+precheck: 1 leader and 2 streaming replicas
+--- generator, first run
+secret pgbackrest-tls-server created
+secret pgbackrest-tls-client created
+leftover files in the generator temp dir: 0 (expected 0)
+pgbackrest-tls-server keys: ["ca.crt","tls.crt","tls.key"] (expected ["ca.crt","tls.crt","tls.key"])
+pgbackrest-tls-client keys: ["ca.crt","tls.crt","tls.key"] (expected ["ca.crt","tls.crt","tls.key"])
+--- public certificate facts (no keys)
+server names:
+DNS:pg-ha-0.pg-ha-headless.pg-ha.svc.cluster.local
+DNS:pg-ha-1.pg-ha-headless.pg-ha.svc.cluster.local
+DNS:pg-ha-2.pg-ha-headless.pg-ha.svc.cluster.local
+client subject: subject=CN=pgbackrest-backup
+server expires: notAfter=Feb 23 16:07:17 2029 GMT
+client expires: notAfter=Feb 23 16:07:17 2029 GMT
+--- generator, second run (expected: both kept)
+secret pgbackrest-tls-server already exists, keeping it
+secret pgbackrest-tls-client already exists, keeping it
+leftover files in the generator temp dir: 0 (expected 0)
+--- pods untouched (expected 3 pods, 2/2, 0 restarts)
+pg-ha-0   2/2   Running   0     137m
+pg-ha-1   2/2   Running   0     137m
+pg-ha-2   2/2   Running   0     137m
+--- git status
+ M k8s/pg/50-statefulset.yaml
+ M scripts/apply-evidence-headers.sh
+ M scripts/pg-up.sh
+?? docs/evidence/BK-2-pgserver-FAILED.txt
+?? docs/evidence/BK-2-tls-up.txt
+?? tests/bk-pgserver.sh

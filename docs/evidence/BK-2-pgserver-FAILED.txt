@@ -1,0 +1,4 @@
+EXPECTED RED LINES: the single FAIL line (pgserver container found in 0 pods) is deliberate (test first).
+---- raw output below, unchanged ----
+date: 2026-11-21T15:19:15Z
+FAIL: expected a pgserver container in 3 pods, found it in 0

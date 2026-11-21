@@ -206,6 +206,65 @@ spec:
             - name: backup-scripts
               mountPath: /scripts
               readOnly: true
+        - name: pgserver
+          image: __IMAGE__
+          imagePullPolicy: IfNotPresent
+          command: ["pgbackrest", "server"]
+          ports:
+            - name: pgbackrest
+              containerPort: 8432
+          envFrom:
+            - configMapRef:
+                name: pgbackrest-env
+          env:
+            - name: PGBACKREST_TLS_SERVER_ADDRESS
+              value: "0.0.0.0"
+            - name: PGBACKREST_TLS_SERVER_CA_FILE
+              value: /tls/ca.crt
+            - name: PGBACKREST_TLS_SERVER_CERT_FILE
+              value: /tls/tls.crt
+            - name: PGBACKREST_TLS_SERVER_KEY_FILE
+              value: /tls/tls.key
+            - name: PGBACKREST_TLS_SERVER_AUTH
+              value: "pgbackrest-backup=pg-ha"
+            - name: PGBACKREST_REPO1_S3_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: objstore-credentials
+                  key: access-key-id
+            - name: PGBACKREST_REPO1_S3_KEY_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: objstore-credentials
+                  key: secret-access-key
+          readinessProbe:
+            tcpSocket:
+              port: 8432
+            periodSeconds: 10
+          resources:
+            requests:
+              cpu: 10m
+              memory: 32Mi
+            limits:
+              memory: 256Mi
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop: ["ALL"]
+          volumeMounts:
+            - name: data
+              mountPath: /pgdata
+              readOnly: true
+            - name: run
+              mountPath: /run/postgresql
+            - name: tmp
+              mountPath: /tmp
+            - name: pgserver-tls
+              mountPath: /tls
+              readOnly: true
+            - name: objstore-ca
+              mountPath: /certs
+              readOnly: true
       volumes:
         - name: patroni-config
           configMap:
@@ -225,6 +284,10 @@ spec:
         - name: backup-scripts
           configMap:
             name: pgbackrest-scripts
+        - name: pgserver-tls
+          secret:
+            secretName: pgbackrest-tls-server
+            defaultMode: 288
   volumeClaimTemplates:
     - metadata:
         name: data

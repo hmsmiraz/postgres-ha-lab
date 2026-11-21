@@ -1,0 +1,14 @@
+EXPECTED RED LINES: the three WARN lines (check command requires option: repo1-s3-key), ERROR 027 and the FAIL line are real: the pgserver container had no S3 key. Fixed in k8s/pg/50-statefulset.yaml. The negative controls did not run.
+---- raw output below, unchanged ----
+date: 2026-11-21T16:13:27Z
+PASS: 3 ready pgserver containers with no restarts, the right command, address and authorised client
+PASS: both TLS Secrets exist with exactly ca.crt, tls.crt and tls.key
+PASS: Patroni reports 1 leader and 2 streaming replicas
+PASS: scratch client pod is ready
+2026-11-21 16:13:32.331 P00   WARN: unable to check pg1: [OptionRequiredError] raised from remote-0 tls protocol on 'pg-ha-0.pg-ha-headless.pg-ha.svc.cluster.local': check command requires option: repo1-s3-key
+2026-11-21 16:13:32.389 P00   WARN: unable to check pg2: [OptionRequiredError] raised from remote-0 tls protocol on 'pg-ha-1.pg-ha-headless.pg-ha.svc.cluster.local': check command requires option: repo1-s3-key
+2026-11-21 16:13:32.431 P00   WARN: unable to check pg3: [OptionRequiredError] raised from remote-0 tls protocol on 'pg-ha-2.pg-ha-headless.pg-ha.svc.cluster.local': check command requires option: repo1-s3-key
+2026-11-21 16:13:32.442 P00  ERROR: [027]: no database found
+                                    HINT: check indexed pg-path/pg-host configurations
+command terminated with exit code 27
+FAIL: pgbackrest check through the three pgserver endpoints failed (exit 27)

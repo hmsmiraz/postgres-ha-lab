@@ -1,0 +1,11 @@
+EXPECTED RED LINES: none. The Terminating line for the scratch pod is cleanup that does not wait. The NotFound for the scratch Secret is expected.
+---- raw output below, unchanged ----
+date: 2026-11-21T16:20:59Z
+PASS: 3 ready pgserver containers with no restarts, the right command, address and authorised client
+PASS: both TLS Secrets exist with exactly ca.crt, tls.crt and tls.key
+PASS: Patroni reports 1 leader and 2 streaming replicas
+PASS: scratch client pod is ready
+PASS: pgbackrest check succeeds through the three pgserver endpoints with the client certificate
+PASS: negative control: with no client certificate the check fails
+PASS: negative control: a self-signed certificate of the same name is refused
+ALL CHECKS PASSED

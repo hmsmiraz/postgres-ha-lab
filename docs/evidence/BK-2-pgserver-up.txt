@@ -1,0 +1,67 @@
+EXPECTED RED LINES: none. First rollout of the pgserver sidecar. The empty pgserver log sections are real: the container logged nothing. The leader moved from pg-ha-0 to pg-ha-2 on purpose of the rolling update, an observation and not a defect.
+---- raw output below, unchanged ----
+date: 2026-11-21T16:09:06Z
+--- before: patroni
++ Cluster: pg-ha (7710621595341348900) ----+-----------+----+-------------+-----+------------+-----+
+| Member  | Host            | Role         | State     | TL | Receive LSN | Lag | Replay LSN | Lag |
++---------+-----------------+--------------+-----------+----+-------------+-----+------------+-----+
+| pg-ha-0 | 192.168.110.142 | Leader       | running   |  1 |             |     |            |     |
+| pg-ha-1 | 192.168.195.203 | Sync Standby | streaming |  1 |   0/7001488 |   0 |  0/7001488 |   0 |
+| pg-ha-2 | 192.168.162.144 | Replica      | streaming |  1 |   0/7001488 |   0 |  0/7001488 |   0 |
++---------+-----------------+--------------+-----------+----+-------------+-----+------------+-----+
+--- before: archiver on pg-ha-0
+archived_count=8 failed_count=6 last_archived_wal=000000010000000000000006
+--- apply the StatefulSet (only this file)
+statefulset.apps/pg-ha configured
+--- rollout (timeout 600 s)
+Waiting for partitioned roll out to finish: 0 out of 3 new pods have been updated...
+Waiting for 1 pods to be ready...
+Waiting for 1 pods to be ready...
+Waiting for 1 pods to be ready...
+Waiting for partitioned roll out to finish: 1 out of 3 new pods have been updated...
+Waiting for 1 pods to be ready...
+Waiting for 1 pods to be ready...
+Waiting for 1 pods to be ready...
+Waiting for partitioned roll out to finish: 2 out of 3 new pods have been updated...
+Waiting for 1 pods to be ready...
+Waiting for 1 pods to be ready...
+Waiting for 1 pods to be ready...
+partitioned roll out complete: 3 new pods have been updated...
+rollout exit=0
+healthy again within 180 s: yes
+--- after: patroni
++ Cluster: pg-ha (7710621595341348900) ----+-----------+----+-------------+-----+------------+-----+
+| Member  | Host            | Role         | State     | TL | Receive LSN | Lag | Replay LSN | Lag |
++---------+-----------------+--------------+-----------+----+-------------+-----+------------+-----+
+| pg-ha-0 | 192.168.110.144 | Replica      | streaming |  2 |   0/8000208 |   0 |  0/8000208 |   0 |
+| pg-ha-1 | 192.168.195.204 | Sync Standby | streaming |  2 |   0/80001E0 |   0 |  0/80001E0 |   0 |
+| pg-ha-2 | 192.168.162.145 | Leader       | running   |  2 |             |     |            |     |
++---------+-----------------+--------------+-----------+----+-------------+-----+------------+-----+
+--- after: pods (container names, ready, restarts)
+pg-ha-0 backup ready=true restarts=0
+pg-ha-0 pgserver ready=true restarts=0
+pg-ha-0 postgres ready=true restarts=0
+pg-ha-1 backup ready=true restarts=0
+pg-ha-1 pgserver ready=true restarts=0
+pg-ha-1 postgres ready=true restarts=0
+pg-ha-2 backup ready=true restarts=0
+pg-ha-2 pgserver ready=true restarts=0
+pg-ha-2 postgres ready=true restarts=0
+--- after: pgserver last log lines per pod (no secrets are logged at warn level, prediction)
+[pg-ha-0]
+[pg-ha-1]
+[pg-ha-2]
+leader before: pg-ha-0  leader after: pg-ha-2
+--- after: archiver on pg-ha-2
+archived_count=2 failed_count=0 last_archived_wal=000000010000000000000008.partial
+--- after: stanza listing on pg-ha-2 (expects backup.info)
+backup.info
+backup.info.copy
+--- git status
+ M k8s/pg/50-statefulset.yaml
+ M scripts/apply-evidence-headers.sh
+ M scripts/pg-up.sh
+?? docs/evidence/BK-2-pgserver-FAILED.txt
+?? docs/evidence/BK-2-pgserver-up.txt
+?? docs/evidence/BK-2-tls-up.txt
+?? tests/bk-pgserver.sh
