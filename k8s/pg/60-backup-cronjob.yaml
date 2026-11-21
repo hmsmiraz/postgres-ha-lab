@@ -1,0 +1,159 @@
+# BK-2 (ADR-0002): one CronJob runs scheduled backups through the pgserver TLS endpoints of the three pods.
+# The script is in the ConfigMap below. No secret value is stored here: the S3 keys come from the Secret objstore-credentials
+# and the TLS client certificate from pgbackrest-tls-client. The pinned image is substituted for __IMAGE__ at apply time.
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: pgbackrest-cronjob-scripts
+  namespace: pg-ha
+data:
+  backup-cronjob.sh: |
+    #!/bin/sh
+    # BK-2: scheduled backup through the pgserver endpoints. Full if no full backup exists or the last full backup is older
+    # than BACKUP_FULL_INTERVAL_SECONDS, incremental otherwise. The state is the repository (pgbackrest info), not this pod.
+    set -eu
+    STANZA="${PGBACKREST_STANZA:?PGBACKREST_STANZA is not set}"
+    INTERVAL="${BACKUP_FULL_INTERVAL_SECONDS:-604800}"
+    now=$(date +%s)
+    info=$(pgbackrest --stanza="$STANZA" info --output=json) || { echo "backup-cronjob: cannot read the repository info" >&2; exit 1; }
+    last_full=$(printf '%s' "$info" | python3 -c '
+    import json, sys
+    d = json.load(sys.stdin)
+    t = [b["timestamp"]["stop"] for s in d for b in s.get("backup", []) if b.get("type") == "full"]
+    print(max(t) if t else 0)
+    ')
+    if [ "$last_full" -eq 0 ] || [ $((now - last_full)) -ge "$INTERVAL" ]; then
+      type=full
+    else
+      type=incr
+    fi
+    echo "backup-cronjob: type=$type"
+    pgbackrest --stanza="$STANZA" --type="$type" backup
+    echo "backup-cronjob: done"
+---
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: pgbackrest-backup
+  namespace: pg-ha
+spec:
+  schedule: "0 2 * * *"
+  timeZone: Etc/UTC
+  concurrencyPolicy: Forbid
+  startingDeadlineSeconds: 3600
+  successfulJobsHistoryLimit: 3
+  failedJobsHistoryLimit: 3
+  jobTemplate:
+    spec:
+      backoffLimit: 0
+      activeDeadlineSeconds: 1800
+      template:
+        spec:
+          restartPolicy: Never
+          automountServiceAccountToken: false
+          securityContext:
+            runAsNonRoot: true
+            runAsUser: 999
+            runAsGroup: 999
+            fsGroup: 999
+            seccompProfile:
+              type: RuntimeDefault
+          containers:
+            - name: backup
+              image: __IMAGE__
+              imagePullPolicy: IfNotPresent
+              command: ["sh", "/scripts/backup-cronjob.sh"]
+              envFrom:
+                - configMapRef:
+                    name: pgbackrest-env
+              env:
+                - name: PGBACKREST_PG1_HOST
+                  value: pg-ha-0.pg-ha-headless.pg-ha.svc.cluster.local
+                - name: PGBACKREST_PG1_HOST_TYPE
+                  value: tls
+                - name: PGBACKREST_PG1_HOST_CA_FILE
+                  value: /client/ca.crt
+                - name: PGBACKREST_PG1_HOST_CERT_FILE
+                  value: /client/tls.crt
+                - name: PGBACKREST_PG1_HOST_KEY_FILE
+                  value: /client/tls.key
+                - name: PGBACKREST_PG2_HOST
+                  value: pg-ha-1.pg-ha-headless.pg-ha.svc.cluster.local
+                - name: PGBACKREST_PG2_HOST_TYPE
+                  value: tls
+                - name: PGBACKREST_PG2_HOST_CA_FILE
+                  value: /client/ca.crt
+                - name: PGBACKREST_PG2_HOST_CERT_FILE
+                  value: /client/tls.crt
+                - name: PGBACKREST_PG2_HOST_KEY_FILE
+                  value: /client/tls.key
+                - name: PGBACKREST_PG2_PATH
+                  value: /pgdata/data
+                - name: PGBACKREST_PG2_SOCKET_PATH
+                  value: /run/postgresql
+                - name: PGBACKREST_PG3_HOST
+                  value: pg-ha-2.pg-ha-headless.pg-ha.svc.cluster.local
+                - name: PGBACKREST_PG3_HOST_TYPE
+                  value: tls
+                - name: PGBACKREST_PG3_HOST_CA_FILE
+                  value: /client/ca.crt
+                - name: PGBACKREST_PG3_HOST_CERT_FILE
+                  value: /client/tls.crt
+                - name: PGBACKREST_PG3_HOST_KEY_FILE
+                  value: /client/tls.key
+                - name: PGBACKREST_PG3_PATH
+                  value: /pgdata/data
+                - name: PGBACKREST_PG3_SOCKET_PATH
+                  value: /run/postgresql
+                - name: PGBACKREST_REPO1_S3_KEY
+                  valueFrom:
+                    secretKeyRef:
+                      name: objstore-credentials
+                      key: access-key-id
+                - name: PGBACKREST_REPO1_S3_KEY_SECRET
+                  valueFrom:
+                    secretKeyRef:
+                      name: objstore-credentials
+                      key: secret-access-key
+                - name: PGBACKREST_START_FAST
+                  value: "y"
+                - name: BACKUP_FULL_INTERVAL_SECONDS
+                  value: "604800"
+              resources:
+                requests:
+                  cpu: 10m
+                  memory: 64Mi
+                limits:
+                  memory: 512Mi
+              securityContext:
+                allowPrivilegeEscalation: false
+                capabilities:
+                  drop: ["ALL"]
+              volumeMounts:
+                - name: client
+                  mountPath: /client
+                  readOnly: true
+                - name: objstore-ca
+                  mountPath: /certs
+                  readOnly: true
+                - name: tmp
+                  mountPath: /tmp
+                - name: scripts
+                  mountPath: /scripts
+                  readOnly: true
+          volumes:
+            - name: client
+              secret:
+                secretName: pgbackrest-tls-client
+                defaultMode: 288
+            - name: objstore-ca
+              secret:
+                secretName: objstore-tls
+                items:
+                  - key: ca.crt
+                    path: ca.crt
+            - name: tmp
+              emptyDir: {}
+            - name: scripts
+              configMap:
+                name: pgbackrest-cronjob-scripts

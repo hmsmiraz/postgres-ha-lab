@@ -1,0 +1,18 @@
+EXPECTED RED LINES: none. The INFO line for bk-schedule-test-4 says result=failed on purpose: it is the negative control (broken CA paths), and the PASS line after it says the Job failed and added no backup. The backups made by jobs 1 to 3 stay in the repository on purpose.
+---- raw output below, unchanged ----
+date: 2026-11-21T16:53:48Z
+PASS: cluster healthy: 1 leader and 2 streaming replicas
+PASS: CronJob spec: Forbid, 5-field schedule, not suspended, backoffLimit 0, deadline, Never, pinned image, no ServiceAccount token
+PASS: three TLS pg hosts with the pod DNS names; only the expected three Secrets are referenced
+PASS: no secret value in the CronJob or any ConfigMap (scanner fired on planted input)
+INFO: baseline full=0 incr=0
+INFO: bk-schedule-test-1 result=complete, log lines=4
+PASS: job 1 added one full backup (full 0 to 1, incr 0 to 0) and logged type=full
+INFO: bk-schedule-test-2 result=complete, log lines=4
+PASS: job 2 added one incremental backup (incr 0 to 1) and logged type=incr
+INFO: bk-schedule-test-3 result=complete, log lines=4
+PASS: control: with the interval at 0, job 3 added one full backup (full 1 to 2)
+INFO: bk-schedule-test-4 result=failed, log lines=8
+PASS: negative control: broken CA paths make the Job fail and add no backup
+PASS: no secret value, key line or private key marker in the four job logs
+ALL CHECKS PASSED

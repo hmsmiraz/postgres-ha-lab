@@ -16,3 +16,4 @@ kubectl apply -f k8s/pg/10-rbac.yaml -f k8s/pg/20-config.yaml \
               -f k8s/pg/25-pgbackrest.yaml -f k8s/pg/30-services.yaml -f k8s/pg/40-pdb.yaml
 sed "s|__IMAGE__|${IMG}|g" k8s/pg/50-statefulset.yaml | kubectl apply -f -
 kubectl -n pg-ha rollout status sts/pg-ha --timeout=600s
+sed "s|__IMAGE__|${IMG}|g" k8s/pg/60-backup-cronjob.yaml | kubectl apply -f -
