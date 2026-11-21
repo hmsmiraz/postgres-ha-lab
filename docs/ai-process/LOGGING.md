@@ -68,3 +68,6 @@ Pattern-based redaction cannot catch every secret, such as a password typed into
   [REDACTED:company]; the pattern is assembled from pieces, and tests/redact-test.sh covers it.
   The script applied it to the whole log, not by hand; the raw hash is unchanged. The commits that
   first held the log were rewritten locally before the next push.
+- The repository was deleted and created again on 2026-11-21, because GitHub kept serving earlier
+  commits by their hash after two force-pushes. The new history is the locally rewritten one: the
+  log and handoff commits were rebuilt on top of the last test commit, and no other commit changed.
