@@ -71,3 +71,6 @@ Pattern-based redaction cannot catch every secret, such as a password typed into
 - The repository was deleted and created again on 2026-11-21, because GitHub kept serving earlier
   commits by their hash after two force-pushes. The new history is the locally rewritten one: the
   log and handoff commits were rebuilt on top of the last test commit, and no other commit changed.
+- Final result of the redaction on this log (current rules): 17 lines changed (aws-access-key-id=1,
+  uri-password=1, company=16 replacements). Raw SHA-256 b674bfaf..., redacted SHA-256 7288f20e...
+  (see MANIFEST.tsv). gitleaks found no leaks in the redacted copy.
