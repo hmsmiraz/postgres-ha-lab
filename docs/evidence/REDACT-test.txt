@@ -1,0 +1,7 @@
+PASS: line count is unchanged
+PASS: only the intended lines changed (secrets, the 3-line key block, the 3 name lines)
+PASS: no fake secret value is left in the output
+PASS: no company or project name is left in the output
+PASS: markers are in place and the surrounding text is untouched
+PASS: CRLF line endings are preserved
+ALL CHECKS PASSED

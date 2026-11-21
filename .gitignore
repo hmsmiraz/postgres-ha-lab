@@ -6,3 +6,4 @@ secrets/
 .kube/
 kubeconfig*
 docs/ai-process/raw/
+*:Zone.Identifier
