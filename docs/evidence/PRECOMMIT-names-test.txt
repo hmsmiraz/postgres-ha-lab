@@ -1,0 +1,4 @@
+PASS: a clean change passes
+PASS: a staged line with a forbidden identifier is blocked
+PASS: the redaction marker passes
+ALL CHECKS PASSED
