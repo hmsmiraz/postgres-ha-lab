@@ -1,0 +1,23 @@
+EXPECTED RED LINES: run 1 (one heading absent on purpose) ends with headings missing: 1 and exit=1; the negative control exits 1 on purpose; the two usage-error runs exit 2 on purpose. The regression run with the built-in list should show headings missing: 0.
+---- raw output below, unchanged ----
+date_utc: 2026-11-21T12:22:28Z
+--- 1. marker file: 1 heading present, 1 absent, comment and blank lines ignored (expect: 1 missing, exit=1)
+What I understood (check this against your repo) 1
+Missing heading (x)                            0
+headings missing: 1
+exit=1
+--- 2. regression: built-in list against the phase 0 to 2 log (expect: headings missing: 0, exit=0)
+lines with the user's terminal prompt: 188
+mentions of the brief title: 4
+headings missing: 0
+exit=0
+--- 3. negative control: phase 3 markers against the phase 0 to 2 log (expect: headings missing: 10, exit=1)
+headings missing: 10
+exit=1
+--- 4. usage errors (expect exit=2 twice)
+ 3 72 /tmp/tmp.909ppvtte4/log.txt
+markers file not found: /tmp/tmp.909ppvtte4/nope.txt
+exit=2
+ 3 72 /tmp/tmp.909ppvtte4/log.txt
+markers file has no headings: /tmp/tmp.909ppvtte4/empty.txt
+exit=2

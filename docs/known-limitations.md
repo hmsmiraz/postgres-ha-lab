@@ -3,9 +3,15 @@
 Each item says how it was found. Items marked "not tested" are open questions, not claims.
 
 ## Backup and recovery
-- No WAL archive or base backups exist yet (Phase 3). Until then a replica that falls behind past
-  `max_slot_wal_keep_size` cannot catch up and needs `patronictl reinit` (manual). Observed 3 times
-  (REP-3 drill, runs 1 to 3).
+- WAL archiving works (BK-1, docs/evidence/BK-1.txt), but no base backup exists yet (Phase 3). Whether a replica that
+  falls behind past `max_slot_wal_keep_size` can now catch up from the archive was not tested; until it is tested it
+  needs `patronictl reinit` (manual). Observed 3 times (REP-3 drill, runs 1 to 3).
+- On the rebuilt cluster the archiver failed 6 times on pg-ha-0 before the backup sidecar created the stanza, which
+  happens at its first check about 60 s after it starts (docs/evidence/BK-1-archiver-first-start.txt). Archiving
+  recovered without manual action. The other pods were not looked at, and tests/bk-wal.sh does not detect this:
+  it only checks that failed_count does not grow during its own run.
+- Archiving fails while the object store is down, so `pg_wal` grows on the 2 GiB volume. Not tested.
+- `archive_timeout` is unset, so a quiet cluster can leave its latest WAL segment unarchived. Not tested.
 
 ## Replication and disk
 - During a silent network partition of a lagging replica, the primary's checkpoint waits on that

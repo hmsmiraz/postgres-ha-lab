@@ -1,0 +1,4 @@
+EXPECTED RED LINES: FAIL on StatefulSet pg-ha missing is the step order, not a store fault: the namespace had been deleted and tests/obj-s3.sh line 35 needs the pg-ha StatefulSet. Rerun after pg-up.sh is BK-1-rebuild-obj-s3.txt.
+---- raw output below, unchanged ----
+date: 2026-11-21T13:33:03Z
+FAIL: cluster not reachable or StatefulSet pg-ha missing (bring the cluster up first)

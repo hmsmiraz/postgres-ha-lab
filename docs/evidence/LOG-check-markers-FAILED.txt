@@ -1,0 +1,26 @@
+EXPECTED RED LINES: the run uses the OLD check-log.sh, which ignores a second argument: it checks its 17 built-in headings against a temporary log, so headings missing: 17 and exit=1 are deliberate (test first).
+---- raw output below, unchanged ----
+date_utc: 2026-11-21T12:22:23Z
+--- self-test with a marker file, OLD script (expect: marker file ignored, its 17 built-in headings all missing)
+ 3 72 /tmp/tmp.GQ2XjItumH/log.txt
+What they want, in short                       0
+Best practices for this task                   0
+Plan before we start                           0
+Phase 1, step 1: pin versions                  0
+Phase 1, step 1: session log redaction         0
+Phase 2, step 1: kind cluster                  0
+Phase 2, step 2: the image                     0
+Phase 2, step 3: deploy Patroni                0
+Phase 2, step 4: the first failover test       0
+Phase 2, step 5: node loss                     0
+Phase 2, step 6: storage loss                  0
+Phase 2, step 7: split-brain                   0
+Phase 2, step 8: FO-5                          0
+Phase 2, step 9: REP-3 drill                   0
+Phase 2, step 10: degraded synchronous mode    0
+Phase 2, last step: placement                  0
+Phase 2 summary                                0
+lines with the user's terminal prompt: 0
+mentions of the brief title: 0
+headings missing: 17
+exit=1

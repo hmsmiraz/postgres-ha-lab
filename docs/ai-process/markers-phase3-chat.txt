@@ -1,0 +1,10 @@
+What I understood (check this against your repo)
+Step 1: probe which images pull anonymously and record the evidence
+Step 12: spike Garage locally in Docker (no cluster)
+Step 17: local TLS spike, with verification on and no cluster
+Step 19: write the init script and spike it locally
+Step 23: fix the two scripts and rerun them
+Step 24: housekeeping (SEC-2 note, honest static harness, evidence headers)
+Sub-step 1.1: generator test first, then the generator
+BK-1 implementation, static only (nothing here contacts the cluster)
+The rebuild steps for the running cluster (option A)

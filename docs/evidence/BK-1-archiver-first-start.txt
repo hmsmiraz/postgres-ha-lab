@@ -1,0 +1,11 @@
+EXPECTED RED LINES: failed_count 6 and the six 'archive command failed' lines are the first-start failures, before the sidecar created the stanza. That is the finding, not a defect.
+---- raw output below, unchanged ----
+date_utc: 2026-11-21T14:22:08Z
+--- pg_stat_archiver on pg-ha-0 (counts, WAL names, times only)
+8|6|000000010000000000000001|2026-11-21 13:50:00.114452+00|000000010000000000000006|2026-11-21 13:49:49.12359+00
+--- postgres log on pg-ha-0: number of 'archive command failed' lines (count only)
+6
+--- all containers: sidecar lines about the stanza, with timestamps
+[pod/pg-ha-0/backup] 2026-11-21T13:49:43.564624435Z backup-sidecar: started, stanza pg-ha
+[pod/pg-ha-0/backup] 2026-11-21T13:50:44.407494135Z backup-sidecar: stanza pg-ha not found in the repository (or it cannot be listed), running stanza-create
+[pod/pg-ha-0/backup] 2026-11-21T13:50:44.460929209Z backup-sidecar: stanza created

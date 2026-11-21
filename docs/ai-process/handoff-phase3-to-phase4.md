@@ -12,6 +12,7 @@ Commits on main, newest first. Nothing is pushed.
 (This handoff update is committed after these; see git log.)
 
 Deployed in the kind cluster, as last seen by the assistant (not looked at since):
+  UPDATE: the bullets below describe the cluster before the rebuild. The rebuild is done (docs/evidence/BK-1-rebuild-*.txt): pg-ha was recreated from the BK-1 template with the backup sidecar, and the BK-1 files are applied.
 - Namespace pg-ha holds the Patroni StatefulSet pg-ha (3 pods, ONE container "postgres": the pod template from before BK-1, with
   no archive_mode and no backup sidecar), the object store StatefulSet objstore (pod objstore-0, containers garage and tls, 2/2
   Running), the completed Job objstore-init, and the Secrets pg-credentials, objstore-credentials, objstore-admin, objstore-tls.
@@ -24,8 +25,7 @@ Passed, with evidence (docs/evidence/):
 - OBJ-2 manifests, static: OBJ-2-manifests-static.txt.
 - OBJ-2 deploy: OBJ-2-up.txt.
 - OBJ-2 in the cluster: OBJ-2.txt (14 PASS, exit 0; leak rules as in ADR-0005 amendment 1).
-- BK-1: implemented and statically checked, not verified in the cluster. Static evidence: BK-1-static.txt. The test tests/bk-wal.sh is
-  red by design (BK-1-FAILED.txt and BK-1-FAILED-v2.txt: archive_mode is off).
+- BK-1: verified in the cluster after the rebuild: docs/evidence/BK-1.txt (13 PASS, exit 0). Earlier red runs kept: BK-1-FAILED.txt and BK-1-FAILED-v2.txt (archive_mode off, deliberate). Static evidence: BK-1-static.txt.
 Failed or invalid runs kept next to the passing ones: OBJ-1-FAILED-v1, OBJ-1-FAILED-v2, OBJ-2-FAILED-v1, OBJ-2-FAILED-v2, OBJ-2-FAILED-v3,
 OBJ-2-secrets-FAILED, OBJ-2-leak-FAILED, OBJ-2-run2-FAILED, OBJ-2-manifests-static-run1, OBJ-2-before-leak-fix, OBJ-static-checks-run1,
 OBJ-static-checks-run2, ADR-0004-image-pin-FAILED, ADR-0005-verify-spike-run1. Each has an EXPECTED RED LINES header
@@ -49,7 +49,7 @@ Made by the human, quoted:
   6. "Add a known-limitations entry stating that the access key ID appears in Garage's request logs, and nothing else."
 - "SPEC.md line 51: use proposal B." Applied and committed in b4b75f2.
 - "Item 1 is accepted: OBJ-2 is green (14 PASS, exit 0, header present, failed runs kept under -FAILED names)."
-- "Decision for the running cluster: A, rebuild pg-ha from scratch." Not yet executed.
+- "Decision for the running cluster: A, rebuild pg-ha from scratch." Executed; see BK-1-rebuild-*.txt in docs/evidence.
 - "Yes, commit the BK-1 checkpoint locally, with the git add command and message you showed. Local only." Done as bca1654.
 - "Hours log: I keep it myself in ~/hours-log.txt. Never ask me for it and never assume time."
 - "Work through your numbered plan one item at a time: BK-1 first, then BK-2 to BK-4, then RS-1 to RS-3 (restore into an empty namespace, PITR, restore test), then monitoring and alerts, then security, then OPS (make up, make down, runbooks), then the documents. If you want a different order, ask me."
@@ -155,8 +155,9 @@ R2. Delete: kubectl delete namespace pg-ha --wait=true --timeout=300s
 R3. Verify, read-only: kubectl get ns pg-ha 2>&1 | tail -n 1 (expect NotFound); kubectl get pv --no-headers | cat (no pg-ha claims left);
     kubectl -n local-path-storage get pods --no-headers | cat
 R4. scripts/objstore-up.sh 2>&1 | tee docs/evidence/BK-1-rebuild-objstore-up.txt
-R5. tests/obj-s3.sh 2>&1 | tee docs/evidence/BK-1-rebuild-obj-s3.txt   (stop if red: the store is the base of everything after)
-R6. timeout 900 scripts/pg-up.sh 2>&1 | tee docs/evidence/BK-1-rebuild-pg-up.txt
+R6. timeout 900 scripts/pg-up.sh 2>&1 | tee docs/evidence/BK-1-rebuild-pg-up.txt   (runs before R5: tests/obj-s3.sh line 35 needs the StatefulSet pg-ha to exist)
+R5. tests/obj-s3.sh 2>&1 | tee docs/evidence/BK-1-rebuild-obj-s3.txt   (runs after R6; stop if red)
+    Run before R6, R5 failed at line 35 (docs/evidence/BK-1-rebuild-obj-s3-FAILED.txt). The order is R4, R6, R5, R7, R8.
 R7. tests/rep-topology.sh 2>&1 | tee docs/evidence/BK-1-rebuild-rep-topology.txt
 R8. tests/bk-wal.sh 2>&1 | tee docs/evidence/BK-1.txt
     If it fails, rename docs/evidence/BK-1.txt to BK-1-run1-FAILED.txt before any rerun, and report.
@@ -164,7 +165,7 @@ Then: add EXPECTED RED LINES headers for the new evidence files in scripts/apply
 the human the git add command and commit message. After the rebuild, the phase 2 failover tests have to be rerun later (item 30).
 
 ## d) Open risks and not verified (one line each)
-- Nothing in BK-1 is verified in the cluster.
+- BK-1 is verified in the cluster (BK-1.txt). Not verified: archiving after a failover; the first-start archive failures were looked at on pg-ha-0 only.
 - Whether bootstrap.dcs (with archive_mode and archive_command) applies only at first initialisation: assumed from Patroni's design, not tested; this is why the rebuild is needed.
 - archive-push over TLS from the postgres container under its 768 Mi memory limit: not tested.
 - The sidecar mounts the data volume read-only; whether pgBackRest needs to write there: not tested.
@@ -176,10 +177,10 @@ the human the git add command and commit message. After the rebuild, the phase 2
 - Object store: init repeatability, restart on its volume, hostname-mismatch rejection and a large transfer are shown in Docker only, not in the cluster (see known-limitations).
 - Git history has not been scanned for secrets (SEC-1).
 - REP-4 lists a Prometheus clause that cannot be met before OBS-1.
-Known-limitations entries still to write after BK-1 (from the plan, not yet written):
+Known-limitations entries written after BK-1 (docs/known-limitations.md, Backup and recovery):
 - Archiving fails while the object store is down, so pg_wal grows on the 2 GiB volume. Not tested.
 - archive_timeout is unset, so a quiet cluster can leave its latest WAL segment unarchived. Not tested.
-The existing entry "No WAL archive or base backups exist yet" stays until BK-1 passes.
+The old entry "No WAL archive or base backups exist yet" was reworded after BK-1 passed: WAL archiving works, no base backup exists yet.
 
 ## e) Rules in force
 - The human decides what is cut or reduced; the assistant gives facts and options.
@@ -200,7 +201,6 @@ git (docs/ai-process/raw/ is in .gitignore). The human states that the logs are 
 disclosed in LOGGING.md.
 Still to capture:
 - The phase 0 to 2 chat: a later copy covering its tail (per the phase 2 handoff).
-- The phase 3 chat that wrote this note: not captured yet. A marker file with ten of its headings is docs/ai-process/markers-phase3-chat.txt (untracked until committed with the log).
-  scripts/check-log.sh has heading markers for the first chat only. PENDING: change it to read the markers from a file given as a second argument (default: the current list). The
-  previous assistant had not seen the script, so the edit is not written.
+- The phase 3 chat that wrote this note: not captured yet. A marker file with ten of its headings is docs/ai-process/markers-phase3-chat.txt (committed).
+  scripts/check-log.sh now takes an optional second argument, a markers file (default: its built-in list for the phase 0 to 2 chat). Evidence: LOG-check-markers.txt (red run: LOG-check-markers-FAILED.txt). Use: scripts/check-log.sh <log> docs/ai-process/markers-phase3-chat.txt
 - This chat itself, at its end.

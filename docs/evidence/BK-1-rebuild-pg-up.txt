@@ -1,0 +1,23 @@
+EXPECTED RED LINES: none.
+---- raw output below, unchanged ----
+Image: "pg-ha:18.7-patroni4.1.5-pgbackrest2.60.0" with ID "sha256:3e0026e32c00002e03c61ac21837557cf5b1b41f04c79dd0463f50debcda5f57" found to be already present on all nodes.
+namespace/pg-ha unchanged
+secret/pg-credentials created
+secret objstore-credentials already exists, keeping it
+secret objstore-admin already exists, keeping it
+secret objstore-tls already exists, keeping it
+serviceaccount/patroni created
+role.rbac.authorization.k8s.io/patroni created
+rolebinding.rbac.authorization.k8s.io/patroni created
+configmap/patroni-static-config created
+configmap/pgbackrest-env created
+configmap/pgbackrest-scripts created
+service/pg-primary created
+service/pg-replica created
+service/pg-ha-headless created
+poddisruptionbudget.policy/pg-ha created
+statefulset.apps/pg-ha created
+Waiting for 3 pods to be ready...
+Waiting for 2 pods to be ready...
+Waiting for 1 pods to be ready...
+partitioned roll out complete: 3 new pods have been updated...

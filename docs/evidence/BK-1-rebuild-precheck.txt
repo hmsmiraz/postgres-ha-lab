@@ -1,0 +1,68 @@
+EXPECTED RED LINES: none. Read-only pre-check taken before the namespace delete.
+---- raw output below, unchanged ----
+date_utc: 2026-11-21T13:13:25Z
+ M docs/ai-process/handoff-phase3-to-phase4.md
+ M scripts/apply-evidence-headers.sh
+ M scripts/check-log.sh
+?? docs/ai-process/markers-phase3-chat.txt
+?? docs/evidence/BK-1-rebuild-precheck.txt
+?? docs/evidence/LOG-check-markers-FAILED.txt
+?? docs/evidence/LOG-check-markers.txt
+a1049d5 docs: handoff note for the rest of phase 3 (BK-1 implemented and statically checked, not verified in the cluster)
+bca1654 feat: BK-1 WAL archiving configuration and backup sidecar (static checks only, not yet verified in the cluster)
+b4b75f2 feat: in-cluster Garage object store behind an nginx TLS front (OBJ-1, OBJ-2, ADR-0004, ADR-0005)
+--- nodes and namespaces
+kind-control-plane   Ready   control-plane   46h   v1.37.0
+kind-worker          Ready   <none>          46h   v1.37.0
+kind-worker2         Ready   <none>          46h   v1.37.0
+kind-worker3         Ready   <none>          46h   v1.37.0
+default              Active   46h
+kube-node-lease      Active   46h
+kube-public          Active   46h
+kube-system          Active   46h
+local-path-storage   Active   46h
+pg-ha                Active   45h
+--- everything in pg-ha (R2 deletes all of it; Secret names only, no values)
+statefulset.apps/objstore   1/1   3h40m
+statefulset.apps/pg-ha      3/3   45h
+job.batch/objstore-init   Complete   1/1   7s    3h38m
+service/objstore         ClusterIP   10.96.234.212   <none>   3900/TCP,3903/TCP   3h40m
+service/pg-ha-headless   ClusterIP   None            <none>   5432/TCP,8008/TCP   45h
+service/pg-primary       ClusterIP   10.96.232.47    <none>   5432/TCP            45h
+service/pg-replica       ClusterIP   10.96.203.60    <none>   5432/TCP            45h
+poddisruptionbudget.policy/pg-ha   2     N/A   1     45h
+configmap/kube-root-ca.crt        1     45h
+configmap/objstore-config         2     3h40m
+configmap/objstore-init           1     3h38m
+configmap/patroni-static-config   2     45h
+configmap/pg-ha-config            0     45h
+configmap/pg-ha-leader            0     45h
+configmap/pg-ha-sync              0     45h
+secret/objstore-admin         Opaque   2     3h40m
+secret/objstore-credentials   Opaque   2     3h40m
+secret/objstore-tls           Opaque   3     3h40m
+secret/pg-credentials         Opaque   5     45h
+persistentvolumeclaim/data-objstore-0   Bound   pvc-3281a835-c74f-4316-98da-80e798c1b13d   2Gi   RWO   standard   <unset>   3h40m
+persistentvolumeclaim/data-pg-ha-0      Bound   pvc-cfe9f4cf-9adc-4926-8779-6c269b030fd0   2Gi   RWO   standard   <unset>   44h
+persistentvolumeclaim/data-pg-ha-1      Bound   pvc-4a3bf35e-3765-4d35-97c3-3501bd482adc   2Gi   RWO   standard   <unset>   45h
+persistentvolumeclaim/data-pg-ha-2      Bound   pvc-f1dff9f3-527e-43de-b5ef-10f48e944cb1   2Gi   RWO   standard   <unset>   45h
+--- volumes bound to claims (reclaim policy Delete: removed with their claims)
+NAME                                       CLAIM             RECLAIM   SIZE
+pvc-3281a835-c74f-4316-98da-80e798c1b13d   data-objstore-0   Delete    2Gi
+pvc-4a3bf35e-3765-4d35-97c3-3501bd482adc   data-pg-ha-1      Delete    2Gi
+pvc-cfe9f4cf-9adc-4926-8779-6c269b030fd0   data-pg-ha-0      Delete    2Gi
+pvc-f1dff9f3-527e-43de-b5ef-10f48e944cb1   data-pg-ha-2      Delete    2Gi
+--- user databases and tables that R2 destroys (names only)
+postgres
+appdb
+public.slot_probe
+public.fo_probe
+public.degraded_probe
+public.rejoin_probe
+public.con_probe
+public.sync_probe
+--- the new pod template under restricted admission (server-side dry run, nothing is created)
+pod/pg-ha-psa-check created (server dry run)
+--- scripts and image
+shellcheck clean
+pg-ha image present sha256:3e0026e32c000
