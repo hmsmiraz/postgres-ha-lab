@@ -1,0 +1,60 @@
+# pgBackRest settings for the pg-ha pods (BK-1). No secret is stored here: the two S3 keys come from the Secret
+# objstore-credentials through secretKeyRef in the StatefulSet, and the CA from the Secret objstore-tls.
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: pgbackrest-env
+  namespace: pg-ha
+data:
+  PGBACKREST_STANZA: pg-ha
+  PGBACKREST_PG1_PATH: /pgdata/data
+  PGBACKREST_PG1_SOCKET_PATH: /run/postgresql
+  PGBACKREST_LOG_LEVEL_CONSOLE: warn
+  PGBACKREST_LOG_LEVEL_FILE: "off"
+  PGBACKREST_REPO1_TYPE: s3
+  PGBACKREST_REPO1_PATH: /pg-ha
+  PGBACKREST_REPO1_S3_BUCKET: pgbackrest
+  PGBACKREST_REPO1_S3_ENDPOINT: objstore.pg-ha.svc.cluster.local
+  PGBACKREST_REPO1_STORAGE_PORT: "3900"
+  PGBACKREST_REPO1_S3_REGION: garage
+  PGBACKREST_REPO1_S3_URI_STYLE: path
+  PGBACKREST_REPO1_STORAGE_CA_FILE: /certs/ca.crt
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: pgbackrest-scripts
+  namespace: pg-ha
+data:
+  backup-loop.sh: |
+    #!/bin/sh
+    # BK-1 sidecar. On the Patroni leader it makes sure the pgBackRest stanza exists in the repository. Safe to repeat.
+    # BK-2 extends this loop with scheduled backups.
+    set -u
+    STANZA="${PGBACKREST_STANZA:?PGBACKREST_STANZA is not set}"
+    MISSING_WAIT="${BACKUP_LOOP_INTERVAL:-10}"
+    IDLE_WAIT="${BACKUP_LOOP_IDLE_INTERVAL:-60}"
+    trap 'exit 0' TERM INT
+    log() { echo "backup-sidecar: $*"; }
+    log "started, stanza $STANZA"
+    while true; do
+      wait_s="$IDLE_WAIT"
+      recovery=$(psql -Atqc "select pg_is_in_recovery()" 2>/dev/null || echo unknown)
+      if [ "$recovery" = "f" ]; then
+        listing=$(pgbackrest repo-ls "backup/$STANZA" 2>/dev/null </dev/null || true)
+        case "$listing" in
+          *backup.info*) ;;
+          *)
+            log "stanza $STANZA not found in the repository (or it cannot be listed), running stanza-create"
+            if pgbackrest --stanza="$STANZA" stanza-create; then
+              log "stanza created"
+            else
+              log "stanza-create failed, retrying"
+              wait_s="$MISSING_WAIT"
+            fi
+            ;;
+        esac
+      fi
+      sleep "$wait_s" &
+      wait $!
+    done

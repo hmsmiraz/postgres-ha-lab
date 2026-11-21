@@ -36,6 +36,8 @@ data:
             max_replication_slots: 10
             wal_log_hints: "on"
             max_slot_wal_keep_size: 1GB
+            archive_mode: "on"
+            archive_command: "pgbackrest --stanza=pg-ha archive-push %p"
             password_encryption: scram-sha-256
             unix_socket_directories: /run/postgresql
       initdb:

@@ -1,0 +1,7 @@
+EXPECTED RED LINES: FAIL on archive_mode is off is deliberate (test first). Test v2 changes the leak rules (ADR-0005 amendment 1) and waits for the stanza; v1 is BK-1-FAILED.txt.
+---- raw output below, unchanged ----
+date: 2026-11-21T11:48:32Z
+PASS: cluster reachable, object store ready
+PASS: secret values loaded (not printed); the log scanner fires on a planted secret and ignores the access key id
+PASS: leader is pg-ha-0, 2 streaming replicas
+FAIL: archive_mode is 'off' on pg-ha-0, expected on

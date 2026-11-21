@@ -52,3 +52,5 @@ add_header "$e/OBJ-2-leak-FAILED.txt" "FAIL on the pod or Job log line is delibe
 add_header "$e/OBJ-2-leak-diagnosis.txt" "none. Counts only, no log lines. An earlier version of this file held three log lines with the key id replaced by a placeholder; it was regenerated counts-only."
 add_header "$e/BK-1-FAILED.txt" "FAIL on archive_mode is off is deliberate (test first)."
 add_header "$e/OBJ-2-run2-FAILED.txt" "the run stops with 'line 190: tok: unbound variable'. That is my mistake: the new leak block used variable names the test does not define (shellcheck SC2154 had flagged it). It is not a leak finding. The PASS lines above it are valid for what they check; the leak checks never ran. Superseded by OBJ-2.txt."
+add_header "$e/BK-1-FAILED-v2.txt" "FAIL on archive_mode is off is deliberate (test first). Test v2 changes the leak rules (ADR-0005 amendment 1) and waits for the stanza; v1 is BK-1-FAILED.txt."
+add_header "$e/BK-1-static.txt" "none expected. Controls A, B and C report that the check found problems in a deliberately broken copy: that is what shows the check can fail."

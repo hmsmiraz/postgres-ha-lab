@@ -1,0 +1,7 @@
+EXPECTED RED LINES: FAIL on archive_mode is off is deliberate (test first).
+---- raw output below, unchanged ----
+date: 2026-11-21T10:39:12Z
+PASS: cluster reachable, object store ready
+PASS: secret values loaded (not printed); the leak scanner fires on a planted value
+PASS: leader is pg-ha-0, 2 streaming replicas
+FAIL: archive_mode is 'off' on pg-ha-0, expected on

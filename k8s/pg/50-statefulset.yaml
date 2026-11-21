@@ -54,6 +54,9 @@ spec:
               containerPort: 5432
             - name: patroni
               containerPort: 8008
+          envFrom:
+            - configMapRef:
+                name: pgbackrest-env
           env:
             - name: PATRONI_NAME
               valueFrom:
@@ -100,6 +103,16 @@ spec:
                 secretKeyRef:
                   name: pg-credentials
                   key: app-password
+            - name: PGBACKREST_REPO1_S3_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: objstore-credentials
+                  key: access-key-id
+            - name: PGBACKREST_REPO1_S3_KEY_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: objstore-credentials
+                  key: secret-access-key
           startupProbe:
             httpGet:
               path: /liveness
@@ -140,6 +153,59 @@ spec:
               mountPath: /tmp
             - name: home
               mountPath: /home/postgres
+            - name: objstore-ca
+              mountPath: /certs
+              readOnly: true
+        - name: backup
+          image: __IMAGE__
+          imagePullPolicy: IfNotPresent
+          command: ["sh", "/scripts/backup-loop.sh"]
+          envFrom:
+            - configMapRef:
+                name: pgbackrest-env
+          env:
+            - name: PGBACKREST_REPO1_S3_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: objstore-credentials
+                  key: access-key-id
+            - name: PGBACKREST_REPO1_S3_KEY_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: objstore-credentials
+                  key: secret-access-key
+            - name: PGHOST
+              value: /run/postgresql
+            - name: PGUSER
+              value: postgres
+            - name: PGDATABASE
+              value: postgres
+            - name: PGCONNECT_TIMEOUT
+              value: "5"
+          resources:
+            requests:
+              cpu: 10m
+              memory: 32Mi
+            limits:
+              memory: 128Mi
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop: ["ALL"]
+          volumeMounts:
+            - name: data
+              mountPath: /pgdata
+              readOnly: true
+            - name: run
+              mountPath: /run/postgresql
+            - name: tmp
+              mountPath: /tmp
+            - name: objstore-ca
+              mountPath: /certs
+              readOnly: true
+            - name: backup-scripts
+              mountPath: /scripts
+              readOnly: true
       volumes:
         - name: patroni-config
           configMap:
@@ -150,6 +216,15 @@ spec:
           emptyDir: {}
         - name: home
           emptyDir: {}
+        - name: objstore-ca
+          secret:
+            secretName: objstore-tls
+            items:
+              - key: ca.crt
+                path: ca.crt
+        - name: backup-scripts
+          configMap:
+            name: pgbackrest-scripts
   volumeClaimTemplates:
     - metadata:
         name: data
