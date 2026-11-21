@@ -1,6 +1,6 @@
 # ADR-0002: pgBackRest for backups, WAL archiving and PITR
 
-Status: Accepted for the tool. Open for how scheduled backups reach the data (decided in Phase 3).
+Status: Accepted. Scheduled backups run as CronJobs that reach the Postgres pods through pgBackRest TLS server mode (decided in Phase 3).
 
 ## Context
 We need base backups, continuous WAL archiving to object storage, retention, verification and point-in-time recovery.
@@ -13,10 +13,11 @@ We need base backups, continuous WAL archiving to object storage, retention, ver
 ## Decision
 pgBackRest. `archive_command` in the Postgres pods pushes WAL to the S3-compatible repository. Retention is declared in the pgBackRest configuration.
 
-## Open question
-How the scheduled backup job reaches the cluster: a CronJob using pgBackRest TLS server mode, or a sidecar. We decide this when we build Phase 3 and update this ADR.
+## Decision on the backup trigger
+CronJobs run pgBackRest from the same pinned image and reach the Postgres pods through pgBackRest TLS server mode, with a `pgserver` sidecar in each pod and certificates generated at `make up`. Options not chosen: a scheduler in a sidecar (backup load in the leader pod, weak failure visibility) and a CronJob using kubectl exec (broad pods/exec permission, conflicts with least privilege). Not verified yet: leader selection with three pg hosts, overlapping backups, certificate rotation.
 
 ## Consequences
 - The image includes a pinned pgBackRest version.
 - Backup, verify and restore scripts all use the same tool.
 - Repository credentials are Kubernetes Secrets generated at `make up`.
+- A new port (8432) and a certificate set exist; both must be covered by the NetworkPolicies of SEC-3.
