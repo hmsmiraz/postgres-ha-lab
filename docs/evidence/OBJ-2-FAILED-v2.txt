@@ -1,0 +1,5 @@
+EXPECTED RED LINES: FAIL on StatefulSet objstore is deliberate (test first). Test v2 did not verify TLS and was replaced by v3.
+---- raw output below, unchanged ----
+date: 2026-11-21T05:51:58Z
+PASS: cluster reachable, pg-ha present
+FAIL: StatefulSet objstore does not exist

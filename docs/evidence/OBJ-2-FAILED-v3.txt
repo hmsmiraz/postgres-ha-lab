@@ -1,0 +1,5 @@
+EXPECTED RED LINES: FAIL on StatefulSet objstore is deliberate (test first).
+---- raw output below, unchanged ----
+date: 2026-11-21T06:33:51Z
+PASS: cluster reachable, pg-ha present
+FAIL: StatefulSet objstore does not exist

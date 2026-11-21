@@ -1,0 +1,6 @@
+EXPECTED RED LINES: q-form missed 5 of 5 planted secrets and c-form found 5 of 5. That is the deliberate demonstration of the hazard.
+---- raw output below, unchanged ----
+date_utc: 2026-11-21T10:38:44Z
+RESULT q-form: reported 'no match' for a planted secret in 5 of 5 trials
+RESULT c-form: found the planted secret in 5 of 5 trials
+RESULT hazard: OBSERVED. A leak check written as 'producer | grep -q' can miss a leak.

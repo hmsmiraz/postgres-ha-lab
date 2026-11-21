@@ -1,0 +1,29 @@
+EXPECTED RED LINES: FAIL on the pod or Job log line is deliberate evidence of the old check: it treated the access key id as a secret, and Garage writes that id to its request log (counts in OBJ-2-leak-diagnosis.txt). The secret access key, admin token and rpc secret had no matches. Resolved by ADR-0005 amendment 1 (the key id is an identifier and is no longer scanned for in logs). Lines above the FAIL passed.
+---- raw output below, unchanged ----
+date: 2026-11-21T10:38:50Z
+PASS: cluster reachable, pg-ha present
+PASS: StatefulSet objstore ready
+PASS: Service objstore exposes exactly 3900 (S3) and 3903 (admin)
+PASS: Job objstore-init completed and logged INIT OK
+PASS: Secrets objstore-credentials and objstore-admin have all four values (values not printed)
+PASS: Secret objstore-tls holds exactly ca.crt, tls.crt, tls.key (no CA private key in the cluster)
+--- client log (final phase: Succeeded)
+PROBE host=objstore.pg-ha.svc.cluster.local port=3900 RESULT=open
+PROBE host=objstore.pg-ha.svc.cluster.local port=3903 RESULT=open
+PROBE host=192.168.162.140 port=3910 RESULT=closed
+PROBE host=192.168.162.140 port=3913 RESULT=closed
+PROBE host=192.168.162.140 port=3901 RESULT=closed
+STEP=negative-control RESULT=OK
+STEP=initdb RESULT=OK
+STEP=stanza-create RESULT=OK
+STEP=ls RESULT=OK
+STEP=get RESULT=OK
+STEP=stanza-delete RESULT=OK
+STEP=cleanup RESULT=OK
+---
+PASS: TLS ports 3900 and 3903 open via the Service; Garage S3 (3910), admin (3913) and RPC (3901) closed on the pod IP
+PASS: negative control: without the CA, pgBackRest rejects the certificate
+PASS: pgBackRest over verified TLS: write (stanza-create), ls, get, delete (stanza-delete), repository clean
+PASS: no secret value in any repo file (working tree only, not history)
+PASS: no secret value in any ConfigMap of namespace pg-ha
+FAIL: a secret value was found in a pod or Job log

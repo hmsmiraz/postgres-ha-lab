@@ -1,0 +1,33 @@
+EXPECTED RED LINES: the INFO line gives only a count of Garage log lines that contain the access key id, a known limitation (ADR-0005 amendment 1). The PROBE lines with RESULT=closed for ports 3910, 3913 and 3901 are deliberate: Garage's own ports must be closed on the pod IP. STEP=negative-control RESULT=OK is the deliberate no-CA control.
+---- raw output below, unchanged ----
+date: 2026-11-21T11:32:58Z
+PASS: cluster reachable, pg-ha present
+PASS: StatefulSet objstore ready
+PASS: Service objstore exposes exactly 3900 (S3) and 3903 (admin)
+PASS: Job objstore-init completed and logged INIT OK
+PASS: Secrets objstore-credentials and objstore-admin have all four values (values not printed)
+PASS: Secret objstore-tls holds exactly ca.crt, tls.crt, tls.key (no CA private key in the cluster)
+--- client log (final phase: Succeeded)
+PROBE host=objstore.pg-ha.svc.cluster.local port=3900 RESULT=open
+PROBE host=objstore.pg-ha.svc.cluster.local port=3903 RESULT=open
+PROBE host=192.168.162.140 port=3910 RESULT=closed
+PROBE host=192.168.162.140 port=3913 RESULT=closed
+PROBE host=192.168.162.140 port=3901 RESULT=closed
+STEP=negative-control RESULT=OK
+STEP=initdb RESULT=OK
+STEP=stanza-create RESULT=OK
+STEP=ls RESULT=OK
+STEP=get RESULT=OK
+STEP=stanza-delete RESULT=OK
+STEP=cleanup RESULT=OK
+---
+PASS: TLS ports 3900 and 3903 open via the Service; Garage S3 (3910), admin (3913) and RPC (3901) closed on the pod IP
+PASS: negative control: without the CA, pgBackRest rejects the certificate
+PASS: pgBackRest over verified TLS: write (stanza-create), ls, get, delete (stanza-delete), repository clean
+PASS: log scanner controls: it fires on a planted secret value and ignores the access key id
+PASS: none of the four values in any repo file (working tree only, not history)
+PASS: none of the four values in any file under docs/evidence
+PASS: none of the four values in any ConfigMap of namespace pg-ha
+PASS: none of the three access-granting values appears in the init Job, client or object store pod logs
+INFO: the access key id appears in 116 lines of the Garage log (known limitation, ADR-0005 amendment 1; count only)
+ALL CHECKS PASSED

@@ -1,0 +1,14 @@
+EXPECTED RED LINES: none.
+---- raw output below, unchanged ----
+# image probe (anonymous pulls)
+date_utc: 2026-11-21T06:16:22Z
+--- docker.io/nginxinc/nginx-unprivileged:1.30.6-alpine
+RESULT: pulled
+digest: nginxinc/nginx-unprivileged@sha256:f5116ed4606f3eb015dd4a8e28cb9b351476dc0ad4bc6e9f93b19cec130cdf03
+created: 2026-10-19T01:52:15.934328014Z arch: amd64 size: 60169039
+user=101 entrypoint=["/docker-entrypoint.sh"] cmd=["nginx","-g","daemon off;"] ports={"8080/tcp":{}}
+--- docker.io/nginxinc/nginx-unprivileged:1.31.7-alpine
+RESULT: pulled
+digest: nginxinc/nginx-unprivileged@sha256:b5047b9b76845eac124358373c6852377c52e4b05834a47647e955dd91cb8f1e
+created: 2026-10-19T02:30:32.579503799Z arch: amd64 size: 60833522
+user=101 entrypoint=["/docker-entrypoint.sh"] cmd=["nginx","-g","daemon off;"] ports={"8080/tcp":{}}

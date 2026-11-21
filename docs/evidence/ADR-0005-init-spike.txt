@@ -1,0 +1,54 @@
+EXPECTED RED LINES: init-wrong-token with HTTP 403 and rc=1, and the loopback ports reported closed, are deliberate controls.
+---- raw output below, unchanged ----
+date_utc: 2026-11-21T06:31:20Z
+garage: docker.io/dxflrs/garage:v2.5.0@sha256:677e5b758e4425a325b811c425c026bf35a4bf42f7ddbaa773de3f4fd779a5a5
+proxy:  docker.io/nginxinc/nginx-unprivileged:1.30.6-alpine@sha256:f5116ed4606f3eb015dd4a8e28cb9b351476dc0ad4bc6e9f93b19cec130cdf03
+RESULT certs OK
+RESULT garage-start OK
+RESULT proxy-start OK
+--- reachability from another container on the network
+port 3900 (S3 over TLS): open
+port 3903 (admin over TLS): open
+port 3910 (S3 loopback): closed ConnectionRefusedError
+port 3913 (admin loopback): closed ConnectionRefusedError
+port 3901 (RPC loopback): closed ConnectionRefusedError
+--- init run: first
+layout: role assigned and applied
+bucket: created
+key: imported
+permissions: read and write granted (idempotent)
+INIT OK
+RESULT init-first rc=0
+--- init run: second
+layout: role already assigned
+bucket: already exists
+key: already imported
+permissions: read and write granted (idempotent)
+INIT OK
+RESULT init-second rc=0
+--- what Garage holds after two runs (must be one bucket and one key)
+[2m2026-11-21T06:31:33.599458Z[0m [32m INFO[0m [2mgarage_net::netapp[0m[2m:[0m Connected to 127.0.0.1:3901, negotiating handshake...
+[2m2026-11-21T06:31:33.642604Z[0m [32m INFO[0m [2mgarage_net::netapp[0m[2m:[0m Connection established to b405ce44ad623b1f
+ID                Created     Global aliases  Local aliases
+54bebda3d266cdf1  2026-11-21  pgbackrest      
+[2m2026-11-21T06:31:33.965684Z[0m [32m INFO[0m [2mgarage_net::netapp[0m[2m:[0m Connected to 127.0.0.1:3901, negotiating handshake...
+[2m2026-11-21T06:31:34.014426Z[0m [32m INFO[0m [2mgarage_net::netapp[0m[2m:[0m Connection established to b405ce44ad623b1f
+ID                          Created     Name        Expiration
+<key-id>  2026-11-21  pgbackrest  never
+--- init run: wrong-token
+INIT FAILED: GET /v2/GetClusterStatus -> HTTP 403: {
+  "code": "AccessDenied",
+  "message": "Forbidden: Invalid bearer token",
+  "region": "garage",
+  "path": "/v2/GetClusterStatus"
+}
+RESULT init-wrong-token rc=1
+--- pgBackRest round trip with the key created by the init script (read+write only), verification on
+STEP=initdb RESULT=OK
+STEP=stanza-create RESULT=OK
+STEP=ls RESULT=OK
+STEP=get RESULT=OK
+STEP=stanza-delete RESULT=OK
+STEP=cleanup RESULT=OK
+RESULT roundtrip-init-key rc=0
+SPIKE DONE

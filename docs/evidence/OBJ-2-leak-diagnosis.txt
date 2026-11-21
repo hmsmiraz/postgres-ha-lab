@@ -1,0 +1,24 @@
+EXPECTED RED LINES: none. Counts only, no log lines. An earlier version of this file held three log lines with the key id replaced by a placeholder; it was regenerated counts-only.
+---- raw output below, unchanged ----
+date_utc: 2026-11-21T11:29:01Z
+--- objstore-0 / garage (2945 lines)
+  access-key-id: 58 matching lines
+  secret-access-key: 0 matching lines
+  admin-token: 0 matching lines
+  rpc-secret: 0 matching lines
+--- objstore-0 / tls (nginx) (80 lines)
+  access-key-id: 0 matching lines
+  secret-access-key: 0 matching lines
+  admin-token: 0 matching lines
+  rpc-secret: 0 matching lines
+--- objstore-0 / init-dirs (1 lines)
+  access-key-id: 0 matching lines
+  secret-access-key: 0 matching lines
+  admin-token: 0 matching lines
+  rpc-secret: 0 matching lines
+--- job objstore-init (5 lines)
+  access-key-id: 0 matching lines
+  secret-access-key: 0 matching lines
+  admin-token: 0 matching lines
+  rpc-secret: 0 matching lines
+DIAGNOSIS DONE

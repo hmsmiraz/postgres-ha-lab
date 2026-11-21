@@ -1,0 +1,67 @@
+EXPECTED RED LINES: wrong token (403) and hostname mismatch (ERROR 095) are deliberate controls. backup-large FAIL (option archive-check not valid offline) was my mistake in the script, and restart-data FAIL followed from it. Superseded by the rerun.
+---- raw output below, unchanged ----
+date_utc: 2026-11-21T06:37:59Z
+garage: docker.io/dxflrs/garage:v2.5.0@sha256:677e5b758e4425a325b811c425c026bf35a4bf42f7ddbaa773de3f4fd779a5a5
+proxy:  docker.io/nginxinc/nginx-unprivileged:1.30.6-alpine@sha256:f5116ed4606f3eb015dd4a8e28cb9b351476dc0ad4bc6e9f93b19cec130cdf03
+RESULT certs OK
+RESULT secrets-not-in-config OK (garage.toml holds neither secret; both come from environment variables)
+RESULT garage-start OK
+RESULT proxy-start OK
+--- init run: first
+layout: role assigned and applied
+bucket: created
+key: imported
+permissions: read and write granted (idempotent)
+INIT OK
+RESULT init-first rc=0
+RESULT init-first-check OK (admin token from the environment variable works)
+--- init run: wrong-token
+INIT FAILED: GET /v2/GetClusterStatus -> HTTP 403: {
+  "code": "AccessDenied",
+  "message": "Forbidden: Invalid bearer token",
+  "region": "garage",
+  "path": "/v2/GetClusterStatus"
+}
+RESULT init-wrong-token rc=1
+RESULT token-enforced OK (wrong token rejected)
+--- hostname mismatch: connect to the container IP, which is not in the certificate names, with the right CA
+2026-11-21 06:38:08.785 P00  ERROR: [095]: unable to find hostname '172.19.0.2' in certificate common name or subject alternative names
+RESULT hostname-mismatch OK (rejected with a certificate error, rc=95)
+--- offline backup of an initdb directory plus a 100 MB random file, through the TLS front
+STEP=stanza-create RESULT=OK
+P00  ERROR: [031]: option 'archive-check' not valid without option 'online'
+STEP=backup RESULT=FAIL
+RESULT backup-large FAIL (rc=1, elapsed 12 s)
+--- Garage view of the bucket
+Created:         2026-11-21 06:38:06.220 +00:00
+
+Size:            1.3 kB (1.2 KiB)
+Objects:         4
+
+Website access:  false
+
+Global alias:    pgbackrest
+
+==== KEYS FOR THIS BUCKET ====
+Permissions  Access key                              Local aliases
+RW           <key-id>  pgbackrest  
+--- recreate both containers on the same data directories
+RESULT garage-start OK
+RESULT proxy-start OK
+--- init run: after-restart
+layout: role already assigned
+bucket: already exists
+key: already imported
+permissions: read and write granted (idempotent)
+INIT OK
+RESULT init-after-restart rc=0
+RESULT restart-init OK (layout, bucket and key persisted)
+--- repository after the restart (the stanza and the backup must still be there)
+stanza: verify9863
+    status: error (no valid backups)
+    cipher: none
+
+    db (current)
+        wal archive min/max (18): none present
+RESULT restart-data FAIL
+VERIFY DONE

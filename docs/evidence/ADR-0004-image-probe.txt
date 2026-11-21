@@ -1,0 +1,26 @@
+EXPECTED RED LINES: the two MinIO entries marked RESULT: FAILED (anonymous pull denied on Docker Hub and quay.io). That is the finding, not a defect.
+---- raw output below, unchanged ----
+# ADR-0004 image probe (anonymous pulls)
+date_utc: 2026-11-21T05:27:24Z
+--- docker.io/minio/minio:RELEASE.2025-09-07T16-13-09Z
+RESULT: FAILED
+Error response from daemon: pull access denied for minio/minio, repository does not exist or may require 'docker login': denied: requested access to the resource is denied
+--- quay.io/minio/minio:RELEASE.2025-09-07T16-13-09Z
+RESULT: FAILED
+Error response from daemon: unauthorized: access to the requested resource is not authorized
+--- docker.io/dxflrs/garage:v2.2.0
+RESULT: pulled
+digest: dxflrs/garage@sha256:45a61ce3f7c9c24fc23d9ed2b09b27ed560ab87b34605d175d5c588f539c24e4
+created: 2026-01-24T14:07:15.696962032Z arch: amd64 size: 43752568
+--- docker.io/dxflrs/garage:v2.4.1
+RESULT: pulled
+digest: dxflrs/garage@sha256:9c96caa2612d3411acc5b0e6701fb238dbfba33e533a6d7d3d811a4b12d0d020
+created: 2026-09-08T08:55:29.774147543Z arch: amd64 size: 71272496
+--- docker.io/dxflrs/garage:v2.5.0
+RESULT: pulled
+digest: dxflrs/garage@sha256:677e5b758e4425a325b811c425c026bf35a4bf42f7ddbaa773de3f4fd779a5a5
+created: 2026-10-24T15:26:38.69233674Z arch: amd64 size: 69426824
+--- Garage release tags on Docker Hub (newest few)
+"name":"v2.4.0"
+"name":"v2.4.1"
+"name":"v2.5.0"

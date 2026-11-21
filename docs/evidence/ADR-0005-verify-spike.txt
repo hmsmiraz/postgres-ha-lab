@@ -1,0 +1,86 @@
+EXPECTED RED LINES: wrong token (403) and hostname mismatch (ERROR 095) are deliberate controls. The WARN about repo1-retention-full is real and is handled in BK-3.
+---- raw output below, unchanged ----
+date_utc: 2026-11-21T06:41:42Z
+garage: docker.io/dxflrs/garage:v2.5.0@sha256:677e5b758e4425a325b811c425c026bf35a4bf42f7ddbaa773de3f4fd779a5a5
+proxy:  docker.io/nginxinc/nginx-unprivileged:1.30.6-alpine@sha256:f5116ed4606f3eb015dd4a8e28cb9b351476dc0ad4bc6e9f93b19cec130cdf03
+RESULT certs OK
+RESULT secrets-not-in-config OK (garage.toml holds neither secret; both come from environment variables)
+RESULT garage-start OK
+RESULT proxy-start OK
+--- init run: first
+layout: role assigned and applied
+bucket: created
+key: imported
+permissions: read and write granted (idempotent)
+INIT OK
+RESULT init-first rc=0
+RESULT init-first-check OK (admin token from the environment variable works)
+--- init run: wrong-token
+INIT FAILED: GET /v2/GetClusterStatus -> HTTP 403: {
+  "code": "AccessDenied",
+  "message": "Forbidden: Invalid bearer token",
+  "region": "garage",
+  "path": "/v2/GetClusterStatus"
+}
+RESULT init-wrong-token rc=1
+RESULT token-enforced OK (wrong token rejected)
+--- hostname mismatch: connect to the container IP, which is not in the certificate names, with the right CA
+2026-11-21 06:41:49.675 P00  ERROR: [095]: unable to find hostname '172.19.0.2' in certificate common name or subject alternative names
+RESULT hostname-mismatch OK (rejected with a certificate error, rc=95)
+--- offline backup of an initdb directory plus a 100 MB random file, through the TLS front
+STEP=stanza-create RESULT=OK
+2026-11-21 06:41:56.483 P00   WARN: option 'repo1-retention-full' is not set for 'repo1-retention-full-type=count', the repository may run out of space
+                                    HINT: to retain full backups indefinitely (without warning), set option 'repo1-retention-full' to the maximum.
+STEP=backup RESULT=OK
+stanza: verify12193
+    status: ok
+    cipher: none
+
+    db (current)
+        wal archive min/max (18): none present
+
+        full backup: 20261121-064156F
+            timestamp start/stop: 2026-11-21 06:41:56+00 / 2026-11-21 06:42:08+00
+            wal start/stop: n/a
+            database size: 138.9MB, database backup size: 138.9MB
+            repo1: backup set size: 104.5MB, backup size: 104.5MB
+RESULT backup-large OK (elapsed 20 s)
+--- Garage view of the bucket
+Created:         2026-11-21 06:41:47.713 +00:00
+
+Size:            110.0 MB (104.9 MiB)
+Objects:         977
+
+Website access:  false
+
+Global alias:    pgbackrest
+
+==== KEYS FOR THIS BUCKET ====
+Permissions  Access key                              Local aliases
+RW           <key-id>  pgbackrest  
+--- recreate both containers on the same data directories
+RESULT garage-start OK
+RESULT proxy-start OK
+--- init run: after-restart
+layout: role already assigned
+bucket: already exists
+key: already imported
+permissions: read and write granted (idempotent)
+INIT OK
+RESULT init-after-restart rc=0
+RESULT restart-init OK (layout, bucket and key persisted)
+--- repository after the restart (the stanza and the backup must still be there)
+stanza: verify12193
+    status: ok
+    cipher: none
+
+    db (current)
+        wal archive min/max (18): none present
+
+        full backup: 20261121-064156F
+            timestamp start/stop: 2026-11-21 06:41:56+00 / 2026-11-21 06:42:08+00
+            wal start/stop: n/a
+            database size: 138.9MB, database backup size: 138.9MB
+            repo1: backup set size: 104.5MB, backup size: 104.5MB
+RESULT restart-data OK (backup still listed)
+VERIFY DONE

@@ -1,0 +1,46 @@
+EXPECTED RED LINES: STEP=negative-control RESULT=FAIL is not a pass and was not explained in this run. The harness did not compare it with its expectation. Superseded by OBJ-static-checks.txt.
+---- raw output below, unchanged ----
+date_utc: 2026-11-21T06:41:24Z
+garage: docker.io/dxflrs/garage:v2.5.0@sha256:677e5b758e4425a325b811c425c026bf35a4bf42f7ddbaa773de3f4fd779a5a5
+--- 1. Garage v2.5.0: secret options and their environment variables
+        --admin-token <admin-token>
+            [env: GARAGE_ADMIN_TOKEN]
+        --admin-token-file <admin-token-file>
+            Admin API authentication token file path, replaces `admin.admin_token` in config.toml and admin-token when
+            running the Garage daemon [env: GARAGE_ADMIN_TOKEN_FILE=]
+            Skip permission check on files containing secrets [env: GARAGE_ALLOW_WORLD_READABLE_SECRETS=]
+            Path to configuration file [env: GARAGE_CONFIG_FILE=]  [default: /etc/garage.toml]
+            daemon [env: GARAGE_METRICS_TOKEN]
+            when running the Garage daemon [env: GARAGE_METRICS_TOKEN_FILE=]
+            Host to connect to for admin operations, in the format: `<full-node-id>@<ip>:<port>` [env: GARAGE_RPC_HOST=]
+    -s, --rpc-secret <rpc-secret>
+            operations [env: GARAGE_RPC_SECRET]
+        --rpc-secret-file <rpc-secret-file>
+            RPC secret network key, used to replace `rpc_secret` in config.toml and rpc-secret when running the daemon
+            or doing admin operations [env: GARAGE_RPC_SECRET_FILE=]
+    admin-token       Operations on admin API tokens
+RESULT env-GARAGE_RPC_SECRET: listed in --help
+RESULT env-GARAGE_ADMIN_TOKEN: listed in --help
+--- 2. tools in the pg-ha image
+env: /usr/bin/env
+sh: /usr/bin/sh
+python3: /opt/patroni/bin/python3
+dd: /usr/bin/dd
+--- 3. kubectl jsonpath with a hyphenated key, on the existing pg-credentials Secret (length only, value not printed)
+decoded length: 32
+RESULT jsonpath-hyphen: OK
+["app-password","replication-password","restapi-password","rewind-password","superuser-password"]
+--- 4. client pod from tests/obj-s3.sh: render, server-side dry run, script syntax, probe output
+template lines: 83
+RESULT pod-dry-run: OK (pod/obj2-client created (server dry run))
+yaml OK, script lines: 36
+RESULT yaml-parse: OK
+RESULT shell-syntax: OK
+--- script run with nothing listening: 5 probes must print closed, and the negative control must report an unexpected error (no repository configured)
+PROBE host=127.0.0.1 port=3900 RESULT=closed
+PROBE host=127.0.0.1 port=3903 RESULT=closed
+PROBE host=127.0.0.1 port=3910 RESULT=closed
+PROBE host=127.0.0.1 port=3913 RESULT=closed
+PROBE host=127.0.0.1 port=3901 RESULT=closed
+STEP=negative-control RESULT=FAIL
+STATIC CHECKS DONE

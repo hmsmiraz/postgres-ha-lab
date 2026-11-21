@@ -1,0 +1,73 @@
+# Creates the layout, bucket, key and permissions through the Garage admin API (over verified TLS).
+# Safe to run again. objstore-up.sh deletes and recreates this Job on every run.
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: objstore-init
+  namespace: pg-ha
+spec:
+  backoffLimit: 6
+  template:
+    metadata:
+      labels:
+        app: objstore-init
+    spec:
+      restartPolicy: OnFailure
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 999
+        runAsGroup: 999
+        seccompProfile:
+          type: RuntimeDefault
+      containers:
+        - name: init
+          image: __IMAGE__
+          imagePullPolicy: IfNotPresent
+          command: ["python3", "/init/objstore-init.py"]
+          env:
+            - name: OBJSTORE_ADMIN_URL
+              value: https://objstore.pg-ha.svc.cluster.local:3903
+            - name: OBJSTORE_CA_FILE
+              value: /certs/ca.crt
+            - name: ADMIN_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: objstore-admin
+                  key: admin-token
+            - name: ACCESS_KEY_ID
+              valueFrom:
+                secretKeyRef:
+                  name: objstore-credentials
+                  key: access-key-id
+            - name: SECRET_ACCESS_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: objstore-credentials
+                  key: secret-access-key
+          resources:
+            requests:
+              cpu: 10m
+              memory: 32Mi
+            limits:
+              memory: 128Mi
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop: ["ALL"]
+          volumeMounts:
+            - name: init
+              mountPath: /init
+              readOnly: true
+            - name: tls
+              mountPath: /certs
+              readOnly: true
+      volumes:
+        - name: init
+          configMap:
+            name: objstore-init
+        - name: tls
+          secret:
+            secretName: objstore-tls
+            items:
+              - key: ca.crt
+                path: ca.crt

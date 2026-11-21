@@ -1,0 +1,21 @@
+EXPECTED RED LINES: none.
+---- raw output below, unchanged ----
+date_utc: 2026-11-21T09:33:02Z
+Image: "pg-ha:18.7-patroni4.1.5-pgbackrest2.60.0" with ID "sha256:3e0026e32c00002e03c61ac21837557cf5b1b41f04c79dd0463f50debcda5f57" found to be already present on all nodes.
+namespace/pg-ha unchanged
+secret objstore-credentials created
+secret objstore-admin created
+secret objstore-tls created
+configmap/objstore-config created
+service/objstore created
+statefulset.apps/objstore created
+Waiting for 1 pods to be ready...
+partitioned roll out complete: 1 new pods have been updated...
+configmap/objstore-init created
+job.batch/objstore-init created
+job.batch/objstore-init condition met
+
+real	1m34.927s
+user	0m3.154s
+sys	0m1.914s
+up exit=0

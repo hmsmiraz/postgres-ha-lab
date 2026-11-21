@@ -1,0 +1,30 @@
+EXPECTED RED LINES: RESULT pgbackrest-roundtrip rc=1 with TLS error wrong version number and STEP=stanza-create RESULT=FAIL are a deliberate demonstration that plain HTTP does not work. Exit code 0 of the script does not mean pass.
+---- raw output below, unchanged ----
+date_utc: 2026-11-21T06:11:32Z
+image: docker.io/dxflrs/garage:v2.5.0@sha256:677e5b758e4425a325b811c425c026bf35a4bf42f7ddbaa773de3f4fd779a5a5
+--- pg-ha image: python3?
+/opt/patroni/bin/python3
+Python 3.13.5
+RESULT garage-start OK
+[2m2026-11-21T06:11:34.391092Z[0m [32m INFO[0m [2mgarage_net::netapp[0m[2m:[0m Connected to 127.0.0.1:3901, negotiating handshake...
+[2m2026-11-21T06:11:34.434616Z[0m [32m INFO[0m [2mgarage_net::netapp[0m[2m:[0m Connection established to b36149b264a43453
+==== HEALTHY NODES ====
+ID                Hostname      Address         Tags  Zone  Capacity          DataAvail  ResyncQueue  Version
+b36149b264a43453  053b1bdb595f  127.0.0.1:3901              NO ROLE ASSIGNED             0            v2.5.0
+[2m2026-11-21T06:11:34.669856Z[0m [32m INFO[0m [2mgarage_net::netapp[0m[2m:[0m Connected to 127.0.0.1:3901, negotiating handshake...
+[2m2026-11-21T06:11:34.714564Z[0m [32m INFO[0m [2mgarage_net::netapp[0m[2m:[0m Connection established to b36149b264a43453
+RESULT node-id OK
+RESULT layout-assign OK
+RESULT layout-apply OK
+RESULT bucket-create OK
+RESULT key-import OK
+RESULT bucket-allow OK
+--- admin API from the pg-ha image (python3, plain HTTP, token not printed)
+RESULT admin-api OK
+http 200 top-level keys: ['layoutVersion', 'nodes']
+--- pgBackRest against plain-HTTP Garage
+STEP=initdb RESULT=OK
+2026-11-21 06:12:46.619 P00  ERROR: [101]: TLS error [1:167772427] wrong version number
+STEP=stanza-create RESULT=FAIL
+RESULT pgbackrest-roundtrip rc=1
+SPIKE DONE

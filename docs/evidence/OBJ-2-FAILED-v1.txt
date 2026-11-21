@@ -1,0 +1,5 @@
+EXPECTED RED LINES: FAIL on StatefulSet objstore is deliberate (test first). Test v1 itself is invalid: it uses repo-put and repo-rm, which pgBackRest 2.60.0 does not have, and grep, which the image lacks.
+---- raw output below, unchanged ----
+date: 2026-11-21T05:41:59Z
+PASS: cluster reachable, pg-ha present
+FAIL: StatefulSet objstore does not exist

@@ -1,0 +1,16 @@
+EXPECTED RED LINES: the privileged-pod control must be reported as rejected, and the empty-config control must find no 3900 listener. Both are deliberate controls.
+---- raw output below, unchanged ----
+date_utc: 2026-11-21T09:31:38Z
+PASS: no unreplaced placeholders
+PASS: kubeconform: Summary: 4 resources found in 4 files - Valid: 4, Invalid: 0, Errors: 0, Skipped: 0
+PASS: nginx config extracted (26 lines, both TLS listeners present)
+PASS: garage.toml extracted, S3, admin and RPC all bind to loopback
+PASS: garage.toml holds no secret
+PASS: nginx -T loads the ConfigMap config: both TLS server blocks appear in the loaded configuration
+PASS: control: with an empty config the check finds no 3900 listener (the nginx check discriminates)
+PASS: Garage starts with the ConfigMap garage.toml and both secrets from environment variables; '/garage status' works (the probe command)
+PASS: control: a privileged pod is rejected in pg-ha (violates PodSecurity "restricted)
+PASS: admission accepts the pod-sts pod (restricted profile): pod/objstore-psa-check created (server dry run)
+PASS: admission accepts the pod-job pod (restricted profile): pod/objstore-init-psa-check created (server dry run)
+PASS: Secret volume defaultMode is 288, which is octal 0440
+ALL STATIC MANIFEST CHECKS PASSED

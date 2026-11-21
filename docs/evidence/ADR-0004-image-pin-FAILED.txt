@@ -1,0 +1,9 @@
+EXPECTED RED LINES: all five FAIL lines are deliberate: the test was written before the pin existed (test first).
+---- raw output below, unchanged ----
+date_utc: 2026-11-21T05:32:01Z
+OBJSTORE_IMAGE=<unset>
+FAIL  OBJSTORE_IMAGE is defined in versions.env
+FAIL  reference is pinned as name:tag@sha256:<64 hex>
+FAIL  tag is not latest
+FAIL  pinned reference pulls anonymously
+FAIL  pulled image digest equals the pinned digest

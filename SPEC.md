@@ -44,6 +44,13 @@ Targets below are goals. Measured values go in the evidence files.
 - FO-6: RTO method: a probe inserts a timestamped row every 100 ms, and RTO is the largest gap between successful writes.
   Evidence: the FO-1 to FO-3 files.
 
+## OBJ: Object store
+- OBJ-1: The object store image and its TLS proxy image are pinned by tag and digest and pull anonymously. ADR-0004, ADR-0005.
+  Test: `tests/obj-image.sh`. Evidence: `docs/evidence/OBJ-1.txt`
+- OBJ-2: The object store runs in the cluster behind TLS. Garage S3, admin and RPC ports listen on loopback only, and the TLS front exposes only S3 (3900) and admin (3903). Bucket, key and permissions are created by an idempotent Job, not by hand.
+  Test: `tests/obj-s3.sh`. Pass: pgBackRest write, list, read and delete succeed over TLS with certificate verification on and fail without the CA; plaintext ports are closed on the pod IP; the cluster holds no CA private key (the Secret objstore-tls holds exactly ca.crt, tls.crt and tls.key); the three access-granting secret values (secret access key, admin token, RPC secret) appear in no repo file (working tree, not git history), evidence file, ConfigMap or pod log; the access key ID, an identifier that Garage writes to its request logs, appears in no repo file (working tree, not git history), evidence file or ConfigMap.
+  Evidence: `docs/evidence/OBJ-2.txt`
+
 ## BK: Backups
 - BK-1: Continuous WAL archiving to object storage.
   Test: `tests/bk-wal.sh`. Pass: `pgbackrest check` succeeds and new WAL objects appear.

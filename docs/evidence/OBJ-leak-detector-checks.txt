@@ -1,0 +1,11 @@
+EXPECTED RED LINES: none. NOTE: the log-grep controls here feed tiny input and cannot show the grep -q SIGPIPE hazard (see OBJ-leak-pipefail-hazard.txt). The empty-pattern-hazard line says CONFIRMED on purpose: it documents a hazard and is not a failure.
+---- raw output below, unchanged ----
+date_utc: 2026-11-21T06:41:36Z
+RESULT git-grep-before-planting: OK, silent
+RESULT git-grep-positive: OK, fires on the planted value
+RESULT git-grep-negative: OK, silent for a value that is not there
+RESULT git-grep-after-removal: OK, silent again
+RESULT log-grep-positive: OK, fires
+RESULT log-grep-negative: OK, silent
+RESULT empty-pattern-hazard: CONFIRMED: an empty line in a pattern file matches everything, so obj-s3.sh must keep its non-empty checks
+LEAK DETECTOR CHECKS DONE

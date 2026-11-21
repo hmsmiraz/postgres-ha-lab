@@ -1,0 +1,15 @@
+EXPECTED RED LINES: the five FAIL lines for OBJSTORE_TLS_PROXY_IMAGE are deliberate: the test was written before the pin existed.
+---- raw output below, unchanged ----
+date_utc: 2026-11-21T06:18:56Z
+=== OBJSTORE_IMAGE=docker.io/dxflrs/garage:v2.5.0@sha256:677e5b758e4425a325b811c425c026bf35a4bf42f7ddbaa773de3f4fd779a5a5
+PASS  OBJSTORE_IMAGE is defined in versions.env
+PASS  OBJSTORE_IMAGE is pinned as name:tag@sha256:<64 hex>
+PASS  OBJSTORE_IMAGE tag is not latest
+PASS  OBJSTORE_IMAGE pulls anonymously
+PASS  OBJSTORE_IMAGE pulled digest equals pinned digest
+=== OBJSTORE_TLS_PROXY_IMAGE=<unset>
+FAIL  OBJSTORE_TLS_PROXY_IMAGE is defined in versions.env
+FAIL  OBJSTORE_TLS_PROXY_IMAGE is pinned as name:tag@sha256:<64 hex>
+FAIL  OBJSTORE_TLS_PROXY_IMAGE tag is not latest
+FAIL  OBJSTORE_TLS_PROXY_IMAGE pulls anonymously
+FAIL  OBJSTORE_TLS_PROXY_IMAGE pulled digest equals pinned digest

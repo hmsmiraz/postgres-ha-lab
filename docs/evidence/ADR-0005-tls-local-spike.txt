@@ -1,0 +1,30 @@
+EXPECTED RED LINES: the negative-control ERROR 095 (no CA file) and the ports reported closed are deliberate controls.
+---- raw output below, unchanged ----
+date_utc: 2026-11-21T06:22:34Z
+garage: docker.io/dxflrs/garage:v2.5.0@sha256:677e5b758e4425a325b811c425c026bf35a4bf42f7ddbaa773de3f4fd779a5a5
+proxy:  docker.io/nginxinc/nginx-unprivileged:1.30.6-alpine@sha256:f5116ed4606f3eb015dd4a8e28cb9b351476dc0ad4bc6e9f93b19cec130cdf03
+RESULT certs OK
+RESULT garage-start OK
+RESULT layout-assign OK
+RESULT layout-apply OK
+RESULT bucket-create OK
+RESULT key-import OK
+RESULT bucket-allow OK
+RESULT proxy-start OK
+--- reachability from another container on the network
+port 3900 (TLS front): open
+port 3910 (Garage S3, loopback only): closed ConnectionRefusedError
+port 3903 (admin, loopback only): closed ConnectionRefusedError
+port 3901 (RPC, loopback only): closed ConnectionRefusedError
+--- negative control: verification on, CA file NOT provided (must fail)
+2026-11-21 06:22:44.129 P00  ERROR: [095]: unable to verify certificate presented by 'objstore.pg-ha.svc.cluster.local:3900 (172.19.0.2)': [20] unable to get local issuer certificate
+RESULT negative-control OK (failed as expected, rc=95)
+--- round trip: verification on, CA file provided
+STEP=initdb RESULT=OK
+STEP=stanza-create RESULT=OK
+STEP=ls RESULT=OK
+STEP=get RESULT=OK
+STEP=stanza-delete RESULT=OK
+STEP=cleanup RESULT=OK
+RESULT roundtrip-verified-tls rc=0
+SPIKE DONE
