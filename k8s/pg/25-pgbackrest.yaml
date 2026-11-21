@@ -19,6 +19,7 @@ data:
   PGBACKREST_REPO1_S3_REGION: garage
   PGBACKREST_REPO1_S3_URI_STYLE: path
   PGBACKREST_REPO1_STORAGE_CA_FILE: /certs/ca.crt
+  PGBACKREST_REPO1_RETENTION_FULL: "2"
 ---
 apiVersion: v1
 kind: ConfigMap

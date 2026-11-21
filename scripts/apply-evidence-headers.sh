@@ -75,3 +75,6 @@ add_header "$e/BK-2-pgserver.txt" "none. The Terminating line for the scratch po
 add_header "$e/BK-2-FAILED.txt" "the single FAIL line for the missing CronJob pgbackrest-backup is deliberate (test first). The PASS line before it is the cluster health check."
 add_header "$e/BK-2-cronjob-up.txt" "none. The script line count (23) differs from the 22 predicted in the plan: that was a miscount, not a defect. The CronJob is created and no Job exists yet except objstore-init."
 add_header "$e/BK-2.txt" "none. The INFO line for bk-schedule-test-4 says result=failed on purpose: it is the negative control (broken CA paths), and the PASS line after it says the Job failed and added no backup. The backups made by jobs 1 to 3 stay in the repository on purpose."
+add_header "$e/BK-3-FAILED.txt" "the single FAIL line for the missing PGBACKREST_REPO1_RETENTION_FULL setting is deliberate (test first). The PASS line before it is the cluster health check."
+add_header "$e/BK-3-config-up.txt" "none. The listing before the apply shows 2 full backups and 1 incremental backup, the state the retention test starts from."
+add_header "$e/BK-3.txt" "none. The oldest full backup and its incremental backup were expired on purpose: the PASS line about the expiry is the finding. The oldest archived WAL equals the start WAL of the oldest kept full backup, which is the boundary and passes."

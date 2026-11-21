@@ -1,0 +1,5 @@
+EXPECTED RED LINES: the single FAIL line for the missing PGBACKREST_REPO1_RETENTION_FULL setting is deliberate (test first). The PASS line before it is the cluster health check.
+---- raw output below, unchanged ----
+date: 2026-11-21T17:12:15Z
+PASS: cluster healthy: 1 leader and 2 streaming replicas
+FAIL: PGBACKREST_REPO1_RETENTION_FULL is not set in the ConfigMap pgbackrest-env
