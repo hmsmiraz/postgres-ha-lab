@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 # RS-3 (on demand, ADR-0006, single-pod option): scripts/restore-test.sh restores the latest backup plus the archived WAL into one
 # scratch Postgres pod in the fixed namespace pg-restore (emptyDir data, plain Postgres without Patroni, archiving off), waits for
-# the end of recovery, runs a data check given by the caller, and removes the pod unless RESTORE_TEST_KEEP=1. The file keeps its
-# SPEC name (rs-scheduled.sh) although the test is on demand.
+# the end of recovery, runs a data check given by the caller, and removes the pod unless RESTORE_TEST_KEEP=1.
+# The file was renamed from rs-scheduled.sh to rs-restore-test.sh because the test is on demand (ADR-0006 amendment 1).
 # Checked here: pg-ha healthy, the script and its pod manifest exist, planted-input controls; the table rs_scratch (300 rows) is
 # written into the live appdb and its WAL is archived; the script runs with the kept pod; independently of the script: the pod is
 # ready, recovery has ended, the checksum equals the live one (control: a changed-value checksum matches its live twin and

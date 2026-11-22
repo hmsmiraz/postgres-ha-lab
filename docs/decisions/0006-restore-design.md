@@ -30,3 +30,11 @@ objstore-tls, as the Secret objstore-ca. The restored roles carry the live passw
 ## Not verified yet
 That Patroni keeps the restore settings with keep_existing_recovery_conf, that the restored leader promotes by itself,
 that the replicas catch up from the leader, and that archiving stays off on every member.
+
+## Amendment 1 (name of the RS-3 test, 2026-11-22)
+Old: the test of RS-3 was tests/rs-scheduled.sh, the name from the first SPEC wording ("Scheduled restore test").
+New: tests/rs-restore-test.sh. SPEC.md names it in the RS-3 entry.
+Why: the human changed RS-3 to an on-demand restore test (SPEC edit in commit a3054f0) and asked to rename the file, because the
+name said "scheduled" for a test that is not scheduled.
+What did not change: the checks of the test. Only one comment sentence changed. docs/evidence/RS-3.txt was produced under the old
+name, and the test was not rerun after the rename (its output does not print the file name).

@@ -60,7 +60,8 @@ Targets below are goals. Measured values go in the evidence files.
 - BK-3: Retention enforced by pgBackRest settings.
   Test: `tests/bk-retention.sh`. Pass: backups beyond the limit are expired.
   Evidence: `docs/evidence/BK-3.txt`
-- BK-4: Backups verified automatically (`pgbackrest verify` plus the restore test in RS-3).
+- BK-4: Backups verified automatically (`pgbackrest verify` after each backup in the backup CronJob, plus the restore test in RS-3).
+  Test: `tests/bk-verify.sh`. Pass: verify runs after a backup and exits 0, and the restore test of RS-3 passes.
   Evidence: `docs/evidence/BK-4.txt`
 
 ## RS: Restore
@@ -71,7 +72,7 @@ Targets below are goals. Measured values go in the evidence files.
   Test: `tests/rs-pitr.sh`. Pass: rows written before the target time exist, rows written after do not.
   Evidence: `docs/evidence/RS-2.txt`
 - RS-3: Restore test to a scratch instance, run on demand by one script, with a data check.
-  Test: `tests/rs-scheduled.sh`. Evidence: `docs/evidence/RS-3.txt`
+  Test: `tests/rs-restore-test.sh`. Evidence: `docs/evidence/RS-3.txt`
 
 ## OPS: Operability
 - OPS-1: `make up` brings up everything. Test: from a clean machine, `make up && make test` passes.
