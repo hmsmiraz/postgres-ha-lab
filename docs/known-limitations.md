@@ -110,14 +110,14 @@ Each item says how it was found. Items marked "not tested" are open questions, n
   covered: secret values from before the BK-1 rebuild, binary files, and objects that GitHub served before the repository was
   recreated.
 - pgbackrest verify (2.60.0) exits 0 even when its report says "status: error" (observed for a backup set that does not exist:
-  docs/evidence/BK-4-run2-FAILED.txt, docs/evidence/BK-4-v3.txt) and prints nothing unless --output=text is given. Since ADR-0002
+  docs/evidence/BK-4-run2-FAILED.txt, docs/evidence/BK-4.txt) and prints nothing unless --output=text is given. Since ADR-0002
   amendment 2 the backup CronJob script runs "verify --output=text --verbose" and fails the Job unless the exit code is 0 and the
   report has the line "status: ok"; tests/bk-verify.sh shows this live with a missing backup set. Not tested: whether verify
   reports "status: error" for a damaged backup or archive file (only the missing-set error was produced), and a pgBackRest
   version that words the report differently (it would fail the Job, the safe direction).
 - Two failure cases of the backup script (verify exits non-zero after a healthy report, and an empty report) were run only
   against a stand-in for pgbackrest in a terminal, and that output is not saved in the repository. The error-report case with
-  exit 0 is shown live by Job 2 of tests/bk-verify.sh (docs/evidence/BK-4-v3.txt).
+  exit 0 is shown live by Job 2 of tests/bk-verify.sh (docs/evidence/BK-4.txt).
 - tests/bk-schedule.sh, tests/bk-retention.sh and tests/rs-full.sh make Jobs from the CronJob template, which now also run
   verify and fail if the report lacks "status: ok". They were not rerun after the script gained the verify step (ADR-0002
   amendments 1 and 2); the final suite rerun (handoff item 30) covers it.

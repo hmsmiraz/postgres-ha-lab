@@ -1,15 +1,19 @@
-EXPECTED RED LINES: none. The INFO lines give the baseline (2 full and 2 incremental backups) and the age of the newest full backup. The test shows the positive path only (ADR-0002 amendment 1): that a failing verify fails the Job is not tested. The incremental backup made by the test stays in the repository on purpose.
+EXPECTED RED LINES: none. Run of the current tests/bk-verify.sh against the script that runs verify --output=text --verbose (ADR-0002 amendment 2); it was saved as BK-4-v3.txt first and renamed. The INFO line for the missing backup set says exit 0: that is reported and not asserted, because pgbackrest verify exits 0 even when it reports status error. bk-verify-test-2 result=failed is deliberate: it is the negative control, and the PASS line after it says the backup still ran and the log says verify FAILED. The two incremental backups made by the test stay in the repository on purpose.
 ---- raw output below, unchanged ----
-date: 2026-11-22T14:06:03Z
+date: 2026-11-22T15:11:27Z
 PASS: pg-ha healthy: 1 leader and 2 streaming replicas
 PASS: CronJob pgbackrest-backup exists
 PASS: the RS-3 restore test evidence exists and ends with ALL CHECKS PASSED
-PASS: controls: the leak scanner and the verify matcher fire on planted input, and the matcher ignores a backup command
-PASS: the backup CronJob script runs pgbackrest verify
-INFO: baseline full=2 incr=2, the newest full backup is 35348 s old
+PASS: controls: the leak scanner fires, the script matcher rejects a backup command and the old verify form, and the ok-line and error-line matchers tell good from bad reports
+PASS: the backup CronJob script runs pgbackrest verify --output=text --verbose and tests the report for status: ok
+INFO: baseline full=2 incr=3, the newest full backup is 39272 s old
 PASS: the newest full backup is younger than 6 days, so the Jobs make incremental backups and nothing expires
-INFO: bk-verify-test-1 result=complete, log lines=3
-PASS: job 1 added one incremental backup (incr 2 to 3), verified it and logged verify ok
-PASS: a direct pgbackrest verify in a pg pod exits 0 (independent of the script)
+INFO: bk-verify-test-1 result=complete, log lines=19
+PASS: job 1 added one incremental backup (incr 3 to 4), logged the verify report with status: ok and verify ok
+PASS: a direct pgbackrest verify in a pg pod exits 0 and prints status: ok (independent of the script)
+INFO: verify of the missing set 19990101-000000F exited 0 (reported, not asserted)
+PASS: a direct verify of a backup set that does not exist prints status: error and no status: ok
+INFO: bk-verify-test-2 result=failed, log lines=5
+PASS: job 2 with a missing verify set failed, the backup still ran (incr 4 to 5), and the log says verify FAILED
 PASS: no secret value, key line or private key marker in the job logs
 ALL CHECKS PASSED

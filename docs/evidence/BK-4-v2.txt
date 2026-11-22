@@ -1,0 +1,15 @@
+EXPECTED RED LINES: none. Run of the first passing version of tests/bk-verify.sh (positive path only, ADR-0002 amendment 1) against the backup script that ran verify with no output and failed only on a non-zero exit. It was committed as docs/evidence/BK-4.txt (commit 79e6b2d) and is superseded by BK-4.txt. The INFO lines give the baseline (2 full and 2 incremental backups) and the age of the newest full backup.
+---- raw output below, unchanged ----
+date: 2026-11-22T14:06:03Z
+PASS: pg-ha healthy: 1 leader and 2 streaming replicas
+PASS: CronJob pgbackrest-backup exists
+PASS: the RS-3 restore test evidence exists and ends with ALL CHECKS PASSED
+PASS: controls: the leak scanner and the verify matcher fire on planted input, and the matcher ignores a backup command
+PASS: the backup CronJob script runs pgbackrest verify
+INFO: baseline full=2 incr=2, the newest full backup is 35348 s old
+PASS: the newest full backup is younger than 6 days, so the Jobs make incremental backups and nothing expires
+INFO: bk-verify-test-1 result=complete, log lines=3
+PASS: job 1 added one incremental backup (incr 2 to 3), verified it and logged verify ok
+PASS: a direct pgbackrest verify in a pg pod exits 0 (independent of the script)
+PASS: no secret value, key line or private key marker in the job logs
+ALL CHECKS PASSED

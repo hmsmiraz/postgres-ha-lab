@@ -61,7 +61,7 @@ Targets below are goals. Measured values go in the evidence files.
   Test: `tests/bk-retention.sh`. Pass: backups beyond the limit are expired.
   Evidence: `docs/evidence/BK-3.txt`
 - BK-4: Backups verified automatically (`pgbackrest verify` after each backup in the backup CronJob, plus the restore test in RS-3).
-  Test: `tests/bk-verify.sh`. Pass: verify runs after a backup and exits 0, and the restore test of RS-3 passes.
+  Test: `tests/bk-verify.sh`. Pass: verify runs after each backup and its report says status ok, a verify error fails the Job, and the restore test of RS-3 passes.
   Evidence: `docs/evidence/BK-4.txt`
 
 ## RS: Restore
