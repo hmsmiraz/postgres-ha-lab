@@ -21,3 +21,16 @@ CronJobs run pgBackRest from the same pinned image and reach the Postgres pods t
 - Backup, verify and restore scripts all use the same tool.
 - Repository credentials are Kubernetes Secrets generated at `make up`.
 - A new port (8432) and a certificate set exist; both must be covered by the NetworkPolicies of SEC-3.
+
+## Amendment 1 (BK-4 test, 2026-11-22)
+Old check: the first version of tests/bk-verify.sh (its failed run is docs/evidence/BK-4-run2-FAILED.txt) had two negative
+controls after the positive path: (A) pgbackrest verify of a backup set that does not exist must exit non-zero, (B) a Job with
+that set in VERIFY_SET must fail and log "verify FAILED".
+New check: both controls are removed. The test keeps the positive path: the backup script runs verify, Job 1 adds one
+incremental backup and logs "verify ok", and a direct verify in a pg pod exits 0.
+Why: pgBackRest 2.60.0 verify exits 0 and prints "status: error" and "backup set ... is not valid" for a set that does not
+exist ("verify command end: completed successfully"). The controls assumed a non-zero exit and could not pass. Of the
+alternatives (judge the output text, use an invalid option, damage a copy of a repository) the human chose to drop the controls.
+Not verified: that a failing verify fails the Job. The script checks only the exit code, and verify returned 0 for the one error
+case tried. Whether verify exits non-zero for a damaged backup or archive file was not tested. The failure paths of the script
+were run only against a stand-in for pgbackrest, and that output is not saved in the repository.

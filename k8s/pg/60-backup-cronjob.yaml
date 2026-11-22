@@ -29,6 +29,17 @@ data:
     fi
     echo "backup-cronjob: type=$type"
     pgbackrest --stanza="$STANZA" --type="$type" backup
+    if [ -n "${VERIFY_SET:-}" ]; then
+      set -- --set="$VERIFY_SET"
+    else
+      set --
+    fi
+    if pgbackrest --stanza="$STANZA" verify "$@"; then
+      echo "backup-cronjob: verify ok"
+    else
+      echo "backup-cronjob: verify FAILED" >&2
+      exit 1
+    fi
     echo "backup-cronjob: done"
 ---
 apiVersion: batch/v1

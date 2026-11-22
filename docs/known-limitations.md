@@ -109,3 +109,10 @@ Each item says how it was found. Items marked "not tested" are open questions, n
   the pre-commit hook's pattern found 0 matches in file content, commit messages, author lines, file paths and refs. Not
   covered: secret values from before the BK-1 rebuild, binary files, and objects that GitHub served before the repository was
   recreated.
+- pgbackrest verify (2.60.0) exited 0 and printed "status: error" and "backup set ... is not valid" when asked for a backup set
+  that does not exist (observed on 2026-11-22 in a terminal; the output is not saved, the failed control is in
+  docs/evidence/BK-4-run2-FAILED.txt). The backup CronJob script fails a Job only on a non-zero exit of verify, so a verify that
+  reports an error with exit 0 would not fail the Job. Whether verify exits non-zero for a damaged backup or archive file was
+  not tested.
+- The failure paths of the backup script (verify FAILED, VERIFY_SET) were run only against a stand-in for pgbackrest in a
+  terminal, and that output is not saved in the repository. tests/bk-verify.sh shows the positive path only (ADR-0002 amendment 1).

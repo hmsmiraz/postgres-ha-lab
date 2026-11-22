@@ -1,0 +1,8 @@
+EXPECTED RED LINES: the single FAIL line (the backup CronJob script does not run pgbackrest verify) is deliberate (test first). The four PASS lines before it are the pg-ha health check, the CronJob check, the RS-3 evidence check and the planted-input controls.
+---- raw output below, unchanged ----
+date: 2026-11-22T13:23:09Z
+PASS: pg-ha healthy: 1 leader and 2 streaming replicas
+PASS: CronJob pgbackrest-backup exists
+PASS: the RS-3 restore test evidence exists and ends with ALL CHECKS PASSED
+PASS: controls: the leak scanner and the verify matcher fire on planted input, and the matcher ignores a backup command
+FAIL: the backup CronJob script does not run pgbackrest verify (BK-4 is not implemented yet)

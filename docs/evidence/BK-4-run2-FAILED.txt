@@ -1,0 +1,14 @@
+EXPECTED RED LINES: the single FAIL line (negative control A: pgbackrest verify of a backup set that does not exist exited 0) is a real finding and not a deliberate red line: the prediction that verify fails for a missing set was wrong. The PASS lines before it are valid. Job 2 (negative control B) and the job-log scan did not run.
+---- raw output below, unchanged ----
+date: 2026-11-22T13:39:18Z
+PASS: pg-ha healthy: 1 leader and 2 streaming replicas
+PASS: CronJob pgbackrest-backup exists
+PASS: the RS-3 restore test evidence exists and ends with ALL CHECKS PASSED
+PASS: controls: the leak scanner and the verify matcher fire on planted input, and the matcher ignores a backup command
+PASS: the backup CronJob script runs pgbackrest verify
+INFO: baseline full=2 incr=1, the newest full backup is 33745 s old
+PASS: the newest full backup is younger than 6 days, so the Jobs make incremental backups and nothing expires
+INFO: bk-verify-test-1 result=complete, log lines=3
+PASS: job 1 added one incremental backup (incr 1 to 2), verified it and logged verify ok
+PASS: a direct pgbackrest verify in a pg pod exits 0 (independent of the script)
+FAIL: negative control A: verify of the missing set 19990101-000000F exited 0
