@@ -34,6 +34,15 @@ kubectl -n "$SRC" get secret objstore-tls -o json \
 echo "restore-full: secret objstore-ca created from ca.crt only"
 
 kubectl apply -f k8s/restore/10-rbac.yaml -f k8s/restore/20-config.yaml -f k8s/restore/30-services.yaml >/dev/null
+# Optional point-in-time target (RS-2): RESTORE_TARGET, RESTORE_TYPE (default time), RESTORE_TARGET_ACTION (default promote).
+# pgBackRest reads them from the ConfigMap pgbackrest-env in pg-restore; the pods read it when they start, after this patch.
+RESTORE_TYPE="${RESTORE_TYPE:-time}"
+RESTORE_TARGET_ACTION="${RESTORE_TARGET_ACTION:-promote}"
+if [ -n "${RESTORE_TARGET:-}" ]; then
+  kubectl -n "$DST" patch configmap pgbackrest-env --type merge \
+    -p "$(jq -n --arg t "$RESTORE_TYPE" --arg g "$RESTORE_TARGET" --arg a "$RESTORE_TARGET_ACTION" '{data:{PGBACKREST_TYPE:$t,PGBACKREST_TARGET:$g,PGBACKREST_TARGET_ACTION:$a}}')" >/dev/null
+  echo "restore-full: point-in-time target set: type $RESTORE_TYPE, target $RESTORE_TARGET, action $RESTORE_TARGET_ACTION"
+fi
 sed "s|__IMAGE__|${IMG}|g" k8s/restore/50-statefulset.yaml | kubectl apply -f - >/dev/null
 echo "restore-full: manifests applied, waiting for the restored cluster"
 kubectl -n "$DST" rollout status sts/pg-restore --timeout=900s

@@ -1,0 +1,22 @@
+EXPECTED RED LINES: none. The NOTICE line about rs_pitr not existing comes from the drop table if exists on the first run. The INFO lines give the newest live archive timeline before and after (5 and 5) and the restored timeline (6): the restored cluster must be on a newer timeline than the archive, and the archive must not change. The target time is a timestamp, not a secret. The live rs_pitr keeps all 1000 rows on purpose; the restored copies hold only the 500 before rows.
+---- raw output below, unchanged ----
+date: 2026-11-22T05:21:18Z
+PASS: pg-ha healthy: 1 leader and 2 streaming replicas
+PASS: restore-full.sh and restore-down.sh are present and executable
+PASS: controls: the static matcher fires on planted input and tells RESTORE_TARGET from RESTORE_TARGET_ACTION
+PASS: restore-full.sh reads RESTORE_TYPE, RESTORE_TARGET and RESTORE_TARGET_ACTION
+PASS: controls: the leak scanner and the timeline matcher fire on planted input
+NOTICE:  table "rs_pitr" does not exist, skipping
+PASS: live rs_pitr holds 500 before rows and 500 after rows; the target time is 2026-11-22 05:21:26.984816+00
+PASS: WAL segment 000000050000000000000018, which holds the after rows, is archived
+INFO: newest timeline in the live archive before the restore: 00000005
+PASS: pg-restore does not exist: the restore starts from an empty namespace
+PASS: restore-full.sh finished with exit 0 with a point-in-time target
+PASS: 3 restored pods are ready; Patroni reports 1 leader and 2 streaming replicas
+PASS: on all three restored pods: 500 rows, 500 before rows with the live checksum, 0 after rows
+PASS: archive_mode is off on every restored member
+INFO: restored timeline 00000006, newest live archive timeline before 00000005 and after 00000005
+PASS: the restored cluster is on a newer timeline and the live archive got no newer timeline
+PASS: pg-ha was not restarted by the restore
+PASS: no secret value in the restored pod logs or the restore script output
+ALL CHECKS PASSED
