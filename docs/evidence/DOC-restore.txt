@@ -1,0 +1,12 @@
+EXPECTED RED LINES: none. The INFO lines give how many paths and RESTORE_ variables the Restore section names. The test is a static check that the document does not contradict the repository; it does not show that the steps work.
+---- raw output below, unchanged ----
+date: 2026-11-22T15:23:10Z
+PASS: controls: every checker accepts a good case and catches a bad one (planted input)
+PASS: docs/runbook.md exists with one Restore section of 76 lines
+PASS: all 15 required topics are mentioned
+INFO: paths named: 13
+INFO: RESTORE_* variables named: 7
+PASS: every named path exists, every named RESTORE_* variable is in a script, and there is no placeholder
+PASS: no line of docs/runbook.md matches the pre-commit hook's pattern (control: the pattern matches 2 of 2 of its own alternatives)
+PASS: no live secret value in docs/runbook.md (the scanner fired on planted input first)
+ALL CHECKS PASSED

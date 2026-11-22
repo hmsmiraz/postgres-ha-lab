@@ -1,0 +1,5 @@
+EXPECTED RED LINES: the single FAIL line (docs/runbook.md does not exist) is deliberate (test first). The PASS line before it is the planted-input controls.
+---- raw output below, unchanged ----
+date: 2026-11-22T14:45:20Z
+PASS: controls: every checker accepts a good case and catches a bad one (planted input)
+FAIL: docs/runbook.md does not exist
