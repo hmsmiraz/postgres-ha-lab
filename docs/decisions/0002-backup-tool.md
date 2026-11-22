@@ -34,3 +34,15 @@ alternatives (judge the output text, use an invalid option, damage a copy of a r
 Not verified: that a failing verify fails the Job. The script checks only the exit code, and verify returned 0 for the one error
 case tried. Whether verify exits non-zero for a damaged backup or archive file was not tested. The failure paths of the script
 were run only against a stand-in for pgbackrest, and that output is not saved in the repository.
+
+## Amendment 2 (BK-4 script and test, 2026-11-22)
+Old check: after Amendment 1 the backup script ran "pgbackrest verify" with the default output (none) and failed the Job only on a
+non-zero exit; tests/bk-verify.sh showed the positive path only (docs/evidence/BK-4.txt).
+New check: the script runs "pgbackrest verify --output=text --verbose", prints the report, and fails the Job unless the exit code
+is 0 and the report has the line "status: ok" (option F2, chosen by the human). tests/bk-verify.sh also checks the live script
+text, that a direct verify of a missing backup set prints "status: error", and that a Job with that set (VERIFY_SET) fails, logs
+"verify FAILED" and still adds one incremental backup.
+Why: pgBackRest 2.60.0 verify exits 0 when it reports "status: error" (observed for a missing backup set) and prints nothing unless
+--output=text is given, so the old script could not fail on a reported error.
+Not verified: that verify reports "status: error" for a damaged backup or archive file (only the missing-set error is produced
+here); that another pgBackRest version keeps the wording "status: ok" (a different wording would fail the Job, the safe direction).

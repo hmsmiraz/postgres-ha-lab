@@ -109,10 +109,15 @@ Each item says how it was found. Items marked "not tested" are open questions, n
   the pre-commit hook's pattern found 0 matches in file content, commit messages, author lines, file paths and refs. Not
   covered: secret values from before the BK-1 rebuild, binary files, and objects that GitHub served before the repository was
   recreated.
-- pgbackrest verify (2.60.0) exited 0 and printed "status: error" and "backup set ... is not valid" when asked for a backup set
-  that does not exist (observed on 2026-11-22 in a terminal; the output is not saved, the failed control is in
-  docs/evidence/BK-4-run2-FAILED.txt). The backup CronJob script fails a Job only on a non-zero exit of verify, so a verify that
-  reports an error with exit 0 would not fail the Job. Whether verify exits non-zero for a damaged backup or archive file was
-  not tested.
-- The failure paths of the backup script (verify FAILED, VERIFY_SET) were run only against a stand-in for pgbackrest in a
-  terminal, and that output is not saved in the repository. tests/bk-verify.sh shows the positive path only (ADR-0002 amendment 1).
+- pgbackrest verify (2.60.0) exits 0 even when its report says "status: error" (observed for a backup set that does not exist:
+  docs/evidence/BK-4-run2-FAILED.txt, docs/evidence/BK-4-v3.txt) and prints nothing unless --output=text is given. Since ADR-0002
+  amendment 2 the backup CronJob script runs "verify --output=text --verbose" and fails the Job unless the exit code is 0 and the
+  report has the line "status: ok"; tests/bk-verify.sh shows this live with a missing backup set. Not tested: whether verify
+  reports "status: error" for a damaged backup or archive file (only the missing-set error was produced), and a pgBackRest
+  version that words the report differently (it would fail the Job, the safe direction).
+- Two failure cases of the backup script (verify exits non-zero after a healthy report, and an empty report) were run only
+  against a stand-in for pgbackrest in a terminal, and that output is not saved in the repository. The error-report case with
+  exit 0 is shown live by Job 2 of tests/bk-verify.sh (docs/evidence/BK-4-v3.txt).
+- tests/bk-schedule.sh, tests/bk-retention.sh and tests/rs-full.sh make Jobs from the CronJob template, which now also run
+  verify and fail if the report lacks "status: ok". They were not rerun after the script gained the verify step (ADR-0002
+  amendments 1 and 2); the final suite rerun (handoff item 30) covers it.

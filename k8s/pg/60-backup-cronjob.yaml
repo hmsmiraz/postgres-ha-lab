@@ -30,14 +30,25 @@ data:
     echo "backup-cronjob: type=$type"
     pgbackrest --stanza="$STANZA" --type="$type" backup
     if [ -n "${VERIFY_SET:-}" ]; then
-      set -- --set="$VERIFY_SET"
+      set -- verify --output=text --verbose --set="$VERIFY_SET"
     else
-      set --
+      set -- verify --output=text --verbose
     fi
-    if pgbackrest --stanza="$STANZA" verify "$@"; then
+    vrc=0
+    vout=$(pgbackrest --stanza="$STANZA" "$@") || vrc=$?
+    echo "$vout"
+    vok=no
+    while IFS= read -r vline; do
+      if [ "$vline" = "status: ok" ]; then
+        vok=yes
+      fi
+    done <<EOFV
+    $vout
+    EOFV
+    if [ "$vrc" -eq 0 ] && [ "$vok" = yes ]; then
       echo "backup-cronjob: verify ok"
     else
-      echo "backup-cronjob: verify FAILED" >&2
+      echo "backup-cronjob: verify FAILED (exit $vrc, status ok line: $vok)" >&2
       exit 1
     fi
     echo "backup-cronjob: done"
