@@ -14,7 +14,7 @@ We need base backups, continuous WAL archiving to object storage, retention, ver
 pgBackRest. `archive_command` in the Postgres pods pushes WAL to the S3-compatible repository. Retention is declared in the pgBackRest configuration.
 
 ## Decision on the backup trigger
-CronJobs run pgBackRest from the same pinned image and reach the Postgres pods through pgBackRest TLS server mode, with a `pgserver` sidecar in each pod and certificates generated at `make up`. Options not chosen: a scheduler in a sidecar (backup load in the leader pod, weak failure visibility) and a CronJob using kubectl exec (broad pods/exec permission, conflicts with least privilege). Not verified yet: leader selection with three pg hosts, overlapping backups, certificate rotation.
+CronJobs run pgBackRest from the same pinned image and reach the Postgres pods through pgBackRest TLS server mode, with a `pgserver` sidecar in each pod and certificates generated at `make up`. Options not chosen: a scheduler in a sidecar (backup load in the leader pod, weak failure visibility) and a CronJob using kubectl exec (broad pods/exec permission, conflicts with least privilege). Shown by tests/bk-pgserver.sh: pgbackrest check works through three TLS pg hosts. Not verified: which pod a backup reads from, overlapping backups (only Forbid is checked), certificate rotation.
 
 ## Consequences
 - The image includes a pinned pgBackRest version.

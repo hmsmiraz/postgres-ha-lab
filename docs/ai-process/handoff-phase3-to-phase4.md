@@ -1,39 +1,41 @@
-# Handoff: Phase 3 in progress (updated 2026-11-21; Phase 3 is NOT done)
+# Handoff: Phase 3 in progress (updated 2026-11-22; Phase 3 is NOT done)
 
 Read AGENTS.md, SPEC.md and docs/decisions/ first. Work test-first; keep failed runs as evidence.
 A new chat has only the repo files it is given and the human's opening message. "Estimate" means an estimate by the previous
 assistant, in hours, not measured. "Prediction" means not verified.
+A new chat starts by asking the human for "git log --oneline -5" and "git status --short".
 
 ## a) Current state
-Commits on main, newest first. Nothing is pushed.
-- bca1654 feat: BK-1 WAL archiving configuration and backup sidecar (static checks only, not yet verified in the cluster)
-- b4b75f2 feat: in-cluster Garage object store behind an nginx TLS front (OBJ-1, OBJ-2, ADR-0004, ADR-0005)
-- c13d9bf chore: pre-commit hook blocks forbidden identifiers; test
-(This handoff update is committed after these; see git log.)
+origin/main is fbec6a2. The human pushed on his own decision, before the phase was done (the repository is public).
+The commits of this update come after it; see git log. Commits on main, newest first:
+- fbec6a2 feat: RS-1 full cluster restore into a scratch namespace as a 3-pod Patroni cluster (ADR-0006)
+- 7b364e1 feat: BK-3 retention of two full backups
+- 9f230a5 feat: BK-2 scheduled backup CronJob with full and incremental backups
+- c97506f feat: BK-2 pgserver sidecar for pgBackRest TLS server mode
+- cb12c19 feat: BK-2 TLS material generator for pgBackRest server mode
+- 8ffeaca docs: ADR-0002 decides CronJobs with pgBackRest TLS server mode
+- f10943d test: BK-1 WAL archiving verified in the cluster after rebuild (pushed earlier)
+- a1049d5, bca1654, b4b75f2, c13d9bf: earlier handoff, BK-1 configuration, object store, pre-commit hook.
 
-Deployed in the kind cluster, as last seen by the assistant (not looked at since):
-  UPDATE: the bullets below describe the cluster before the rebuild. The rebuild is done (docs/evidence/BK-1-rebuild-*.txt): pg-ha was recreated from the BK-1 template with the backup sidecar, and the BK-1 files are applied.
-- Namespace pg-ha holds the Patroni StatefulSet pg-ha (3 pods, ONE container "postgres": the pod template from before BK-1, with
-  no archive_mode and no backup sidecar), the object store StatefulSet objstore (pod objstore-0, containers garage and tls, 2/2
-  Running), the completed Job objstore-init, and the Secrets pg-credentials, objstore-credentials, objstore-admin, objstore-tls.
-- The BK-1 files in the repo (k8s/pg/25-pgbackrest.yaml, k8s/pg/20-config.yaml, k8s/pg/50-statefulset.yaml, scripts/pg-up.sh) are
-  committed but NOT applied to the cluster.
+Deployed in the kind cluster, as last seen (2026-11-22, about 04:40 UTC):
+- Namespace pg-ha: Patroni StatefulSet pg-ha, 3 pods with containers postgres, backup and pgserver (3/3), PostgreSQL 18.7,
+  leader pg-ha-2 on timeline 5, one sync standby, one replica; the object store objstore (Garage behind an nginx TLS front);
+  CronJob pgbackrest-backup (0 2 * * *, Forbid); ConfigMaps pgbackrest-env (retention-full 2), pgbackrest-scripts,
+  pgbackrest-cronjob-scripts; Secrets pg-credentials, objstore-credentials, objstore-admin, objstore-tls,
+  pgbackrest-tls-server, pgbackrest-tls-client.
+- The live appdb holds the table rs_sentinel (1000 rows), left on purpose for RS-2.
+- The repository holds 2 full backups (20261121-172516F, 20261122-041645F) and 1 incremental backup (from the cron test).
+- Namespace pg-restore is RUNNING: a restored 3-pod Patroni cluster on timeline 6, with copies of pg-credentials and
+  objstore-credentials. RS-2 and RS-3 reuse it. scripts/restore-down.sh deletes it (list and explicit go first).
 
-Passed, with evidence (docs/evidence/):
-- OBJ-1: OBJ-1.txt (both object store images pinned by digest and pulled anonymously).
-- OBJ-2 secrets generator: OBJ-2-secrets.txt.
-- OBJ-2 manifests, static: OBJ-2-manifests-static.txt.
-- OBJ-2 deploy: OBJ-2-up.txt.
-- OBJ-2 in the cluster: OBJ-2.txt (14 PASS, exit 0; leak rules as in ADR-0005 amendment 1).
-- BK-1: verified in the cluster after the rebuild: docs/evidence/BK-1.txt (13 PASS, exit 0). Earlier red runs kept: BK-1-FAILED.txt and BK-1-FAILED-v2.txt (archive_mode off, deliberate). Static evidence: BK-1-static.txt.
-Failed or invalid runs kept next to the passing ones: OBJ-1-FAILED-v1, OBJ-1-FAILED-v2, OBJ-2-FAILED-v1, OBJ-2-FAILED-v2, OBJ-2-FAILED-v3,
-OBJ-2-secrets-FAILED, OBJ-2-leak-FAILED, OBJ-2-run2-FAILED, OBJ-2-manifests-static-run1, OBJ-2-before-leak-fix, OBJ-static-checks-run1,
-OBJ-static-checks-run2, ADR-0004-image-pin-FAILED, ADR-0005-verify-spike-run1. Each has an EXPECTED RED LINES header
-(scripts/apply-evidence-headers.sh).
-Phase 0 to 2 results (REP-1..4, CON-1/2, FO-1..5, FT-1/2, ADR-0001 and the drills) are listed in handoff-phase2-to-phase3.md. They were
-not rerun in this phase, and 33 of those evidence files have no EXPECTED RED LINES header.
-Decision records: ADR-0004 Accepted. ADR-0005 Accepted, with Amendment 1 (the access key id appears in Garage request logs).
-ADR-0002 is still open on the backup trigger.
+Passed, with evidence (docs/evidence/): BK-1.txt (13 PASS), BK-2-tls.txt (15), BK-2-pgserver.txt (7), BK-2.txt (9),
+BK-3.txt (8), RS-1.txt (16). Supporting: BK-2-tls-up, BK-2-pgserver-up, BK-2-pgserver-up2, BK-2-cronjob-up, BK-2-cron-fire,
+BK-3-config-up. Failed runs kept: BK-2-tls-FAILED, BK-2-pgserver-FAILED, BK-2-pgserver-run2-FAILED, BK-2-FAILED,
+BK-3-FAILED, RS-1-FAILED. Earlier evidence is listed in the previous version of this file (git history).
+Decision records: ADR-0002 Accepted (CronJobs through pgBackRest TLS server mode), ADR-0004, ADR-0005 (with amendment 1),
+ADR-0006 Accepted (restore into the fixed scratch namespace pg-restore as a 3-pod Patroni cluster).
+Phase 3 position: items 3, 4a, 4b, 5 and 7 are done. Open in this phase: 8 (RS-2), 9 (RS-3), 6 (BK-4, which needs 9) and 45.
+When they are done, tell the human the phase is done.
 
 ## b) Decisions
 Tags, in the human's words: "REQUIRED = the brief states it; AREA = a graded area whose content I define; MINE = our own SPEC wording, not in the brief."
@@ -60,30 +62,30 @@ Made by the human, quoted:
 - "Never paste the assignment text into any file. Describe requirements in your own words."
 - Tags: "Item 1: REQUIRED, keep note [a]." "Item 14 (SEC-1): REQUIRED." "Item 11 (REP-4 Prometheus re-check): MINE." "Item 44 (AI process playbook): REQUIRED in substance; the file name is mine to choose." "Item 45 (documented restore procedure): REQUIRED." "Item 24 (design.md): REQUIRED, scope includes the four statements in point 1." "Items 41, 42, 26, 43: REQUIRED as you tagged." The four statements for design.md, in other words: the sync vs async choice and the RPO; the fencing and leader-election mechanism; the RTO that was measured and how; what changes on a real multi-zone cluster.
 - "MINE (not in the brief): incrementals in BK-2, the word CronJob in BK-2, the word scheduled in RS-3, the exact alert list, the threat model file, and the seven handoff open items (34 to 40; the brief only forbids hiding known gaps, it does not require testing them)."
+Added in this chat, in the human's words (typos kept):
+- "one CronJob with `concurrencyPolicy: Forbid` for bk-2"
+- "keep 2" (retention-full)
+- RS-1 shape: "B: a 3-pod Patroni cluster in `pg-restore`, bootstrapped from the repository." The names, the sentinel table with
+  the extra full backup, the copied credentials and the delete and recreate of pg-restore in each test run were approved.
+- RS-3: "fixed scratch namespace so that we can test and i need we can delete it"; "i want rs3 shecdhled in short time"; and
+  "keep my list as it is" (the order of the remaining items).
+- CronJob test: "go with b and not gap" (the temporary 2-minute schedule test).
+- Push: "i oushed the code to gihub recently, its my own decison."
+- Phase boundary (from the opening message of the second chat): Phase 3 ends after BK-2, BK-3, BK-4, RS-1, RS-2, RS-3 and the
+  documented restore procedure (items 4a, 4b, 5, 6, 7, 8, 9, 45). Monitoring, security, OPS and documents start only when the
+  human says start; for each, give options and costs first.
+SPEC.md wording: no SPEC edit was made in this phase except the OBJ-2 sentence. The BK-2 line (CronJob) and the RS-3 line
+(Scheduled restore test) stand unchanged. That the RS-3 line stays as it is is the assistant's reading of the human's answer;
+ask once to confirm.
+Pending, marked pending: which phase holds OBS-1..3 and SEC-3..6; which MINE items get done (4b is covered by the BK-2 test,
+9b is the scheduled RS-3 the human now wants); the optional second-agent run (item 46); whether the review chat is captured as a log.
 
-SPEC.md wording:
-- Approved and applied: the OBJ-2 test sentence, proposal B (above). The OBJ section (OBJ-1 and OBJ-2) was added by commands the human ran.
-- NOT approved, and no edit was proposed with the full current and proposed lines: the BK-2 wording ("CronJob", and "full and incremental") and the RS-3 wording ("Scheduled restore test"). The human has said an on-demand restore test is fine; that is not an approval of any SPEC edit.
-
-Pending, marked pending:
-- PENDING: the backup trigger (ADR-0002). Options so far: a scheduler sidecar in the Postgres pods (the assistant's proposal, NOT approved); a CronJob with pgBackRest TLS server mode; a CronJob that runs kubectl exec.
-- PENDING: whether the restore test is on-demand or scheduled (the plan assumed on-demand, which the human has not confirmed).
-- PENDING: which phase holds OBS-1..3 and SEC-3..6 (only SEC-2 is assigned, to Phase 4).
-- PENDING: which MINE items get done: 4b, 9b, 11, 25, 29, 31, and the seven open items 34 to 40.
-- PENDING: the optional second-agent phase run (item 46).
-- PENDING: whether the review chat is captured as a log.
-
-## c) Remaining items, in order (item numbers are from the previous chat's plan; hours are estimates, not measured)
-Plan total 63.0 h (REQUIRED 39.0, AREA 16.0, MINE 8.0), of which 3.0 h is items 1, 2a, 2b (done). Items 9b and 46 are not in the total.
-- 3. BK-1 WAL archiving. 3.0 total; implementation and static checks are done and the item was not re-estimated. Needs the object store (done). REQUIRED.
-- 4a. BK-2 scheduled full backups. 2.0. Needs 3 and the ADR-0002 decision. REQUIRED.
-- 4b. BK-2 incrementals. 0.5. Needs 4a. MINE.
-- 5. BK-3 retention. 1.0. Needs 4a. pgBackRest already warned that repo1-retention-full is not set (docs/evidence/ADR-0005-verify-spike.txt). REQUIRED.
-- 6. BK-4 verify. 1.0. Needs 4a and 9. REQUIRED.
-- 7. RS-1 restore into an empty namespace. 4.0. Needs 3 and 4a. REQUIRED.
-- 8. RS-2 PITR. 1.5. Needs 7. REQUIRED.
-- 9. RS-3 on-demand restore test. 1.0. Needs 7. REQUIRED. (9b, the scheduled version, +1.0, MINE.)
-- 45. Documented restore procedure. 0.75. Needs 7 and 8. REQUIRED.
+## c) Remaining items, in order
+- Done: 3 (BK-1), 4a and 4b (BK-2, full and incremental, one CronJob with Forbid), 5 (BK-3), 7 (RS-1).
+- 8. RS-2 PITR. Reuses pg-restore and the sentinel table. REQUIRED.
+- 9. RS-3 scheduled restore test, in the fixed pg-restore namespace (the human's choice). REQUIRED.
+- 6. BK-4 verify. Needs 9. REQUIRED. (The human's list had it before RS-1; the dependency was raised once.)
+- 45. Documented restore procedure. Needs 7 and 8. REQUIRED.
 - 10. OBS-1. 2.5. Needs 3. AREA.
 - 11. REP-4 re-check: the Prometheus clause of REP-4 cannot hold before OBS-1. 0.5. Needs 10. MINE.
 - 12. OBS-2. 2.0. Needs 10, 3, 4a. AREA.
@@ -115,72 +117,29 @@ Plan total 63.0 h (REQUIRED 39.0, AREA 16.0, MINE 8.0), of which 3.0 h is items 
 - 34. fo-rejoin.sh log window 0.25. 35. Which pg_hba is effective 0.5. 36. Shorter wal_sender_timeout 0.75. 37. tcp_user_timeout on the primary 0.75.
   38. nftables variant of fo-split-brain.sh 1.0. 39. "WAL archive removes reinit" experiment 0.75 (needs BK-1). 40. WSL .wslconfig memory 0.25 (before OBS-1). All MINE.
 - 46. Optional second-agent phase run, about 3.0. Not tagged.
-
-First next step: option A, rebuild pg-ha from scratch (the human decided). The new chat must show these steps to the human and wait for a go.
-R0. Read-only pre-checks, saved as evidence:
-```bash
-{
-  echo "date_utc: $(date -u +%FT%TZ)"
-  git status --short | cat
-  git log --oneline -3 | cat
-  echo "--- nodes and namespaces"
-  kubectl get nodes --no-headers | cat
-  kubectl get ns --no-headers | cat
-  echo "--- everything in pg-ha (R2 deletes all of it; Secret names only, no values)"
-  kubectl -n pg-ha get sts,job,svc,pdb,cm,secret,pvc --no-headers | cat
-  echo "--- volumes bound to claims (reclaim policy Delete: removed with their claims)"
-  kubectl get pv -o custom-columns=NAME:.metadata.name,CLAIM:.spec.claimRef.name,RECLAIM:.spec.persistentVolumeReclaimPolicy,SIZE:.spec.capacity.storage | cat
-  echo "--- user databases and tables that R2 destroys (names only)"
-  kubectl -n pg-ha exec pg-ha-0 -c postgres -- psql -U postgres -At -c "select datname from pg_database where not datistemplate" | cat
-  kubectl -n pg-ha exec pg-ha-0 -c postgres -- psql -U postgres -d appdb -At -c "select schemaname || '.' || relname from pg_stat_user_tables" 2>&1 | cat
-  echo "--- the new pod template under restricted admission (server-side dry run, nothing is created)"
-  . ./versions.env
-  r=$(mktemp -d)
-  sed "s|__IMAGE__|${IMAGE_NAME}:${IMAGE_TAG}|g" k8s/pg/50-statefulset.yaml >"$r/sts.yaml"
-  kubectl create --dry-run=client -f "$r/sts.yaml" -o json >"$r/sts.json"
-  jq '{apiVersion:"v1",kind:"Pod",metadata:{name:"pg-ha-psa-check",namespace:"pg-ha",labels:.spec.template.metadata.labels},spec:(.spec.template.spec | .volumes += [{"name":"data","emptyDir":{}}])}' "$r/sts.json" >"$r/pod.json"
-  kubectl apply --dry-run=server -f "$r/pod.json" 2>&1 | cat
-  rm -rf "$r"
-  echo "--- scripts and image"
-  shellcheck scripts/pg-up.sh scripts/objstore-up.sh scripts/gen-objstore-secrets.sh && echo "shellcheck clean"
-  docker image inspect "${IMAGE_NAME}:${IMAGE_TAG}" --format 'pg-ha image present {{.Id}}' | cut -c1-40
-} 2>&1 | tee docs/evidence/BK-1-rebuild-precheck.txt
-```
-R1. The human reads the output. Stop if the admission dry run is rejected or shellcheck complains.
-R2. Delete: kubectl delete namespace pg-ha --wait=true --timeout=300s
-    This deletes everything in the namespace: both StatefulSets and their pods, the 4 claims (3 Postgres, 1 Garage) and their volumes, the Secrets
-    (pg-credentials, objstore-credentials, objstore-admin, objstore-tls), the ConfigMaps (including Patroni's DCS ConfigMaps), Services, PDB, the Job, and the
-    patroni ServiceAccount, Role and RoleBinding. It does not touch the kind cluster, the nodes, Calico, local-path-storage, the images cached on the nodes,
-    the repo or the evidence files.
-R3. Verify, read-only: kubectl get ns pg-ha 2>&1 | tail -n 1 (expect NotFound); kubectl get pv --no-headers | cat (no pg-ha claims left);
-    kubectl -n local-path-storage get pods --no-headers | cat
-R4. scripts/objstore-up.sh 2>&1 | tee docs/evidence/BK-1-rebuild-objstore-up.txt
-R6. timeout 900 scripts/pg-up.sh 2>&1 | tee docs/evidence/BK-1-rebuild-pg-up.txt   (runs before R5: tests/obj-s3.sh line 35 needs the StatefulSet pg-ha to exist)
-R5. tests/obj-s3.sh 2>&1 | tee docs/evidence/BK-1-rebuild-obj-s3.txt   (runs after R6; stop if red)
-    Run before R6, R5 failed at line 35 (docs/evidence/BK-1-rebuild-obj-s3-FAILED.txt). The order is R4, R6, R5, R7, R8.
-R7. tests/rep-topology.sh 2>&1 | tee docs/evidence/BK-1-rebuild-rep-topology.txt
-R8. tests/bk-wal.sh 2>&1 | tee docs/evidence/BK-1.txt
-    If it fails, rename docs/evidence/BK-1.txt to BK-1-run1-FAILED.txt before any rerun, and report.
-Then: add EXPECTED RED LINES headers for the new evidence files in scripts/apply-evidence-headers.sh, write the two known-limitations entries (see d), and give
-the human the git add command and commit message. After the rebuild, the phase 2 failover tests have to be rerun later (item 30).
+The cluster, namespaces and scripts: restore-full.sh and restore-down.sh refuse any namespace other than pg-restore.
 
 ## d) Open risks and not verified (one line each)
-- BK-1 is verified in the cluster (BK-1.txt). Not verified: archiving after a failover; the first-start archive failures were looked at on pg-ha-0 only.
-- Whether bootstrap.dcs (with archive_mode and archive_command) applies only at first initialisation: assumed from Patroni's design, not tested; this is why the rebuild is needed.
-- archive-push over TLS from the postgres container under its 768 Mi memory limit: not tested.
-- The sidecar mounts the data volume read-only; whether pgBackRest needs to write there: not tested.
-- psql over the socket from the sidecar (peer authentication as postgres): prediction, not tested.
-- A stanza created by one leader being found by the next leader after a failover: not tested.
-- The sidecar checks every 60 s, so the first stanza can take up to that long to appear; the test waits 180 s: prediction.
-- The new StatefulSet template under restricted admission: only checked by the R0 dry run of a bare Pod, which is a proxy.
-- Four phase 2 tests call kubectl logs "$PROBE" on a probe pod (fo-node-stop, fo-pod-kill, fo-pvc-loss, fo-split-brain): candidates only, not read.
-- Object store: init repeatability, restart on its volume, hostname-mismatch rejection and a large transfer are shown in Docker only, not in the cluster (see known-limitations).
-- Git history has not been scanned for secrets (SEC-1).
-- REP-4 lists a Prometheus clause that cannot be met before OBS-1.
-Known-limitations entries written after BK-1 (docs/known-limitations.md, Backup and recovery):
-- Archiving fails while the object store is down, so pg_wal grows on the 2 GiB volume. Not tested.
-- archive_timeout is unset, so a quiet cluster can leave its latest WAL segment unarchived. Not tested.
-The old entry "No WAL archive or base backups exist yet" was reworded after BK-1 passed: WAL archiving works, no base backup exists yet.
+- The BK-2 CronJob did not fire at 02:00 UTC (cause not found); it did fire under a temporary 2-minute schedule
+  (BK-2-cron-fire.txt). The real 02:00 firing is not shown.
+- The second rolling update moved the timeline from 2 to 5 (three promotions) with no write probe; overnight probe failures
+  on pg-ha-2 and pg-ha-0 had no restart and no promotion. Causes not found.
+- Archiving after planned failovers showed no failures (twice). A crash-type failover, a replica catching up from the archive,
+  and the first-start failures on pg-ha-1 and pg-ha-2 (pods restarted since) are not examined.
+- Not tested: Forbid blocking an overlap; which pod a backup reads from; the cause of the BK-2 Job 4 failure; time-based
+  retention and differential backups; restore of an older backup, of an archive with a newer timeline, two restores at once.
+- After retention, point-in-time recovery to a time before the oldest kept full backup is not possible.
+- pgBackRest server certificates last 825 days with no rotation; the CA key is removed with rm; authorisation by certificate
+  name and stanza is not tested.
+- pg-restore holds the live passwords and the read-write store key, and has the same Patroni system identifier as the live
+  cluster. Only archive_mode=off and the timeline check protect the live archive.
+- No NetworkPolicy exists; SEC-3 must allow port 8432 and the pg-restore to object store path.
+- History scans: gitleaks (34 commits) clean; current secret values 0 files; the hook's pattern 0 matches. Not covered:
+  secrets from before the BK-1 rebuild, binary files, GitHub objects served before the repository was recreated.
+- The Phase 2 tests were not rerun on the rebuilt cluster (item 30). Four Phase 2 tests call kubectl logs on a probe pod
+  (candidates only, not read). REP-4 lists a Prometheus clause that cannot be met before OBS-1.
+- Object store: init repeatability, restart on its volume, hostname-mismatch rejection and a large transfer were shown in
+  Docker only (see known-limitations).
 
 ## e) Rules in force
 - The human decides what is cut or reduced; the assistant gives facts and options.
@@ -195,12 +154,10 @@ The old entry "No WAL archive or base backups exist yet" was reworded after BK-1
 - The repo is public.
 
 ## f) AI session logs
-Method: docs/ai-process/LOGGING.md (not re-read by the previous assistant). From the phase 2 handoff: capture each chat at its end from the chat's share page, check it with
-scripts/check-log.sh, redact with scripts/redact-logs.sh (rules in scripts/redact.pl, tested by tests/redact-test.sh), commit docs/ai-process/redacted only. Raw logs stay out of
-git (docs/ai-process/raw/ is in .gitignore). The human states that the logs are real and unedited apart from secrets, and that the company and project names were also replaced,
-disclosed in LOGGING.md.
-Still to capture:
-- The phase 0 to 2 chat: a later copy covering its tail (per the phase 2 handoff).
-- The phase 3 chat that wrote this note: not captured yet. A marker file with ten of its headings is docs/ai-process/markers-phase3-chat.txt (committed).
-  scripts/check-log.sh now takes an optional second argument, a markers file (default: its built-in list for the phase 0 to 2 chat). Evidence: LOG-check-markers.txt (red run: LOG-check-markers-FAILED.txt). Use: scripts/check-log.sh <log> docs/ai-process/markers-phase3-chat.txt
-- This chat itself, at its end.
+Method: docs/ai-process/LOGGING.md (capture from the chat's share page, scripts/check-log.sh, scripts/redact-logs.sh, commit
+docs/ai-process/redacted only; raw stays out of git). The human states that the logs are real and unedited apart from secrets,
+and that the company and project names were also replaced (disclosed in LOGGING.md).
+Captured: the phase 0 to 2 chat (docs/ai-process/redacted/2026-11-20-claude-chat-share-copy.txt).
+Still to capture: a later copy of the phase 0 to 2 chat; the first phase 3 chat (markers file
+docs/ai-process/markers-phase3-chat.txt); the second phase 3 chat that built BK-2, BK-3 and RS-1 (markers file to create from
+a real capture); and the chat after this handoff, at its end.

@@ -3,7 +3,7 @@
 Each item says how it was found. Items marked "not tested" are open questions, not claims.
 
 ## Backup and recovery
-- WAL archiving works (BK-1, docs/evidence/BK-1.txt), but no base backup exists yet (Phase 3). Whether a replica that
+- WAL archiving works (BK-1, docs/evidence/BK-1.txt) and base backups exist (BK-2, BK-3). Whether a replica that
   falls behind past `max_slot_wal_keep_size` can now catch up from the archive was not tested; until it is tested it
   needs `patronictl reinit` (manual). Observed 3 times (REP-3 drill, runs 1 to 3).
 - On the rebuilt cluster the archiver failed 6 times on pg-ha-0 before the backup sidecar created the stanza, which
@@ -80,3 +80,32 @@ Each item says how it was found. Items marked "not tested" are open questions, n
 - Observed: one readiness-probe failure on port 3900 (connection refused) during the first start of
   `objstore-0`, then ready with 0 restarts. The cause was not investigated.
 - The access key ID of the pgBackRest key appears in Garage's request logs (docs/evidence/OBJ-2-leak-diagnosis.txt, ADR-0005 amendment 1).
+
+## Backups, retention and restore (Phase 3, ADR-0002, ADR-0006)
+- The BK-2 CronJob (daily 02:00 UTC) did not fire on its own: it was created on 2026-11-21 at about 16:53 UTC, and the 02:00 UTC
+  run on 2026-11-22 left no Job and no event (lastScheduleTime was unset at 04:20 UTC). The cause was not found. With a temporary
+  schedule of every 2 minutes the controller created a Job about 2 minutes later and it completed (docs/evidence/BK-2-cron-fire.txt),
+  so the controller can start this CronJob. The real 02:00 firing is not shown. tests/bk-schedule.sh uses Jobs started by hand from
+  the CronJob template.
+- concurrencyPolicy Forbid is checked as a setting only. An overlapping run was not tested.
+- Job 4 of tests/bk-schedule.sh (broken CA paths) must fail, and it does, but the test does not check why. Found by reading it.
+- Retention is retention-full=2 (type count). BK-3 shows the oldest full backup and its incremental are expired. Not tested:
+  time-based retention, differential backups, expiry during a restore. After expiry, point-in-time recovery to a time
+  before the oldest kept full backup is no longer possible.
+- The pgBackRest server certificates are valid for 825 days (to Feb 2029) with no rotation. The CA key is removed with rm,
+  which is not a secure erase. Authorisation by certificate name and stanza is configured but not tested, because the
+  cluster holds no CA key to sign another name.
+- The restore namespace pg-restore holds the live database passwords and the read-write object store key until it is deleted
+  (ADR-0006). The restored cluster has the same Patroni system identifier as the live one. Only archive_mode=off keeps it
+  from writing into the live archive, and tests/rs-full.sh checks the timeline.
+- RS-1 did not cover restoring an older backup, an archive that holds a newer timeline, two restores at the same time, or a
+  failed restore script.
+- No NetworkPolicy exists. The pgserver port (8432) and the path from pg-restore to the object store in pg-ha are open. SEC-3
+  must allow both.
+- Observed and not investigated: the second rolling update moved the timeline from 2 to 5 (three promotions in one update),
+  and no write probe ran. Overnight, pg-ha-2 failed one liveness probe (about 02:24 UTC) and one readiness probe (about
+  04:04 UTC) and pg-ha-0 one readiness probe (about 04:17 UTC), with no restart and no promotion.
+- History scan: gitleaks over 34 commits found nothing, a scan for the current secret values found 0 files, and a scan with
+  the pre-commit hook's pattern found 0 matches in file content, commit messages, author lines, file paths and refs. Not
+  covered: secret values from before the BK-1 rebuild, binary files, and objects that GitHub served before the repository was
+  recreated.

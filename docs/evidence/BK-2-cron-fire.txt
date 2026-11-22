@@ -1,0 +1,28 @@
+EXPECTED RED LINES: none. The empty kube-controller-manager sections are real: that pod logged no cronjob lines at its default level. The live schedule was patched to every 2 minutes for about 2 minutes and then restored; kubectl diff exit 0 confirms the live objects equal the committed file. The Job appeared about 2 minutes after the patch, not at once as predicted.
+---- raw output below, unchanged ----
+date: 2026-11-22T04:38:04Z
+precheck: Patroni healthy, schedule '0 2 * * *', not suspended, no Job from the CronJob yet
+--- before: backups full=2 incr=0
+--- before: kube-controller-manager (read-only)
+kube-controller-manager-kind-control-plane   1/1   Running   0     2d13h
+lines with cronjob in its log, last 15 h: 0
+--- patch the live schedule to every 2 minutes (temporary)
+cronjob.batch/pgbackrest-backup patched
+--- restore the committed schedule now
+schedule now: 0 2 * * * (expected 0 2 * * *)
+RESULT: the CronJob controller created Job pgbackrest-backup-29922040 at 2026-11-22T04:40:00Z
+job result: complete
+backup-cronjob lines in the job log:
+backup-cronjob: type=incr
+backup-cronjob: done
+Jobs from the CronJob now: pgbackrest-backup-29922040 (expected exactly one)
+lastScheduleTime: 2026-11-22T04:40:00Z
+--- after: backups full=2 incr=1
+kubectl diff exit=0 (0 means the live objects equal the committed file)
+--- after: kube-controller-manager, last cronjob lines (read-only, cut to 200 characters)
+--- pods untouched (expected 3 pods, 3/3, same ages)
+pg-ha-0   3/3   Running   0     12h
+pg-ha-1   3/3   Running   0     12h
+pg-ha-2   3/3   Running   0     12h
+--- git status
+?? docs/evidence/BK-2-cron-fire.txt
