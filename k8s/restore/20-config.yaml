@@ -1,0 +1,95 @@
+# No secret is stored here. The restored cluster reads the live stanza pg-ha from the live repository, with archiving off.
+# There is no retention setting on purpose: nothing in pg-restore can expire a backup.
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: pgbackrest-env
+  namespace: pg-restore
+data:
+  PGBACKREST_STANZA: pg-ha
+  PGBACKREST_PG1_PATH: /pgdata/data
+  PGBACKREST_PG1_SOCKET_PATH: /run/postgresql
+  PGBACKREST_LOG_LEVEL_CONSOLE: warn
+  PGBACKREST_LOG_LEVEL_FILE: "off"
+  PGBACKREST_REPO1_TYPE: s3
+  PGBACKREST_REPO1_PATH: /pg-ha
+  PGBACKREST_REPO1_S3_BUCKET: pgbackrest
+  PGBACKREST_REPO1_S3_ENDPOINT: objstore.pg-ha.svc.cluster.local
+  PGBACKREST_REPO1_STORAGE_PORT: "3900"
+  PGBACKREST_REPO1_S3_REGION: garage
+  PGBACKREST_REPO1_S3_URI_STYLE: path
+  PGBACKREST_REPO1_STORAGE_CA_FILE: /certs/ca.crt
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: patroni-static-config
+  namespace: pg-restore
+data:
+  patroni.yml: |
+    scope: pg-restore
+    restapi:
+      listen: 0.0.0.0:8008
+    kubernetes:
+      use_endpoints: false
+      scope_label: cluster-name
+      role_label: role
+      leader_label_value: primary
+      standby_leader_label_value: primary
+      follower_label_value: replica
+      labels:
+        application: pg-restore
+    bootstrap:
+      method: pgbackrest_restore
+      pgbackrest_restore:
+        command: sh /etc/patroni/restore.sh
+        no_params: true
+        keep_existing_recovery_conf: true
+      dcs:
+        ttl: 30
+        loop_wait: 10
+        retry_timeout: 10
+        maximum_lag_on_failover: 1048576
+        synchronous_mode: true
+        synchronous_mode_strict: false
+        synchronous_node_count: 1
+        postgresql:
+          use_pg_rewind: true
+          use_slots: true
+          parameters:
+            wal_level: replica
+            hot_standby: "on"
+            max_wal_senders: 10
+            max_replication_slots: 10
+            wal_log_hints: "on"
+            max_slot_wal_keep_size: 1GB
+            archive_mode: "off"
+            password_encryption: scram-sha-256
+            unix_socket_directories: /run/postgresql
+    postgresql:
+      listen: 0.0.0.0:5432
+      data_dir: /pgdata/data
+      bin_dir: /usr/lib/postgresql/18/bin
+      use_unix_socket: true
+      pgpass: /tmp/pgpass
+      authentication:
+        superuser:
+          username: postgres
+        replication:
+          username: replicator
+        rewind:
+          username: rewind_user
+      pg_hba:
+        - local all postgres peer
+        - host all all 127.0.0.1/32 scram-sha-256
+        - host replication replicator 127.0.0.1/32 scram-sha-256
+        - host replication replicator 192.168.0.0/16 scram-sha-256
+        - host all all 192.168.0.0/16 scram-sha-256
+  restore.sh: |
+    #!/bin/sh
+    # Patroni bootstrap method: restore the newest backup of the live stanza into an empty data directory.
+    # archive-mode=off keeps this cluster from ever pushing WAL into the live repository.
+    set -eu
+    mkdir -p /pgdata/data
+    chmod 0700 /pgdata/data
+    exec pgbackrest --stanza=pg-ha --archive-mode=off restore

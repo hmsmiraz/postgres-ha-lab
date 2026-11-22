@@ -1,0 +1,45 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: pg-primary
+  namespace: pg-restore
+spec:
+  selector:
+    application: pg-restore
+    cluster-name: pg-restore
+    role: primary
+  ports:
+    - name: postgres
+      port: 5432
+      targetPort: 5432
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: pg-replica
+  namespace: pg-restore
+spec:
+  selector:
+    application: pg-restore
+    cluster-name: pg-restore
+    role: replica
+  ports:
+    - name: postgres
+      port: 5432
+      targetPort: 5432
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: pg-restore-headless
+  namespace: pg-restore
+spec:
+  clusterIP: None
+  selector:
+    application: pg-restore
+    cluster-name: pg-restore
+  ports:
+    - name: postgres
+      port: 5432
+    - name: patroni
+      port: 8008

@@ -1,0 +1,8 @@
+# RS-1 (ADR-0006): the fixed scratch namespace for restores. Created by scripts/restore-full.sh, removed by scripts/restore-down.sh.
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: pg-restore
+  labels:
+    pod-security.kubernetes.io/enforce: restricted
+    pod-security.kubernetes.io/enforce-version: latest
