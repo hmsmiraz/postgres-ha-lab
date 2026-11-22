@@ -70,7 +70,7 @@ Targets below are goals. Measured values go in the evidence files.
 - RS-2: Point-in-time recovery to a timestamp.
   Test: `tests/rs-pitr.sh`. Pass: rows written before the target time exist, rows written after do not.
   Evidence: `docs/evidence/RS-2.txt`
-- RS-3: Scheduled restore test to a scratch instance, with a data check.
+- RS-3: Restore test to a scratch instance, run on demand by one script, with a data check.
   Test: `tests/rs-scheduled.sh`. Evidence: `docs/evidence/RS-3.txt`
 
 ## OPS: Operability

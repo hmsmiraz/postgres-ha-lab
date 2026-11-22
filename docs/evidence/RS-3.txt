@@ -1,0 +1,17 @@
+EXPECTED RED LINES: none. The NOTICE line about rs_scratch not existing comes from the drop table if exists on the first run. The INFO lines give the newest live archive timeline before and after (5 and 5) and the scratch timeline (6). The negative-control run is not shown in this file by design: the PASS line reports that the script failed on a wrong expected value and removed its pod. The live rs_scratch keeps its 300 rows on purpose.
+---- raw output below, unchanged ----
+date: 2026-11-22T13:15:18Z
+PASS: pg-ha healthy: 1 leader and 2 streaming replicas
+PASS: restore-test.sh and its pod manifest are present
+PASS: controls: the leak scanner and the timeline matcher fire on planted input
+NOTICE:  table "rs_scratch" does not exist, skipping
+PASS: live rs_scratch written (300 rows, the changed-value control differs); WAL segment 000000050000000000000019 is archived
+INFO: newest timeline in the live archive before the restore test: 00000005
+PASS: restore-test.sh finished with exit 0 and kept the scratch pod for inspection
+PASS: the scratch instance is ready, recovery has ended, and row count 300 and checksum equal the live ones (control matches)
+INFO: scratch timeline 00000006, newest live archive timeline before 00000005 and after 00000005
+PASS: archive_mode is off, the scratch instance is on a newer timeline, and the live archive got no newer timeline
+PASS: pg-ha was not restarted and the 3-pod cluster in pg-restore is unchanged
+PASS: negative control: with a wrong expected value the script fails and removes its pod
+PASS: no secret value in the script output or the scratch pod log
+ALL CHECKS PASSED

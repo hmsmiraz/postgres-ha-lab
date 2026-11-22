@@ -1,0 +1,5 @@
+EXPECTED RED LINES: the single FAIL line (scripts/restore-test.sh does not exist) is deliberate (test first). The PASS line before it is the pg-ha health check.
+---- raw output below, unchanged ----
+date: 2026-11-22T13:00:32Z
+PASS: pg-ha healthy: 1 leader and 2 streaming replicas
+FAIL: scripts/restore-test.sh does not exist or is not executable

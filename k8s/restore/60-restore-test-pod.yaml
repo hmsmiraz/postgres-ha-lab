@@ -1,0 +1,109 @@
+# RS-3 (ADR-0006, on-demand single-pod option): one scratch Postgres that restores the latest backup plus the archived WAL
+# of the live stanza into an emptyDir, with archiving off. Plain Postgres, no Patroni. It does NOT read the ConfigMap
+# pgbackrest-env of this namespace: RS-2 patches a point-in-time target into it. No secret value is stored here.
+apiVersion: v1
+kind: Pod
+metadata:
+  name: pg-restore-test
+  namespace: pg-restore
+  labels:
+    app: restore-test
+spec:
+  restartPolicy: Never
+  activeDeadlineSeconds: 1500
+  automountServiceAccountToken: false
+  securityContext:
+    runAsNonRoot: true
+    runAsUser: 999
+    runAsGroup: 999
+    fsGroup: 999
+    seccompProfile:
+      type: RuntimeDefault
+  containers:
+    - name: postgres
+      image: __IMAGE__
+      imagePullPolicy: IfNotPresent
+      command:
+        - sh
+        - -c
+        - |
+          set -eu
+          mkdir -p /pgdata/data
+          chmod 0700 /pgdata/data
+          pgbackrest --stanza=pg-ha --archive-mode=off restore
+          exec /usr/lib/postgresql/18/bin/postgres -D /pgdata/data -c archive_mode=off -c listen_addresses= -c synchronous_standby_names= -c unix_socket_directories=/run/postgresql
+      env:
+        - name: PGBACKREST_STANZA
+          value: pg-ha
+        - name: PGBACKREST_PG1_PATH
+          value: /pgdata/data
+        - name: PGBACKREST_LOG_LEVEL_CONSOLE
+          value: warn
+        - name: PGBACKREST_LOG_LEVEL_FILE
+          value: "off"
+        - name: PGBACKREST_REPO1_TYPE
+          value: s3
+        - name: PGBACKREST_REPO1_PATH
+          value: /pg-ha
+        - name: PGBACKREST_REPO1_S3_BUCKET
+          value: pgbackrest
+        - name: PGBACKREST_REPO1_S3_ENDPOINT
+          value: objstore.pg-ha.svc.cluster.local
+        - name: PGBACKREST_REPO1_STORAGE_PORT
+          value: "3900"
+        - name: PGBACKREST_REPO1_S3_REGION
+          value: garage
+        - name: PGBACKREST_REPO1_S3_URI_STYLE
+          value: path
+        - name: PGBACKREST_REPO1_STORAGE_CA_FILE
+          value: /certs/ca.crt
+        - name: PGBACKREST_REPO1_S3_KEY
+          valueFrom:
+            secretKeyRef:
+              name: objstore-credentials
+              key: access-key-id
+        - name: PGBACKREST_REPO1_S3_KEY_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: objstore-credentials
+              key: secret-access-key
+      readinessProbe:
+        exec:
+          command:
+            - sh
+            - -c
+            - |
+              r=$(psql -h /run/postgresql -U postgres -d appdb -Atqc 'select pg_is_in_recovery()'); [ "$r" = f ]
+        periodSeconds: 3
+        failureThreshold: 3
+      resources:
+        requests:
+          cpu: 100m
+          memory: 256Mi
+        limits:
+          memory: 768Mi
+      securityContext:
+        allowPrivilegeEscalation: false
+        capabilities:
+          drop: ["ALL"]
+      volumeMounts:
+        - name: data
+          mountPath: /pgdata
+        - name: run
+          mountPath: /run/postgresql
+        - name: tmp
+          mountPath: /tmp
+        - name: objstore-ca
+          mountPath: /certs
+          readOnly: true
+  volumes:
+    - name: data
+      emptyDir:
+        sizeLimit: 1Gi
+    - name: run
+      emptyDir: {}
+    - name: tmp
+      emptyDir: {}
+    - name: objstore-ca
+      secret:
+        secretName: objstore-ca
