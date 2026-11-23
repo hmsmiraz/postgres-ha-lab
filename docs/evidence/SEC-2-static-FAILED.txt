@@ -1,0 +1,14 @@
+EXPECTED RED LINES: all 10 FAIL lines are deliberate: the test was written before the TLS edits exist (test first).
+---- raw output below, unchanged ----
+date_utc: 2026-11-23T14:14:14Z
+FAIL  pg_hba has 4 hostssl rules (found 0, need 4)
+FAIL  pg_hba has no plain host rule (file empty or found 4)
+FAIL  ssl is on (found 0, need 1)
+FAIL  ssl_cert_file is /tls/tls.crt (found 0, need 1)
+FAIL  ssl_key_file is /tls/tls.key (found 0, need 1)
+FAIL  replication uses sslmode verify-ca (found 0, need 1)
+FAIL  replication has sslrootcert /tls/ca.crt (found 0, need 1)
+FAIL  statefulset uses the Secret pg-tls (found 0, need 1)
+FAIL  statefulset mounts /tls in postgres and pgserver (found 1, need 2)
+FAIL  pg-up.sh calls the pg-tls generator (found 0, need 1)
+PASS  control: the counter sees a known string

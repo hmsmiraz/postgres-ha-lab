@@ -1,0 +1,15 @@
+EXPECTED RED LINES: all 11 FAIL lines are deliberate: the test was written before TLS is configured (test first). The PASS lines are checks that already hold.
+---- raw output below, unchanged ----
+date_utc: 2026-11-23T14:08:10Z
+FAIL  pg-ha-0 ssl is on
+FAIL  pg-ha-0 has no non-SSL host rule (found 4)
+FAIL  pg-ha-1 ssl is on
+FAIL  pg-ha-1 has no non-SSL host rule (found 4)
+FAIL  pg-ha-2 ssl is on
+FAIL  pg-ha-2 has no non-SSL host rule (found 4)
+FAIL  Secret pg-tls holds exactly ca.crt, tls.crt, tls.key
+FAIL  client connection with sslmode=require uses TLS
+FAIL  client connection with sslmode=disable is rejected
+FAIL  replicas use sslmode=verify-ca (0 of 2)
+FAIL  all walsender connections use TLS (total 2, without TLS 2)
+PASS  control: a local socket connection reports ssl false
