@@ -57,6 +57,10 @@ atleast "grafana news feed is disabled" "$graf" 'GF_NEWS_NEWS_FEED_ENABLED' 1
 atleast "dashboard schedule-time query is multiplied by 1000 (milliseconds)" "$dash" 'last_schedule_time.*\* 1000' 1
 atleast "obs-up applies the dashboards ConfigMap" scripts/obs-up.sh '50-dashboards\.yaml' 1
 
+atleast "dashboard has a bytes lag panel" "$dash" 'max by \(application_name\) \(pg_stat_replication_pg_wal_lsn_diff\)' 1
+atleast "dashboard has a seconds lag panel" "$dash" 'pg_replication_lag_seconds' 1
+atleast "dashboard age panel has thresholds" "$dash" '"thresholds"' 1
+
 ctl=$(mktemp)
 printf 'zzqx\n' > "$ctl"
 n=$(grep -cE -- zzqx "$ctl" || true)

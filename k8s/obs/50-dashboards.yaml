@@ -198,7 +198,24 @@ data:
           ],
           "fieldConfig": {
             "defaults": {
-              "unit": "s"
+              "unit": "s",
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "green",
+                    "value": null
+                  },
+                  {
+                    "color": "yellow",
+                    "value": 93600
+                  },
+                  {
+                    "color": "red",
+                    "value": 129600
+                  }
+                ]
+              }
             },
             "overrides": []
           }
@@ -223,6 +240,54 @@ data:
           "fieldConfig": {
             "defaults": {
               "unit": "dateTimeAsIso"
+            },
+            "overrides": []
+          }
+        },
+        {
+          "id": 11,
+          "title": "Replication lag (bytes)",
+          "type": "timeseries",
+          "gridPos": {
+            "x": 8,
+            "y": 18,
+            "w": 8,
+            "h": 6
+          },
+          "targets": [
+            {
+              "refId": "A",
+              "expr": "max by (application_name) (pg_stat_replication_pg_wal_lsn_diff)",
+              "legendFormat": "{{application_name}}"
+            }
+          ],
+          "fieldConfig": {
+            "defaults": {
+              "unit": "bytes"
+            },
+            "overrides": []
+          }
+        },
+        {
+          "id": 12,
+          "title": "Replication lag (seconds)",
+          "type": "timeseries",
+          "gridPos": {
+            "x": 16,
+            "y": 18,
+            "w": 8,
+            "h": 6
+          },
+          "targets": [
+            {
+              "refId": "A",
+              "expr": "pg_replication_lag_seconds",
+              "legendFormat": "{{instance}}"
+            }
+          ],
+          "fieldConfig": {
+            "defaults": {
+              "unit": "s"
             },
             "overrides": []
           }
