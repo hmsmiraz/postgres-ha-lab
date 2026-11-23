@@ -20,7 +20,13 @@ my $K_KEY    = '[REDACTED:private-key-line]';
 my $K_ORG    = '[REDACTED:company]';
 
 while (my $line = <>) {
-    if ($in_key || $line =~ /-----BEGIN [A-Z ]*PRIVATE KEY-----/) {
+    my $is_begin = ($line =~ /-----BEGIN [A-Z ]*PRIVATE KEY-----/) ? 1 : 0;
+    my $is_end   = ($line =~ /-----END [A-Z ]*PRIVATE KEY-----/) ? 1 : 0;
+    # R2: inside a block only base64 text, PEM header lines and the markers stay in the block.
+    if ($in_key && !$is_begin && !$is_end && $line !~ /^[A-Za-z0-9+\/=]{4,}\s*$/ && $line !~ /^(?:Proc-Type|DEK-Info):/) {
+        $in_key = 0;
+    }
+    if ($in_key || $is_begin) {
         my $end = ($line =~ /-----END [A-Z ]*PRIVATE KEY-----/) ? 1 : 0;
         $line =~ s/^[^\r\n]*/$K_KEY/;
         $n{'private-key-line'}++;

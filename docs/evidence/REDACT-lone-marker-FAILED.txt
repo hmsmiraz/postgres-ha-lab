@@ -1,0 +1,13 @@
+EXPECTED RED LINES: the 2 FAIL lines (cases A and B) are deliberate: the test was written before the redaction rule fix (test first).
+---- raw output below, unchanged ----
+PASS: A: line count unchanged
+FAIL: A: changed lines are '2 3 4 5', expected '2'
+PASS: B: line count unchanged
+FAIL: B: changed lines are '2 3 4 5 6', expected '2 3 4'
+PASS: B: base64 body is gone
+PASS: C: line count unchanged
+PASS: C: changed lines are '2 3 4 5'
+PASS: C: base64 body is gone
+PASS: control: identical files report no change
+PASS: control: a one-line change is seen
+redact-lone-marker-test: 2 failed

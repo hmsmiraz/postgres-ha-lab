@@ -1,0 +1,21 @@
+PASS: A: line count unchanged
+PASS: A: changed lines are '2'
+PASS: B: line count unchanged
+PASS: B: changed lines are '2 3 4'
+PASS: B: base64 body is gone
+PASS: C: line count unchanged
+PASS: C: changed lines are '2 3 4 5'
+PASS: C: base64 body is gone
+PASS: control: identical files report no change
+PASS: control: a one-line change is seen
+redact-lone-marker-test: 0 failed
+new test exit 0
+=== existing tests/redact-test.sh ===
+PASS: line count is unchanged
+PASS: only the intended lines changed (secrets, the 3-line key block, the 3 name lines)
+PASS: no fake secret value is left in the output
+PASS: no company or project name is left in the output
+PASS: markers are in place and the surrounding text is untouched
+PASS: CRLF line endings are preserved
+ALL CHECKS PASSED
+existing test exit 0
