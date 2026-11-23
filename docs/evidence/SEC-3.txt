@@ -1,0 +1,37 @@
+date_utc: 2026-11-23T16:15:23Z
+networkpolicy.networking.k8s.io/pg-ha-ingress created
+networkpolicy.networking.k8s.io/objstore-ingress created
+=== tests/sec-netpol.sh ===
+date_utc: 2026-11-23T16:15:34Z
+PASS  control: the intruder pod reaches Grafana on 3000
+PASS  control: a closed port reads as blocked
+PASS  k8s/pg/70-networkpolicy.yaml exists
+PASS  2 NetworkPolicies exist in pg-ha
+PASS  intruder is blocked from pg-ha-0 on 5432
+PASS  intruder is blocked from pg-ha-0 on 8008
+PASS  intruder is blocked from objstore on 3900
+PASS  app=write-probe reaches pg-ha-0 on 5432
+PASS  pg-ha-0 reaches objstore on 3900
+PASS  pg-restore-0 reaches objstore on 3900
+PASS  Prometheus has 8 targets up
+PASS  Patroni is 1 leader + 2 streaming replicas
+=== tests/obs-exporter-live.sh ===
+date_utc: 2026-11-23T16:16:55Z
+PASS  pg-ha-0 answers on 9187 (1374 lines)
+PASS  pg-ha-0 pg_up is 1
+PASS  pg-ha-0 has archiver metrics
+PASS  pg-ha-0 has replication slot metrics
+PASS  pg-ha-1 answers on 9187 (1374 lines)
+PASS  pg-ha-1 pg_up is 1
+PASS  pg-ha-1 has archiver metrics
+PASS  pg-ha-1 has replication slot metrics
+PASS  pg-ha-2 answers on 9187 (1382 lines)
+PASS  pg-ha-2 pg_up is 1
+PASS  pg-ha-2 has archiver metrics
+PASS  pg-ha-2 has replication slot metrics
+write probe: acknowledged 84, failed 0, largest gap 1082 ms
+DIAG: acknowledged in log: 84, rows read from table: 87
+DIAG: first missing: 
+PASS  write probe works through the policy, 0 missing
+PASS  all pods ready
+PASS  Prometheus has 8 targets up
