@@ -1,0 +1,35 @@
+EXPECTED RED LINES: all 2 FAIL lines are deliberate: the tests expect ReplicationLag for 15s before the rule is changed (test first).
+---- raw output below, unchanged ----
+=== tests/obs-rules-static.sh ===
+date_utc: 2026-11-23T12:59:49Z
+PASS  k8s/obs/25-rules.yaml exists and is not empty
+PASS  rules ConfigMap is named prometheus-rules (1)
+PASS  alert NoPrimary is defined (1)
+PASS  alert ReplicationLag is defined (1)
+PASS  alert SlotRetention is defined (1)
+PASS  alert WalArchiveFailure is defined (1)
+PASS  alert BackupTooOld is defined (1)
+PASS  every alert has a for: duration (5)
+PASS  prometheus config loads the rule files (1)
+PASS  prometheus mounts the rules (1)
+PASS  prometheus has the rules volume (1)
+PASS  promtool check rules is clean
+FAIL  ReplicationLag has for 15s
+PASS  control: the counter sees a known string
+exit 1
+=== tests/obs-rules-unit.sh ===
+date_utc: 2026-11-23T12:59:50Z
+PASS  rules extracted from the ConfigMap
+FAIL  all unit tests pass
+Processing test file: /r/unit.yml
+  FAILED:
+    name: ReplicationLag fires above 10 KiB,
+    alertname: ReplicationLag, time: 50s, 
+        exp:[
+            0:
+              Labels:{alertname="ReplicationLag", severity="warning"}
+              Annotations:{summary="A replica is more than 10 KiB behind in replay"}
+            ], 
+        got:[]
+PASS  negative control: a wrong expectation fails
+exit 1

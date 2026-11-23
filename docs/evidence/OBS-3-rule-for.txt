@@ -1,0 +1,60 @@
+=== tests/obs-rules-static.sh ===
+date_utc: 2026-11-23T12:59:52Z
+PASS  k8s/obs/25-rules.yaml exists and is not empty
+PASS  rules ConfigMap is named prometheus-rules (1)
+PASS  alert NoPrimary is defined (1)
+PASS  alert ReplicationLag is defined (1)
+PASS  alert SlotRetention is defined (1)
+PASS  alert WalArchiveFailure is defined (1)
+PASS  alert BackupTooOld is defined (1)
+PASS  every alert has a for: duration (5)
+PASS  prometheus config loads the rule files (1)
+PASS  prometheus mounts the rules (1)
+PASS  prometheus has the rules volume (1)
+PASS  promtool check rules is clean
+PASS  ReplicationLag has for 15s
+PASS  control: the counter sees a known string
+=== tests/obs-rules-unit.sh ===
+date_utc: 2026-11-23T12:59:52Z
+PASS  rules extracted from the ConfigMap
+PASS  all unit tests pass
+PASS  negative control: a wrong expectation fails
+=== tests/obs-manifests.sh ===
+date_utc: 2026-11-23T12:59:54Z
+PASS  10-rbac.yaml exists and is not empty
+PASS  20-prometheus.yaml exists and is not empty
+PASS  30-ksm.yaml exists and is not empty
+PASS  40-grafana.yaml exists and is not empty
+PASS  rbac has a ClusterRole (1)
+PASS  rbac has no write verb
+PASS  prometheus PVC is 2Gi (1)
+PASS  prometheus retention is 7d (1)
+PASS  prometheus scrapes the three patroni pods on 8008 (3)
+PASS  prometheus has a postgres-exporter job (1)
+PASS  prometheus scrapes the three exporters on 9187 (3)
+PASS  prometheus image placeholder (1)
+PASS  ksm image placeholder (1)
+PASS  grafana image placeholder (1)
+PASS  20-prometheus.yaml never uses latest
+PASS  20-prometheus.yaml imagePullPolicy IfNotPresent (1)
+PASS  20-prometheus.yaml runAsNonRoot (1)
+PASS  20-prometheus.yaml no privilege escalation (1)
+PASS  20-prometheus.yaml drops all capabilities (1)
+PASS  20-prometheus.yaml seccomp RuntimeDefault (1)
+PASS  30-ksm.yaml never uses latest
+PASS  30-ksm.yaml imagePullPolicy IfNotPresent (1)
+PASS  30-ksm.yaml runAsNonRoot (1)
+PASS  30-ksm.yaml no privilege escalation (1)
+PASS  30-ksm.yaml drops all capabilities (1)
+PASS  30-ksm.yaml seccomp RuntimeDefault (1)
+PASS  40-grafana.yaml never uses latest
+PASS  40-grafana.yaml imagePullPolicy IfNotPresent (1)
+PASS  40-grafana.yaml runAsNonRoot (1)
+PASS  40-grafana.yaml no privilege escalation (1)
+PASS  40-grafana.yaml drops all capabilities (1)
+PASS  40-grafana.yaml seccomp RuntimeDefault (1)
+PASS  prometheus runs as 65534 (1)
+PASS  ksm runs as 65534 (1)
+PASS  grafana runs as 472 (1)
+PASS  grafana admin password comes from a secretKeyRef
+PASS  control: the counter sees a known string

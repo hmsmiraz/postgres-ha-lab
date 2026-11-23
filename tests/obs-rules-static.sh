@@ -39,6 +39,8 @@ for d in yaml.safe_load_all(open(sys.argv[1])):
 fi
 if [ "$ok" = 1 ]; then pass "promtool check rules is clean"; else bad "promtool check rules is clean"; fi
 
+n=$(grep -A4 'alert: ReplicationLag$' "$r" | grep -c 'for: 15s' || true)
+if [ "${n:-0}" -ge 1 ]; then pass "ReplicationLag has for 15s"; else bad "ReplicationLag has for 15s"; fi
 ctl=$(mktemp); printf 'zzqx\n' > "$ctl"
 n=$(grep -cE -- zzqx "$ctl" || true); rm -f "$ctl"
 if [ "${n:-0}" -eq 1 ]; then pass "control: the counter sees a known string"; else bad "control: the counter sees a known string"; fi

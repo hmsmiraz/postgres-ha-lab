@@ -18,7 +18,7 @@ data:
               summary: No Patroni primary is reported
           - alert: ReplicationLag
             expr: max(pg_stat_replication_pg_wal_lsn_diff) > 10240
-            for: 30s
+            for: 15s
             labels:
               severity: warning
             annotations:

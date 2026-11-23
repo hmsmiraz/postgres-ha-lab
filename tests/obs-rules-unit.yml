@@ -28,6 +28,13 @@ tests:
       - eval_time: 30s
         alertname: ReplicationLag
         exp_alerts: []
+      - eval_time: 50s
+        alertname: ReplicationLag
+        exp_alerts:
+          - exp_labels:
+              severity: warning
+            exp_annotations:
+              summary: A replica is more than 10 KiB behind in replay
       - eval_time: 2m
         alertname: ReplicationLag
         exp_alerts:

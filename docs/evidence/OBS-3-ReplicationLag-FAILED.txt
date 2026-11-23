@@ -1,0 +1,24 @@
+EXPECTED RED LINES: the alert did not reach firing; this is a finding about the 10 KiB and 30 s thresholds against Patroni resuming replay (see the report of this run).
+---- raw output below, unchanged ----
+date_utc: 2026-11-23T12:56:43Z  leader: pg-ha-2  paused replica: pg-ha-0
+state before: inactive
+t=1s state=inactive
+t=6s state=inactive
+t=12s state=inactive
+t=17s state=inactive
+t=23s state=pending
+t=28s state=pending
+t=34s state=pending
+t=39s state=pending
+t=45s state=pending
+t=50s state=pending
+t=56s state=inactive
+t=61s state=inactive
+t=69s state=pending
+t=75s state=pending
+t=81s state=inactive
+t=89s state=inactive
+t=98s state=inactive
+first pending at: 23  first firing at: never
+state after resume: inactive
+FAIL  ReplicationLag did not reach firing within 100 s (pending: 23)

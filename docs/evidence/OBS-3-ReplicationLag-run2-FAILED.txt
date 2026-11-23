@@ -1,0 +1,24 @@
+EXPECTED RED LINES: the alert did not reach firing in the second attempt with for 15s and a 0.3 s re-pause loop (see the report of this run).
+---- raw output below, unchanged ----
+date_utc: 2026-11-23T13:01:26Z  leader: pg-ha-2  paused replica: pg-ha-0
+state before: inactive
+t=1s state=inactive
+t=7s state=pending
+t=13s state=pending
+t=18s state=pending
+t=24s state=inactive
+t=30s state=inactive
+t=36s state=inactive
+t=42s state=pending
+t=51s state=pending
+t=58s state=inactive
+t=63s state=inactive
+t=69s state=pending
+t=74s state=pending
+t=80s state=pending
+t=86s state=inactive
+t=92s state=inactive
+t=98s state=pending
+first pending at: 7  first firing at: never
+state after resume: inactive
+FAIL  ReplicationLag did not reach firing within 100 s (pending: 7)
