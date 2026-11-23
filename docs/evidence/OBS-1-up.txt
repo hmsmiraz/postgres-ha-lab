@@ -1,0 +1,21 @@
+date_utc: 2026-11-23T04:57:33Z
+PASS  scripts/obs-up.sh exists and is executable
+PASS  scripts/gen-grafana-secret.sh exists and is executable
+PASS  obs-up has set -euo pipefail (1)
+PASS  obs-up sources versions.env (1)
+PASS  obs-up uses the tag form of PROMETHEUS_IMAGE (1)
+PASS  obs-up uses the tag form of KSM_IMAGE (1)
+PASS  obs-up uses the tag form of GRAFANA_IMAGE (1)
+PASS  obs-up fills the three image placeholders (3)
+PASS  obs-up applies the four manifest files (4)
+PASS  obs-up waits for the three rollouts (3)
+PASS  obs-up never deletes anything
+PASS  obs-up creates the Secret before it applies 40-grafana.yaml
+PASS  generator has set -euo pipefail (1)
+PASS  generator defaults to namespace pg-ha (1)
+PASS  generator writes the key admin-password (1)
+PASS  generator draws the value from openssl rand (1)
+PASS  generator keeps an existing Secret (1)
+PASS  generator names the Secret grafana-admin (5)
+PASS  generator never prints the value or traces
+PASS  control: the counter sees a known string
