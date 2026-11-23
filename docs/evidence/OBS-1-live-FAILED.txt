@@ -1,0 +1,13 @@
+EXPECTED RED LINES: all 9 FAIL lines are deliberate: the test was written before the observability stack is applied (test first).
+---- raw output below, unchanged ----
+date_utc: 2026-11-23T04:58:41Z
+FAIL  deployment prometheus is available (available: none)
+FAIL  deployment kube-state-metrics is available (available: none)
+FAIL  deployment grafana is available (available: none)
+FAIL  prometheus is ready
+FAIL  job patroni has 3 targets up (found 0)
+FAIL  job postgres-exporter has 3 targets up (found 0)
+FAIL  job kube-state-metrics has 1 targets up (found 0)
+FAIL  job prometheus has 1 targets up (found 0)
+FAIL  grafana health reports database ok
+PASS  control: the target counter returns 0 for input without targets

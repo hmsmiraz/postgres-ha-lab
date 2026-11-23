@@ -1,0 +1,11 @@
+date_utc: 2026-11-23T05:00:12Z
+PASS  deployment prometheus is available
+PASS  deployment kube-state-metrics is available
+PASS  deployment grafana is available
+PASS  prometheus is ready
+PASS  job patroni has 3 targets up
+PASS  job postgres-exporter has 3 targets up
+PASS  job kube-state-metrics has 1 targets up
+PASS  job prometheus has 1 targets up
+PASS  grafana health reports database ok
+PASS  control: the target counter returns 0 for input without targets
