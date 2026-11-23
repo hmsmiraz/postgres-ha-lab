@@ -1,0 +1,16 @@
+EXPECTED RED LINES: the 1 FAIL lines are a finding about the lag metrics or the scrape timing (see the report of this run).
+---- raw output below, unchanged ----
+date_utc: 2026-11-23T05:37:34Z
+leader: pg-ha-2  async replica (paused): pg-ha-0  sync standby (control): pg-ha-1
+PASS  control: an absent series reads as none
+PASS  bytes lag has 2 series (one per replica)
+PASS  seconds lag has 3 series (one per pod)
+PASS  baseline: pg-ha-0 bytes lag is 0
+FAIL  replay is paused on pg-ha-0
+during pause: pg-ha-0 bytes lag 16312, seconds lag 414.343944
+PASS  bytes lag of pg-ha-0 rises above 0 while replay is paused
+PASS  seconds lag of pg-ha-0 rises above 0 while replay is paused
+PASS  control: pg-ha-1 bytes lag stays 0
+after resume: pg-ha-0 bytes lag 0
+PASS  bytes lag of pg-ha-0 returns to 0 after resume
+PASS  replay is running again on pg-ha-0

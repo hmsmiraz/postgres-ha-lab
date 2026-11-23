@@ -1,0 +1,36 @@
+date_utc: 2026-11-23T05:30:43Z  leader: pg-ha-2  paused replica: pg-ha-0
+--- before the pause (05:30:43)
+replica SQL receive|replay|paused|replay_age_s: 0/27097C50|0/27097C50|f|644 
+leader SQL replay diff bytes: 0 
+replica exporter: pg_replication_lag_seconds 0 pg_replication_last_replay_seconds 645.383646 
+leader exporter bytes: pg_stat_replication_pg_wal_lsn_diff 0 
+prometheus bytes:   ts=1795411845.492 v=0 
+prometheus seconds: ts=1795411845.933 v=0 
+--- pause +0 s (05:30:46)
+replica SQL receive|replay|paused|replay_age_s: 0/2710E418|0/27097C50|t|648 
+leader SQL replay diff bytes: 485320 
+replica exporter: pg_replication_lag_seconds 649.13769 pg_replication_last_replay_seconds 649.13769 
+leader exporter bytes: pg_stat_replication_pg_wal_lsn_diff 485320 
+prometheus bytes:   ts=1795411849.273 v=0 
+prometheus seconds: ts=1795411849.766 v=0 
+--- pause +20 s (05:31:09)
+replica SQL receive|replay|paused|replay_age_s: 0/2710E450|0/2710E450|f|23 
+leader SQL replay diff bytes: 0 
+replica exporter: pg_replication_lag_seconds 0 pg_replication_last_replay_seconds 24.635586 
+leader exporter bytes: pg_stat_replication_pg_wal_lsn_diff 0 
+prometheus bytes:   ts=1795411872.762 v=0 
+prometheus seconds: ts=1795411873.253 v=0 
+--- pause +40 s (05:31:33)
+replica SQL receive|replay|paused|replay_age_s: 0/2710E450|0/2710E450|f|47 
+leader SQL replay diff bytes: 0 
+replica exporter: pg_replication_lag_seconds 0 pg_replication_last_replay_seconds 48.07325 
+leader exporter bytes: pg_stat_replication_pg_wal_lsn_diff 0 
+prometheus bytes:   ts=1795411896.009 v=0 
+prometheus seconds: ts=1795411896.619 v=0 
+--- 30 s after resume (05:32:07)
+replica SQL receive|replay|paused|replay_age_s: 0/2710E558|0/2710E558|f|81 
+leader SQL replay diff bytes: 0 
+replica exporter: pg_replication_lag_seconds 0 pg_replication_last_replay_seconds 81.789913 
+leader exporter bytes: pg_stat_replication_pg_wal_lsn_diff 0 
+prometheus bytes:   ts=1795411929.760 v=0 
+prometheus seconds: ts=1795411930.363 v=0 
