@@ -1,0 +1,16 @@
+date_utc: 2026-11-23T03:22:06Z
+tag form: quay.io/prometheuscommunity/postgres-exporter:v0.21.1
+=== before ===
+kind-worker  tag form:    does NOT resolve
+kind-worker  digest form: does NOT resolve
+kind-worker2 tag form:    does NOT resolve
+Image: "quay.io/prometheuscommunity/postgres-exporter:v0.21.1" with ID "sha256:d75080f7313a9dece64a6070c554616fec0648bfa9fc35edfb4a0cdd17fd8e9d" not yet present on node "kind-worker", loading...
+kind load exit 0
+=== after ===
+kind-worker  tag form:    resolves
+kind-worker  digest form: does NOT resolve
+kind-worker2 tag form:    does NOT resolve (control, expected: does NOT resolve)
+=== names in the node store (kind-worker, postgres-exporter only) ===
+quay.io/prometheuscommunity/postgres-exporter:v0.21.1 application/vnd.oci.image.manifest.v1+json
+=== imageID the node reports for the tag form ===
+sha256:d75080f7313a9dece64a6070c554616fec0648bfa9fc35edfb4a0cdd17fd8e9d

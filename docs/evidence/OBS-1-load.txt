@@ -1,0 +1,38 @@
+date_utc: 2026-11-23T03:23:38Z
+resolving tag forms before the load: 1 of 16
+Image: "docker.io/prom/prometheus:v3.16.0" with ID "sha256:9bd9cbec4bd4f33bb6ccedf8c25a5132f8e7b2fb158c9a223a54485e4332e962" not yet present on node "kind-worker3", loading...
+Image: "docker.io/prom/prometheus:v3.16.0" with ID "sha256:9bd9cbec4bd4f33bb6ccedf8c25a5132f8e7b2fb158c9a223a54485e4332e962" not yet present on node "kind-control-plane", loading...
+Image: "docker.io/prom/prometheus:v3.16.0" with ID "sha256:9bd9cbec4bd4f33bb6ccedf8c25a5132f8e7b2fb158c9a223a54485e4332e962" not yet present on node "kind-worker", loading...
+Image: "docker.io/prom/prometheus:v3.16.0" with ID "sha256:9bd9cbec4bd4f33bb6ccedf8c25a5132f8e7b2fb158c9a223a54485e4332e962" not yet present on node "kind-worker2", loading...
+kind load exit 0 for docker.io/prom/prometheus:v3.16.0
+Image: "quay.io/prometheuscommunity/postgres-exporter:v0.21.1" with ID "sha256:d75080f7313a9dece64a6070c554616fec0648bfa9fc35edfb4a0cdd17fd8e9d" not yet present on node "kind-worker3", loading...
+Image: "quay.io/prometheuscommunity/postgres-exporter:v0.21.1" with ID "sha256:d75080f7313a9dece64a6070c554616fec0648bfa9fc35edfb4a0cdd17fd8e9d" not yet present on node "kind-control-plane", loading..
+Image: "quay.io/prometheuscommunity/postgres-exporter:v0.21.1" with ID "sha256:d75080f7313a9dece64a6070c554616fec0648bfa9fc35edfb4a0cdd17fd8e9d" not yet present on node "kind-worker2", loading...
+kind load exit 0 for quay.io/prometheuscommunity/postgres-exporter:v0.21.1
+Image: "registry.k8s.io/kube-state-metrics/kube-state-metrics:v2.20.0" with ID "sha256:a635e3d8e1a4f75a18349bdea3fccfcf84ac6da920eeed1eb3313d8065ab7bdd" not yet present on node "kind-worker3", loading
+Image: "registry.k8s.io/kube-state-metrics/kube-state-metrics:v2.20.0" with ID "sha256:a635e3d8e1a4f75a18349bdea3fccfcf84ac6da920eeed1eb3313d8065ab7bdd" not yet present on node "kind-control-plane", l
+Image: "registry.k8s.io/kube-state-metrics/kube-state-metrics:v2.20.0" with ID "sha256:a635e3d8e1a4f75a18349bdea3fccfcf84ac6da920eeed1eb3313d8065ab7bdd" not yet present on node "kind-worker", loading.
+Image: "registry.k8s.io/kube-state-metrics/kube-state-metrics:v2.20.0" with ID "sha256:a635e3d8e1a4f75a18349bdea3fccfcf84ac6da920eeed1eb3313d8065ab7bdd" not yet present on node "kind-worker2", loading
+kind load exit 0 for registry.k8s.io/kube-state-metrics/kube-state-metrics:v2.20.0
+Image: "docker.io/grafana/grafana:13.3.1" with ID "sha256:bc5ca66188ced0ed137172d30a53944c7f13e183c099cae842da777103feedaa" not yet present on node "kind-worker3", loading...
+Image: "docker.io/grafana/grafana:13.3.1" with ID "sha256:bc5ca66188ced0ed137172d30a53944c7f13e183c099cae842da777103feedaa" not yet present on node "kind-control-plane", loading...
+Image: "docker.io/grafana/grafana:13.3.1" with ID "sha256:bc5ca66188ced0ed137172d30a53944c7f13e183c099cae842da777103feedaa" not yet present on node "kind-worker", loading...
+Image: "docker.io/grafana/grafana:13.3.1" with ID "sha256:bc5ca66188ced0ed137172d30a53944c7f13e183c099cae842da777103feedaa" not yet present on node "kind-worker2", loading...
+kind load exit 0 for docker.io/grafana/grafana:13.3.1
+resolving tag forms after the load: 16 of 16 (expected 16)
+kind-control-plane docker.io/prom/prometheus:v3.16.0: resolves
+kind-control-plane quay.io/prometheuscommunity/postgres-exporter:v0.21.1: resolves
+kind-control-plane registry.k8s.io/kube-state-metrics/kube-state-metrics:v2.20.0: resolves
+kind-control-plane docker.io/grafana/grafana:13.3.1: resolves
+kind-worker docker.io/prom/prometheus:v3.16.0: resolves
+kind-worker quay.io/prometheuscommunity/postgres-exporter:v0.21.1: resolves
+kind-worker registry.k8s.io/kube-state-metrics/kube-state-metrics:v2.20.0: resolves
+kind-worker docker.io/grafana/grafana:13.3.1: resolves
+kind-worker2 docker.io/prom/prometheus:v3.16.0: resolves
+kind-worker2 quay.io/prometheuscommunity/postgres-exporter:v0.21.1: resolves
+kind-worker2 registry.k8s.io/kube-state-metrics/kube-state-metrics:v2.20.0: resolves
+kind-worker2 docker.io/grafana/grafana:13.3.1: resolves
+kind-worker3 docker.io/prom/prometheus:v3.16.0: resolves
+kind-worker3 quay.io/prometheuscommunity/postgres-exporter:v0.21.1: resolves
+kind-worker3 registry.k8s.io/kube-state-metrics/kube-state-metrics:v2.20.0: resolves
+kind-worker3 docker.io/grafana/grafana:13.3.1: resolves

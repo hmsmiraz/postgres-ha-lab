@@ -1,0 +1,11 @@
+date_utc: 2026-11-23T03:29:12Z
+t-prometheus: started
+PASS  t-prometheus resolves its pinned image from the node store (Never)
+t-exporter: started
+PASS  t-exporter resolves its pinned image from the node store (Never)
+t-ksm: started
+PASS  t-ksm resolves its pinned image from the node store (Never)
+t-grafana: started
+PASS  t-grafana resolves its pinned image from the node store (Never)
+t-absent: never
+PASS  negative control: an absent image shows ErrImageNeverPull

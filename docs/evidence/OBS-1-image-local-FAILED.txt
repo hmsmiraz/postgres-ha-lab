@@ -1,0 +1,13 @@
+EXPECTED RED LINES: the 4 FAIL lines are a finding about how the images were loaded by kind load, not a defect of the test (see the report of this run).
+---- raw output below, unchanged ----
+date_utc: 2026-11-23T03:16:21Z
+t-prometheus: never
+FAIL  t-prometheus resolves its pinned image from the node store (Never)
+t-exporter: never
+FAIL  t-exporter resolves its pinned image from the node store (Never)
+t-ksm: never
+FAIL  t-ksm resolves its pinned image from the node store (Never)
+t-grafana: never
+FAIL  t-grafana resolves its pinned image from the node store (Never)
+t-absent: never
+PASS  negative control: an absent image shows ErrImageNeverPull
