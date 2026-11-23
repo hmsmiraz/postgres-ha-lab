@@ -1,0 +1,8 @@
+Step 2: backup trigger (ADR-0002)
+Step 3: SPEC wording
+Step B result: the rollout worked
+Block 1: write ADR-0006 (the approved text)
+RS-3 closed (item 9)
+BK-4 passed again
+Item 45 passed
+Log capture for this chat

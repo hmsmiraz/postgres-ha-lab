@@ -121,3 +121,11 @@ Each item says how it was found. Items marked "not tested" are open questions, n
 - tests/bk-schedule.sh, tests/bk-retention.sh and tests/rs-full.sh make Jobs from the CronJob template, which now also run
   verify and fail if the report lacks "status: ok". They were not rerun after the script gained the verify step (ADR-0002
   amendments 1 and 2); the final suite rerun (handoff item 30) covers it.
+
+## Phase 4 findings (2026-11-23)
+- Log redaction (ADR-0007, rule R2): an encrypted private key whose body follows a blank line is not fully redacted, because the blank line closes the block (not tested). A single plain word of 4 or more letters right after a lone marker is replaced. Other secret shapes in the pushed chat logs were never covered.
+- The four monitoring images (Prometheus, postgres-exporter, kube-state-metrics, Grafana) cannot be referenced by digest in pods on this cluster: kind load stores a re-exported manifest, and the registry digest is in no node (docs/evidence/OBS-1-image-local-FAILED.txt). Manifests use name:tag and the digest is checked on the host only (tests/obs-image.sh). Why the object store images did resolve by digest is unknown.
+- kind load left four unnamed import-2026-11-23 entries in every node (about 1.7 GB per node) from the digest-form load. They are unused and not removed.
+- The names loaded by kind load were not tested across a kind restart.
+- The BK-2 CronJob did not fire at 02:00 UTC on 2026-11-22 or on 2026-11-23: at 03:13 UTC on 2026-11-23 the only Job was the 2-minute test run from 2026-11-22 (docs/evidence/BK-2-cron-fire.txt) and the last schedule time had not moved. The cause is unknown and was not investigated yet.
+- The history scan counts here (gitleaks over 34 commits, in the Backups section) are older than the scan of 2026-11-22 (43 commits) and the scan before the push on 2026-11-23 (45 commits, all clean). Binary files and secret values from before the BK-1 rebuild are still not covered.
