@@ -1,0 +1,15 @@
+date_utc: 2026-11-23T16:19:41Z
+PASS  control: admin identity can get secrets (the check can say yes)
+PASS  patroni can get configmaps in pg-ha
+PASS  patroni can patch pods in pg-ha
+PASS  patroni cannot get secrets in pg-ha
+PASS  patroni cannot create pods in pg-ha
+PASS  patroni cannot delete pods in pg-ha
+PASS  patroni cannot create deployments in pg-ha
+PASS  patroni cannot get secrets in pg-restore
+PASS  patroni cannot list nodes
+PASS  kube-state-metrics cannot get secrets
+PASS  kube-state-metrics cannot create pods
+PASS  default account in pg-ha cannot get secrets
+PASS  RBAC manifests name no secrets resource and no wildcard
+ACCEPTED (not asserted): patroni can delete configmaps: yes; deletecollection: yes. Need not tested.
