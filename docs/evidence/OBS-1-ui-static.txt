@@ -1,0 +1,17 @@
+date_utc: 2026-11-23T05:06:54Z
+PASS  scripts/obs-open.sh exists and is executable
+PASS  obs-open binds 127.0.0.1 (3)
+PASS  obs-open forwards prometheus 9090 (1)
+PASS  obs-open forwards grafana 3000 (1)
+PASS  obs-open never uses 0.0.0.0
+PASS  k8s/obs/50-dashboards.yaml exists and is not empty
+PASS  dashboards ConfigMap is named grafana-dashboards (1)
+PASS  dashboards ConfigMap is in pg-ha (1)
+PASS  dashboard queries patroni_primary (1)
+PASS  dashboard queries pg_up (1)
+PASS  dashboard queries pg_stat_archiver_failed_count (1)
+PASS  dashboard queries pg_replication_slots (1)
+PASS  dashboard queries kube_cronjob_status_last_schedule_time (1)
+PASS  dashboard JSON parses (1)
+PASS  grafana news feed is disabled (1)
+PASS  control: the counter sees a known string

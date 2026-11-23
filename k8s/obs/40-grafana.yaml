@@ -90,6 +90,8 @@ spec:
               value: "false"
             - name: GF_UNIFIED_ALERTING_ENABLED
               value: "false"
+            - name: GF_NEWS_NEWS_FEED_ENABLED
+              value: "false"
           readinessProbe:
             httpGet:
               path: /api/health

@@ -1,0 +1,231 @@
+# OBS-1 (UI): one Grafana dashboard from the Patroni, postgres-exporter and kube-state-metrics series.
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: grafana-dashboards
+  namespace: pg-ha
+data:
+  pg-ha.json: |
+    {
+      "title": "pg-ha overview",
+      "uid": "pg-ha-overview",
+      "schemaVersion": 39,
+      "version": 1,
+      "refresh": "30s",
+      "time": {
+        "from": "now-6h",
+        "to": "now"
+      },
+      "panels": [
+        {
+          "id": 1,
+          "title": "Leader present",
+          "type": "stat",
+          "gridPos": {
+            "x": 0,
+            "y": 0,
+            "w": 8,
+            "h": 6
+          },
+          "targets": [
+            {
+              "refId": "A",
+              "expr": "sum(patroni_primary)",
+              "legendFormat": "{{instance}}"
+            }
+          ]
+        },
+        {
+          "id": 2,
+          "title": "Replicas streaming",
+          "type": "stat",
+          "gridPos": {
+            "x": 8,
+            "y": 0,
+            "w": 8,
+            "h": 6
+          },
+          "targets": [
+            {
+              "refId": "A",
+              "expr": "sum(patroni_replica) + sum(patroni_sync_standby)",
+              "legendFormat": "{{instance}}"
+            }
+          ]
+        },
+        {
+          "id": 3,
+          "title": "Timeline",
+          "type": "stat",
+          "gridPos": {
+            "x": 16,
+            "y": 0,
+            "w": 8,
+            "h": 6
+          },
+          "targets": [
+            {
+              "refId": "A",
+              "expr": "max(patroni_postgres_timeline)",
+              "legendFormat": "{{instance}}"
+            }
+          ]
+        },
+        {
+          "id": 4,
+          "title": "Exporter up per pod",
+          "type": "timeseries",
+          "gridPos": {
+            "x": 0,
+            "y": 6,
+            "w": 8,
+            "h": 6
+          },
+          "targets": [
+            {
+              "refId": "A",
+              "expr": "pg_up",
+              "legendFormat": "{{instance}}"
+            }
+          ]
+        },
+        {
+          "id": 5,
+          "title": "Archiver failed count",
+          "type": "timeseries",
+          "gridPos": {
+            "x": 8,
+            "y": 6,
+            "w": 8,
+            "h": 6
+          },
+          "targets": [
+            {
+              "refId": "A",
+              "expr": "pg_stat_archiver_failed_count",
+              "legendFormat": "{{instance}}"
+            }
+          ]
+        },
+        {
+          "id": 6,
+          "title": "Seconds since last archive",
+          "type": "timeseries",
+          "gridPos": {
+            "x": 16,
+            "y": 6,
+            "w": 8,
+            "h": 6
+          },
+          "targets": [
+            {
+              "refId": "A",
+              "expr": "pg_stat_archiver_last_archive_age",
+              "legendFormat": "{{instance}}"
+            }
+          ],
+          "fieldConfig": {
+            "defaults": {
+              "unit": "s"
+            },
+            "overrides": []
+          }
+        },
+        {
+          "id": 7,
+          "title": "pg_wal size per pod",
+          "type": "timeseries",
+          "gridPos": {
+            "x": 0,
+            "y": 12,
+            "w": 8,
+            "h": 6
+          },
+          "targets": [
+            {
+              "refId": "A",
+              "expr": "pg_wal_size_bytes",
+              "legendFormat": "{{instance}}"
+            }
+          ],
+          "fieldConfig": {
+            "defaults": {
+              "unit": "bytes"
+            },
+            "overrides": []
+          }
+        },
+        {
+          "id": 8,
+          "title": "Slot safe WAL size",
+          "type": "timeseries",
+          "gridPos": {
+            "x": 8,
+            "y": 12,
+            "w": 8,
+            "h": 6
+          },
+          "targets": [
+            {
+              "refId": "A",
+              "expr": "pg_replication_slots_safe_wal_size_bytes",
+              "legendFormat": "{{instance}}"
+            }
+          ],
+          "fieldConfig": {
+            "defaults": {
+              "unit": "bytes"
+            },
+            "overrides": []
+          }
+        },
+        {
+          "id": 9,
+          "title": "Backup CronJob age",
+          "type": "stat",
+          "gridPos": {
+            "x": 16,
+            "y": 12,
+            "w": 8,
+            "h": 6
+          },
+          "targets": [
+            {
+              "refId": "A",
+              "expr": "time() - kube_cronjob_status_last_successful_time{cronjob=\"pgbackrest-backup\"}",
+              "legendFormat": "{{instance}}"
+            }
+          ],
+          "fieldConfig": {
+            "defaults": {
+              "unit": "s"
+            },
+            "overrides": []
+          }
+        },
+        {
+          "id": 10,
+          "title": "Backup CronJob last schedule time",
+          "type": "stat",
+          "gridPos": {
+            "x": 0,
+            "y": 18,
+            "w": 8,
+            "h": 6
+          },
+          "targets": [
+            {
+              "refId": "A",
+              "expr": "kube_cronjob_status_last_schedule_time{cronjob=\"pgbackrest-backup\"}",
+              "legendFormat": "{{instance}}"
+            }
+          ],
+          "fieldConfig": {
+            "defaults": {
+              "unit": "dateTimeAsIso"
+            },
+            "overrides": []
+          }
+        }
+      ]
+    }

@@ -1,0 +1,19 @@
+EXPECTED RED LINES: all 15 FAIL lines are deliberate: the test was written before scripts/obs-open.sh, the dashboard ConfigMap and the news setting exist (test first).
+---- raw output below, unchanged ----
+date_utc: 2026-11-23T05:05:44Z
+FAIL  scripts/obs-open.sh exists and is executable
+FAIL  obs-open binds 127.0.0.1 (found 0, need 1)
+FAIL  obs-open forwards prometheus 9090 (found 0, need 1)
+FAIL  obs-open forwards grafana 3000 (found 0, need 1)
+FAIL  obs-open never uses 0.0.0.0 (file empty or found 0)
+FAIL  k8s/obs/50-dashboards.yaml exists and is not empty
+FAIL  dashboards ConfigMap is named grafana-dashboards (found 0, need 1)
+FAIL  dashboards ConfigMap is in pg-ha (found 0, need 1)
+FAIL  dashboard queries patroni_primary (found 0, need 1)
+FAIL  dashboard queries pg_up (found 0, need 1)
+FAIL  dashboard queries pg_stat_archiver_failed_count (found 0, need 1)
+FAIL  dashboard queries pg_replication_slots (found 0, need 1)
+FAIL  dashboard queries kube_cronjob_status_last_schedule_time (found 0, need 1)
+FAIL  dashboard JSON parses
+FAIL  grafana news feed is disabled (found 0, need 1)
+PASS  control: the counter sees a known string
