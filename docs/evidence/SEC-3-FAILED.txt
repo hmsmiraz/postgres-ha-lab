@@ -1,0 +1,15 @@
+EXPECTED RED LINES: all 5 FAIL lines are deliberate: the test was written before the NetworkPolicies exist (test first). The PASS lines are controls and flows that already work.
+---- raw output below, unchanged ----
+date_utc: 2026-11-23T15:40:34Z
+PASS  control: the intruder pod reaches Grafana on 3000
+PASS  control: a closed port reads as blocked
+FAIL  k8s/pg/70-networkpolicy.yaml exists
+FAIL  at least 2 NetworkPolicies exist in pg-ha (found 0)
+FAIL  intruder is blocked from pg-ha-0 on 5432
+FAIL  intruder is blocked from pg-ha-0 on 8008
+FAIL  intruder is blocked from objstore on 3900
+PASS  app=write-probe reaches pg-ha-0 on 5432
+PASS  pg-ha-0 reaches objstore on 3900
+PASS  pg-restore-0 reaches objstore on 3900
+PASS  Prometheus has 8 targets up
+PASS  Patroni is 1 leader + 2 streaming replicas

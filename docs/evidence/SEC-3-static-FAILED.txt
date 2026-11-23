@@ -1,0 +1,12 @@
+EXPECTED RED LINES: all 8 FAIL lines are deliberate: the test was written before the policy file exists (test first).
+---- raw output below, unchanged ----
+date_utc: 2026-11-23T16:14:19Z
+FAIL  file has 2 documents
+FAIL  policies are pg-ha-ingress and objstore-ingress
+FAIL  both policies are in pg-ha
+FAIL  policyTypes is Ingress only
+FAIL  ports are 3900, 3903, 5432, 8008, 8432, 9187
+FAIL  no ipBlock rule
+FAIL  no 0.0.0.0/0
+FAIL  objstore allows the pg-restore namespace
+PASS  control: the counter sees a known string
