@@ -1,0 +1,10 @@
+date_utc: 2026-11-23T14:02:25Z
+PASS  gitleaks over all commits and refs: 0 leaks (64 commits)
+PASS  gitleaks over the tracked files: 0 leaks (291 files)
+PASS  forbidden name: 0 hits in content, messages and authors
+PASS  forbidden name: 0 hits in content, messages and authors
+PASS  no co-author or contributor trailer
+PASS  secret value list is usable (10 values, none short)
+PASS  no live secret value in tracked files (0) or in any commit (0)
+PASS  control: a planted token makes gitleaks fail
+PASS  control: the value matcher finds a known string
