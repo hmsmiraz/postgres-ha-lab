@@ -1,0 +1,20 @@
+EXPECTED RED LINES: the 2 FAIL lines are findings about running pods or my checks (see the report of this run).
+---- raw output below, unchanged ----
+date_utc: 2026-11-23T16:20:58Z
+PASS  control: the checker reports 4 violations for a synthetic bad container
+PASS  namespace pg-ha enforces restricted
+FAIL  pg-ha: 10 pods, 21 containers, violations: 20
+pg-ha/grafana-9b44b84c8-l7lnm/grafana: privilege escalation allowed
+pg-ha/kube-state-metrics-549dc7f774-272x9/kube-state-metrics: privilege escalation allowed
+pg-ha/objstore-0/garage: privilege escalation allowed
+pg-ha/objstore-0/tls: privilege escalation allowed
+pg-ha/objstore-0/init-dirs: privilege escalation allowed
+pg-ha/objstore-init-5dbf6/init: privilege escalation allowed
+pg-ha/pg-ha-0/postgres: privilege escalation allowed
+pg-ha/pg-ha-0/backup: privilege escalation allowed
+PASS  namespace pg-restore enforces restricted
+FAIL  pg-restore: 3 pods, 3 containers, violations: 2
+pg-restore/pg-restore-0/postgres: privilege escalation allowed
+pg-restore/pg-restore-1/postgres: privilege escalation allowed
+pg-restore/pg-restore-2/postgres: privilege escalation allowed
+PASS  control: a privileged pod is rejected by Pod Security admission

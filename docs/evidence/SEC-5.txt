@@ -1,0 +1,7 @@
+date_utc: 2026-11-23T16:21:47Z
+PASS  control: the checker reports 4 violations for a synthetic bad container
+PASS  namespace pg-ha enforces restricted
+PASS  pg-ha: 10 pods, 21 containers, 0 violations
+PASS  namespace pg-restore enforces restricted
+PASS  pg-restore: 3 pods, 3 containers, 0 violations
+PASS  control: a privileged pod is rejected by Pod Security admission
