@@ -1,0 +1,30 @@
+=== tests/sec-tls-static.sh ===
+date_utc: 2026-11-23T14:17:08Z
+PASS  pg_hba has 4 hostssl rules (4)
+PASS  pg_hba has no plain host rule
+PASS  ssl is on (1)
+PASS  ssl_cert_file is /tls/tls.crt (1)
+PASS  ssl_key_file is /tls/tls.key (1)
+PASS  replication uses sslmode verify-ca (1)
+PASS  replication has sslrootcert /tls/ca.crt (1)
+PASS  statefulset uses the Secret pg-tls (1)
+PASS  statefulset mounts /tls in postgres and pgserver (2)
+PASS  pg-up.sh calls the pg-tls generator (1)
+PASS  control: the counter sees a known string
+=== tests/obs-exporter-static.sh ===
+date_utc: 2026-11-23T14:17:09Z
+PASS  sidecar container is named postgres-exporter (1)
+PASS  sidecar image is the placeholder (1)
+PASS  image placeholders in the statefulset (postgres, backup, pgserver, exporter) (4)
+PASS  statefulset never uses latest
+PASS  exporter port 9187 (1)
+PASS  exporter data source uses the socket (1)
+PASS  exporter data source names the run directory (1)
+PASS  exporter data source has no password (1)
+PASS  exporter data source has no sslmode require or password text
+PASS  every container drops all capabilities (4 containers) (4)
+PASS  every container blocks privilege escalation (4 containers) (4)
+PASS  exporter has a memory limit of 128Mi (2)
+PASS  pg-up fills the exporter image placeholder (1)
+PASS  pg-up uses the tag form of PG_EXPORTER_IMAGE (1)
+PASS  control: the counter sees a known string

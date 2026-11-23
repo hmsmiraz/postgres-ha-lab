@@ -156,6 +156,9 @@ spec:
             - name: objstore-ca
               mountPath: /certs
               readOnly: true
+            - name: pg-tls
+              mountPath: /tls
+              readOnly: true
         - name: backup
           image: __IMAGE__
           imagePullPolicy: IfNotPresent
@@ -307,6 +310,10 @@ spec:
             items:
               - key: ca.crt
                 path: ca.crt
+        - name: pg-tls
+          secret:
+            secretName: pg-tls
+            defaultMode: 288
         - name: backup-scripts
           configMap:
             name: pgbackrest-scripts

@@ -12,6 +12,7 @@ kubectl apply -f k8s/pg/00-namespace.yaml
 bash scripts/gen-secrets.sh
 bash scripts/gen-objstore-secrets.sh
 bash scripts/gen-pgbackrest-tls.sh
+bash scripts/gen-pg-tls.sh
 kubectl apply -f k8s/pg/10-rbac.yaml -f k8s/pg/20-config.yaml \
               -f k8s/pg/25-pgbackrest.yaml -f k8s/pg/30-services.yaml -f k8s/pg/40-pdb.yaml
 sed -e "s|__IMAGE__|${IMG}|g" -e "s|__PG_EXPORTER_IMAGE__|${PG_EXPORTER_IMAGE%%@*}|g" k8s/pg/50-statefulset.yaml | kubectl apply -f -
