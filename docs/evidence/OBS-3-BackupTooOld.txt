@@ -1,0 +1,14 @@
+date_utc: 2026-11-23T13:55:45Z
+NOTE: the tested threshold is 3600 s, not the real 129600 s
+before: time() - kube_cronjob_status_last_successful_time{cronjob="pgbackrest-backup"} > 129600 state=inactive
+lowered: time() - kube_cronjob_status_last_successful_time{cronjob="pgbackrest-backup"} > 3600
+t=1s state=pending
+t=11s state=pending
+t=22s state=pending
+t=33s state=firing
+first pending at: 1  first firing at: 33
+restored: time() - kube_cronjob_status_last_successful_time{cronjob="pgbackrest-backup"} > 129600 state=inactive
+PASS  BackupTooOld reached firing with threshold 3600 (33s after Prometheus came back)
+PASS  live rule is back to 129600
+PASS  alert is inactive again
+PASS  live ConfigMap equals the repo file
