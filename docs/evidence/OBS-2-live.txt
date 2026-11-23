@@ -1,0 +1,10 @@
+date_utc: 2026-11-23T12:50:50Z
+PASS  group pg-ha has 5 rules
+PASS  alert NoPrimary is loaded
+PASS  alert ReplicationLag is loaded
+PASS  alert SlotRetention is loaded
+PASS  alert WalArchiveFailure is loaded
+PASS  alert BackupTooOld is loaded
+PASS  all 5 rules have health ok
+PASS  no alert is firing on a healthy cluster
+PASS  control: an absent rule counts 0

@@ -15,6 +15,7 @@ for i in "$P" "$K" "$G"; do kind load docker-image "$i" --name kind; done
 kubectl apply -f k8s/pg/00-namespace.yaml
 bash scripts/gen-grafana-secret.sh
 kubectl apply -f k8s/obs/10-rbac.yaml
+kubectl apply -f k8s/obs/25-rules.yaml
 sed "s|__PROMETHEUS_IMAGE__|${P}|g" k8s/obs/20-prometheus.yaml | kubectl apply -f -
 sed "s|__KSM_IMAGE__|${K}|g" k8s/obs/30-ksm.yaml | kubectl apply -f -
 kubectl apply -f k8s/obs/50-dashboards.yaml

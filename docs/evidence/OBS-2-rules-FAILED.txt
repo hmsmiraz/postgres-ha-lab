@@ -1,0 +1,16 @@
+EXPECTED RED LINES: all 12 FAIL lines are deliberate: the test was written before k8s/obs/25-rules.yaml and the rule loading exist (test first).
+---- raw output below, unchanged ----
+date_utc: 2026-11-23T12:44:08Z
+FAIL  k8s/obs/25-rules.yaml exists and is not empty
+FAIL  rules ConfigMap is named prometheus-rules (found 0, need 1)
+FAIL  alert NoPrimary is defined (found 0, need 1)
+FAIL  alert ReplicationLag is defined (found 0, need 1)
+FAIL  alert SlotRetention is defined (found 0, need 1)
+FAIL  alert WalArchiveFailure is defined (found 0, need 1)
+FAIL  alert BackupTooOld is defined (found 0, need 1)
+FAIL  every alert has a for: duration (found 0, need 5)
+FAIL  prometheus config loads the rule files (found 0, need 1)
+FAIL  prometheus mounts the rules (found 0, need 1)
+FAIL  prometheus has the rules volume (found 0, need 1)
+FAIL  promtool check rules is clean
+PASS  control: the counter sees a known string

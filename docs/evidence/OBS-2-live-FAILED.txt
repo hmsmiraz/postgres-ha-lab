@@ -1,0 +1,12 @@
+EXPECTED RED LINES: all 7 FAIL lines are deliberate: the test was written before the alert rules are applied to Prometheus (test first).
+---- raw output below, unchanged ----
+date_utc: 2026-11-23T12:48:11Z
+FAIL  group pg-ha has 5 rules (found 0)
+FAIL  alert NoPrimary is loaded
+FAIL  alert ReplicationLag is loaded
+FAIL  alert SlotRetention is loaded
+FAIL  alert WalArchiveFailure is loaded
+FAIL  alert BackupTooOld is loaded
+FAIL  all 5 rules have health ok (found 0)
+PASS  no alert is firing on a healthy cluster
+PASS  control: an absent rule counts 0

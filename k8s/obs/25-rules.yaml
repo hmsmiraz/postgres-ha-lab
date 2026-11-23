@@ -1,0 +1,46 @@
+# OBS-2: Prometheus alert rules. No Alertmanager (decision D3 b): alerts show on the Prometheus Alerts page and in the API.
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: prometheus-rules
+  namespace: pg-ha
+data:
+  rules.yml: |
+    groups:
+      - name: pg-ha
+        rules:
+          - alert: NoPrimary
+            expr: sum(patroni_primary) < 1
+            for: 30s
+            labels:
+              severity: critical
+            annotations:
+              summary: No Patroni primary is reported
+          - alert: ReplicationLag
+            expr: max(pg_stat_replication_pg_wal_lsn_diff) > 10240
+            for: 30s
+            labels:
+              severity: warning
+            annotations:
+              summary: A replica is more than 10 KiB behind in replay
+          - alert: SlotRetention
+            expr: min(pg_replication_slots_safe_wal_size_bytes) < 268435456
+            for: 1m
+            labels:
+              severity: warning
+            annotations:
+              summary: A replication slot is close to the max_slot_wal_keep_size limit
+          - alert: WalArchiveFailure
+            expr: increase(pg_stat_archiver_failed_count[5m]) > 0
+            for: 1m
+            labels:
+              severity: critical
+            annotations:
+              summary: WAL archiving failed in the last 5 minutes
+          - alert: BackupTooOld
+            expr: time() - kube_cronjob_status_last_successful_time{cronjob="pgbackrest-backup"} > 129600
+            for: 1m
+            labels:
+              severity: warning
+            annotations:
+              summary: The last successful backup is older than 36 hours

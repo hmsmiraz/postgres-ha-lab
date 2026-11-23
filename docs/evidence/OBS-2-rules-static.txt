@@ -1,0 +1,99 @@
+=== tests/obs-rules-static.sh ===
+date_utc: 2026-11-23T12:46:31Z
+PASS  k8s/obs/25-rules.yaml exists and is not empty
+PASS  rules ConfigMap is named prometheus-rules (1)
+PASS  alert NoPrimary is defined (1)
+PASS  alert ReplicationLag is defined (1)
+PASS  alert SlotRetention is defined (1)
+PASS  alert WalArchiveFailure is defined (1)
+PASS  alert BackupTooOld is defined (1)
+PASS  every alert has a for: duration (5)
+PASS  prometheus config loads the rule files (1)
+PASS  prometheus mounts the rules (1)
+PASS  prometheus has the rules volume (1)
+PASS  promtool check rules is clean
+PASS  control: the counter sees a known string
+=== tests/obs-manifests.sh ===
+date_utc: 2026-11-23T12:46:32Z
+PASS  10-rbac.yaml exists and is not empty
+PASS  20-prometheus.yaml exists and is not empty
+PASS  30-ksm.yaml exists and is not empty
+PASS  40-grafana.yaml exists and is not empty
+PASS  rbac has a ClusterRole (1)
+PASS  rbac has no write verb
+PASS  prometheus PVC is 2Gi (1)
+PASS  prometheus retention is 7d (1)
+PASS  prometheus scrapes the three patroni pods on 8008 (3)
+PASS  prometheus has a postgres-exporter job (1)
+PASS  prometheus scrapes the three exporters on 9187 (3)
+PASS  prometheus image placeholder (1)
+PASS  ksm image placeholder (1)
+PASS  grafana image placeholder (1)
+PASS  20-prometheus.yaml never uses latest
+PASS  20-prometheus.yaml imagePullPolicy IfNotPresent (1)
+PASS  20-prometheus.yaml runAsNonRoot (1)
+PASS  20-prometheus.yaml no privilege escalation (1)
+PASS  20-prometheus.yaml drops all capabilities (1)
+PASS  20-prometheus.yaml seccomp RuntimeDefault (1)
+PASS  30-ksm.yaml never uses latest
+PASS  30-ksm.yaml imagePullPolicy IfNotPresent (1)
+PASS  30-ksm.yaml runAsNonRoot (1)
+PASS  30-ksm.yaml no privilege escalation (1)
+PASS  30-ksm.yaml drops all capabilities (1)
+PASS  30-ksm.yaml seccomp RuntimeDefault (1)
+PASS  40-grafana.yaml never uses latest
+PASS  40-grafana.yaml imagePullPolicy IfNotPresent (1)
+PASS  40-grafana.yaml runAsNonRoot (1)
+PASS  40-grafana.yaml no privilege escalation (1)
+PASS  40-grafana.yaml drops all capabilities (1)
+PASS  40-grafana.yaml seccomp RuntimeDefault (1)
+PASS  prometheus runs as 65534 (1)
+PASS  ksm runs as 65534 (1)
+PASS  grafana runs as 472 (1)
+PASS  grafana admin password comes from a secretKeyRef
+PASS  control: the counter sees a known string
+=== tests/obs-up-static.sh ===
+date_utc: 2026-11-23T12:46:32Z
+PASS  scripts/obs-up.sh exists and is executable
+PASS  scripts/gen-grafana-secret.sh exists and is executable
+PASS  obs-up has set -euo pipefail (1)
+PASS  obs-up sources versions.env (1)
+PASS  obs-up uses the tag form of PROMETHEUS_IMAGE (1)
+PASS  obs-up uses the tag form of KSM_IMAGE (1)
+PASS  obs-up uses the tag form of GRAFANA_IMAGE (1)
+PASS  obs-up fills the three image placeholders (3)
+PASS  obs-up applies the four manifest files (4)
+PASS  obs-up waits for the three rollouts (3)
+PASS  obs-up never deletes anything
+PASS  obs-up creates the Secret before it applies 40-grafana.yaml
+PASS  generator has set -euo pipefail (1)
+PASS  generator defaults to namespace pg-ha (1)
+PASS  generator writes the key admin-password (1)
+PASS  generator draws the value from openssl rand (1)
+PASS  generator keeps an existing Secret (1)
+PASS  generator names the Secret grafana-admin (5)
+PASS  generator never prints the value or traces
+PASS  control: the counter sees a known string
+=== tests/obs-ui-static.sh ===
+date_utc: 2026-11-23T12:46:32Z
+PASS  scripts/obs-open.sh exists and is executable
+PASS  obs-open binds 127.0.0.1 (3)
+PASS  obs-open forwards prometheus 9090 (1)
+PASS  obs-open forwards grafana 3000 (1)
+PASS  obs-open never uses 0.0.0.0
+PASS  k8s/obs/50-dashboards.yaml exists and is not empty
+PASS  dashboards ConfigMap is named grafana-dashboards (1)
+PASS  dashboards ConfigMap is in pg-ha (1)
+PASS  dashboard queries patroni_primary (1)
+PASS  dashboard queries pg_up (1)
+PASS  dashboard queries pg_stat_archiver_failed_count (1)
+PASS  dashboard queries pg_replication_slots (1)
+PASS  dashboard queries kube_cronjob_status_last_schedule_time (1)
+PASS  dashboard JSON parses (1)
+PASS  grafana news feed is disabled (1)
+PASS  dashboard schedule-time query is multiplied by 1000 (milliseconds) (1)
+PASS  obs-up applies the dashboards ConfigMap (1)
+PASS  dashboard has a bytes lag panel (1)
+PASS  dashboard has a seconds lag panel (1)
+PASS  dashboard age panel has thresholds (1)
+PASS  control: the counter sees a known string

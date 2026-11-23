@@ -15,8 +15,8 @@ Targets below are goals. Measured values go in the evidence files.
   Test: `tests/rep-slots.sh`. Pass: slots exist for both replicas, and a stopped replica cannot grow WAL past the limit.
   Evidence: `docs/evidence/REP-3.txt`
 - REP-4: Replication lag is measured.
-  Test: `tests/rep-lag.sh`. Pass: lag in bytes and seconds is queried and appears as a Prometheus metric.
-  Evidence: `docs/evidence/REP-4.txt`
+  Test: `tests/rep-lag.sh` (lag in bytes and time from SQL) and `tests/obs-rep-lag.sh` (lag in bytes and seconds in Prometheus). Pass: lag in bytes and seconds is queried, and appears as a Prometheus metric that rises above 0 while WAL replay on the async replica is paused and returns to 0 after it resumes.
+  Evidence: `docs/evidence/REP-4.txt` and `docs/evidence/REP-4-prometheus.txt`
 
 ## CON: Connectivity
 - CON-1: Stable read-write service always routes to the current primary.
