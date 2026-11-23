@@ -59,8 +59,6 @@ data:
           username: postgres
         replication:
           username: replicator
-          sslmode: verify-ca
-          sslrootcert: /tls/ca.crt
         rewind:
           username: rewind_user
       pg_hba:

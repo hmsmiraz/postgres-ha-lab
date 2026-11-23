@@ -1,0 +1,14 @@
+EXPECTED RED LINES: the 2 FAIL lines (verify-ca and sslrootcert) are deliberate: they are the red proof for step 2 of the two-step TLS rollout (test first).
+---- raw output below, unchanged ----
+date_utc: 2026-11-23T15:22:00Z
+PASS  pg_hba has 4 hostssl rules (4)
+PASS  pg_hba has no plain host rule
+PASS  ssl is on (1)
+PASS  ssl_cert_file is /tls/tls.crt (1)
+PASS  ssl_key_file is /tls/tls.key (1)
+FAIL  replication uses sslmode verify-ca (found 0, need 1)
+FAIL  replication has sslrootcert /tls/ca.crt (found 0, need 1)
+PASS  statefulset uses the Secret pg-tls (1)
+PASS  statefulset mounts /tls in postgres and pgserver (2)
+PASS  pg-up.sh calls the pg-tls generator (1)
+PASS  control: the counter sees a known string

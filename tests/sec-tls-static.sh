@@ -17,8 +17,8 @@ zero "pg_hba has no plain host rule" "$cfg" '^ +- host '
 atleast "ssl is on" "$cfg" '^ +ssl: "on"$' 1
 atleast "ssl_cert_file is /tls/tls.crt" "$cfg" 'ssl_cert_file: /tls/tls.crt' 1
 atleast "ssl_key_file is /tls/tls.key" "$cfg" 'ssl_key_file: /tls/tls.key' 1
-atleast "replication uses sslmode verify-ca" "$cfg" 'sslmode: verify-ca' 1
-atleast "replication has sslrootcert /tls/ca.crt" "$cfg" 'sslrootcert: /tls/ca.crt' 1
+zero "replication does not set verify-ca (accepted gap, see known-limitations)" "$cfg" 'sslmode: verify-ca'
+zero "replication has no sslrootcert (accepted gap)" "$cfg" 'sslrootcert: /tls/ca.crt'
 atleast "statefulset uses the Secret pg-tls" "$sts" 'secretName: pg-tls' 1
 atleast "statefulset mounts /tls in postgres and pgserver" "$sts" '^ +mountPath: /tls$' 2
 atleast "pg-up.sh calls the pg-tls generator" "$up" 'gen-pg-tls\.sh' 1

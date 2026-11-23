@@ -1,0 +1,40 @@
+date_utc: 2026-11-23T15:22:00Z
+timeline before: 9
+PASS  the corrected config reached pg-ha-2
+PASS  rollout completed
+PASS  cluster is back to 1 leader + 2 streaming replicas
+timeline after: 11
+leader after: pg-ha-2
+acknowledged writes: 199, failed attempts: 23, largest gap between writes: 3772 ms
+DIAG: acknowledged in log: 199, rows read from table: 214
+DIAG: first missing: 
+acknowledged writes missing from the table: 0
+PASS  no acknowledged write is missing
+PASS  exactly one writable primary
+restarts per container (pod container restarts):
+pg-ha-0 backup 0
+pg-ha-0 pgserver 0
+pg-ha-0 postgres 0
+pg-ha-0 postgres-exporter 0
+pg-ha-1 backup 0
+pg-ha-1 pgserver 0
+pg-ha-1 postgres 0
+pg-ha-1 postgres-exporter 0
+pg-ha-2 backup 0
+pg-ha-2 pgserver 0
+pg-ha-2 postgres 0
+pg-ha-2 postgres-exporter 0
+=== tests/sec-tls.sh (expected: 11 PASS, 1 FAIL for verify-ca; not counted in the exit code) ===
+date_utc: 2026-11-23T15:23:39Z
+PASS  pg-ha-0 ssl is on
+PASS  pg-ha-0 has no non-SSL host rule
+PASS  pg-ha-1 ssl is on
+PASS  pg-ha-1 has no non-SSL host rule
+PASS  pg-ha-2 ssl is on
+PASS  pg-ha-2 has no non-SSL host rule
+PASS  Secret pg-tls holds exactly ca.crt, tls.crt, tls.key
+PASS  client connection with sslmode=require uses TLS
+PASS  client connection with sslmode=disable is rejected
+FAIL  replicas use sslmode=verify-ca (0 of 2)
+PASS  all 2 walsender connections use TLS
+PASS  control: a local socket connection reports ssl false

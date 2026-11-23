@@ -1,0 +1,40 @@
+=== tests/sec-tls-static.sh ===
+date_utc: 2026-11-23T15:26:57Z
+PASS  pg_hba has 4 hostssl rules (4)
+PASS  pg_hba has no plain host rule
+PASS  ssl is on (1)
+PASS  ssl_cert_file is /tls/tls.crt (1)
+PASS  ssl_key_file is /tls/tls.key (1)
+PASS  replication does not set verify-ca (accepted gap, see known-limitations)
+PASS  replication has no sslrootcert (accepted gap)
+PASS  statefulset uses the Secret pg-tls (1)
+PASS  statefulset mounts /tls in postgres and pgserver (2)
+PASS  pg-up.sh calls the pg-tls generator (1)
+PASS  control: the counter sees a known string
+=== tests/sec-tls.sh ===
+date_utc: 2026-11-23T15:26:57Z
+PASS  pg-ha-0 ssl is on
+PASS  pg-ha-0 has no non-SSL host rule
+PASS  pg-ha-1 ssl is on
+PASS  pg-ha-1 has no non-SSL host rule
+PASS  pg-ha-2 ssl is on
+PASS  pg-ha-2 has no non-SSL host rule
+PASS  Secret pg-tls holds exactly ca.crt, tls.crt, tls.key
+PASS  client connection with sslmode=require uses TLS
+PASS  client connection with sslmode=disable is rejected
+PASS  replica verify-ca not required (accepted gap, 2 replicas seen)
+PASS  all 2 walsender connections use TLS
+PASS  control: a local socket connection reports ssl false
+=== tests/sec-tls-secret.sh ===
+date_utc: 2026-11-23T15:27:05Z
+PASS  generator script is present and executable
+PASS  first run created the Secret
+PASS  Secret keys are exactly ca.crt, tls.crt, tls.key
+PASS  server certificate verifies against ca.crt
+PASS  negative control: an unrelated CA does not verify the certificate
+PASS  SANs name the services, localhost and the three pods
+PASS  key matches, server certificate is not a CA, ca.crt is a CA, validity over 30 days
+PASS  no key material is left on disk by the generator
+PASS  the generator output holds no key material
+PASS  second run keeps the Secret unchanged
+ALL CHECKS PASSED

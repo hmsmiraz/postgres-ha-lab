@@ -1,0 +1,58 @@
+EXPECTED RED LINES: the 10 FAIL lines are a finding about the live TLS rollout, not a defect of the test (see the report of this run).
+---- raw output below, unchanged ----
+date_utc: 2026-11-23T14:24:58Z
+timeline before: 8
+secret pg-tls created
+PASS  Secret pg-tls exists with the three keys
+FAIL  rollout completed within 15 minutes
+FAIL  cluster is back to 1 leader + 2 streaming replicas within 10 minutes
+timeline after: 9 (before 8)
+leader after: pg-ha-1
+acknowledged writes: 6081, failed attempts: 12, largest gap between writes: 4599 ms
+DIAG: acknowledged in log: 6081, rows read from table: 6095
+DIAG: first missing: 
+acknowledged writes missing from the table: 0
+PASS  no acknowledged write is missing
+PASS  exactly one writable primary
+archiver failed_count on the leader: 0
+restarts per container (pod container restarts):
+pg-ha-0 backup 0
+pg-ha-0 pgserver 0
+pg-ha-0 postgres 0
+pg-ha-0 postgres-exporter 0
+pg-ha-1 backup 0
+pg-ha-1 pgserver 0
+pg-ha-1 postgres 0
+pg-ha-1 postgres-exporter 0
+pg-ha-2 backup 0
+pg-ha-2 pgserver 0
+pg-ha-2 postgres 0
+pg-ha-2 postgres-exporter 0
+=== tests/sec-tls.sh ===
+date_utc: 2026-11-23T14:50:40Z
+FAIL  pg-ha-0 ssl is on
+FAIL  pg-ha-0 has no non-SSL host rule (found 4)
+FAIL  pg-ha-1 ssl is on
+FAIL  pg-ha-1 has no non-SSL host rule (found 4)
+PASS  pg-ha-2 ssl is on
+PASS  pg-ha-2 has no non-SSL host rule
+PASS  Secret pg-tls holds exactly ca.crt, tls.crt, tls.key
+FAIL  client connection with sslmode=require uses TLS
+FAIL  client connection with sslmode=disable is rejected
+FAIL  replicas use sslmode=verify-ca (1 of 2)
+FAIL  all walsender connections use TLS (total 1, without TLS 1)
+PASS  control: a local socket connection reports ssl false
+=== tests/obs-exporter-live.sh ===
+date_utc: 2026-11-23T14:50:48Z
+PASS  pg-ha-0 answers on 9187 (1374 lines)
+PASS  pg-ha-0 pg_up is 1
+PASS  pg-ha-0 has archiver metrics
+PASS  pg-ha-0 has replication slot metrics
+PASS  pg-ha-1 answers on 9187 (1382 lines)
+PASS  pg-ha-1 pg_up is 1
+PASS  pg-ha-1 has archiver metrics
+PASS  pg-ha-1 has replication slot metrics
+PASS  pg-ha-2 answers on 9187 (1374 lines)
+PASS  pg-ha-2 pg_up is 1
+PASS  pg-ha-2 has archiver metrics
+PASS  pg-ha-2 has replication slot metrics
