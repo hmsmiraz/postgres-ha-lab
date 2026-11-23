@@ -17,6 +17,12 @@ data:
               - pg-ha-0.pg-ha-headless.pg-ha.svc.cluster.local:8008
               - pg-ha-1.pg-ha-headless.pg-ha.svc.cluster.local:8008
               - pg-ha-2.pg-ha-headless.pg-ha.svc.cluster.local:8008
+      - job_name: postgres-exporter
+        static_configs:
+          - targets:
+              - pg-ha-0.pg-ha-headless.pg-ha.svc.cluster.local:9187
+              - pg-ha-1.pg-ha-headless.pg-ha.svc.cluster.local:9187
+              - pg-ha-2.pg-ha-headless.pg-ha.svc.cluster.local:9187
       - job_name: kube-state-metrics
         static_configs:
           - targets: ["kube-state-metrics.pg-ha.svc.cluster.local:8080"]

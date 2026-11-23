@@ -37,6 +37,8 @@ zero "rbac has no write verb" 10-rbac.yaml '(create|delete|patch|update|\*)'
 atleast "prometheus PVC is 2Gi" 20-prometheus.yaml 'storage: 2Gi' 1
 atleast "prometheus retention is 7d" 20-prometheus.yaml 'retention.time=7d' 1
 atleast "prometheus scrapes the three patroni pods on 8008" 20-prometheus.yaml 'pg-ha-[012]\.pg-ha-headless\.pg-ha\.svc\.cluster\.local:8008' 3
+atleast "prometheus has a postgres-exporter job" 20-prometheus.yaml 'job_name: postgres-exporter' 1
+atleast "prometheus scrapes the three exporters on 9187" 20-prometheus.yaml 'pg-ha-[012]\.pg-ha-headless\.pg-ha\.svc\.cluster\.local:9187' 3
 
 atleast "prometheus image placeholder" 20-prometheus.yaml '__PROMETHEUS_IMAGE__' 1
 atleast "ksm image placeholder" 30-ksm.yaml '__KSM_IMAGE__' 1
