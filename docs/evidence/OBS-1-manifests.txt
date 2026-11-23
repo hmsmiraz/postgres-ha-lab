@@ -1,0 +1,36 @@
+date_utc: 2026-11-23T03:46:16Z
+PASS  10-rbac.yaml exists and is not empty
+PASS  20-prometheus.yaml exists and is not empty
+PASS  30-ksm.yaml exists and is not empty
+PASS  40-grafana.yaml exists and is not empty
+PASS  rbac has a ClusterRole (1)
+PASS  rbac has no write verb
+PASS  prometheus PVC is 2Gi (1)
+PASS  prometheus retention is 7d (1)
+PASS  prometheus scrapes the three patroni pods on 8008 (3)
+PASS  prometheus image placeholder (1)
+PASS  ksm image placeholder (1)
+PASS  grafana image placeholder (1)
+PASS  20-prometheus.yaml never uses latest
+PASS  20-prometheus.yaml imagePullPolicy IfNotPresent (1)
+PASS  20-prometheus.yaml runAsNonRoot (1)
+PASS  20-prometheus.yaml no privilege escalation (1)
+PASS  20-prometheus.yaml drops all capabilities (1)
+PASS  20-prometheus.yaml seccomp RuntimeDefault (1)
+PASS  30-ksm.yaml never uses latest
+PASS  30-ksm.yaml imagePullPolicy IfNotPresent (1)
+PASS  30-ksm.yaml runAsNonRoot (1)
+PASS  30-ksm.yaml no privilege escalation (1)
+PASS  30-ksm.yaml drops all capabilities (1)
+PASS  30-ksm.yaml seccomp RuntimeDefault (1)
+PASS  40-grafana.yaml never uses latest
+PASS  40-grafana.yaml imagePullPolicy IfNotPresent (1)
+PASS  40-grafana.yaml runAsNonRoot (1)
+PASS  40-grafana.yaml no privilege escalation (1)
+PASS  40-grafana.yaml drops all capabilities (1)
+PASS  40-grafana.yaml seccomp RuntimeDefault (1)
+PASS  prometheus runs as 65534 (1)
+PASS  ksm runs as 65534 (1)
+PASS  grafana runs as 472 (1)
+PASS  grafana admin password comes from a secretKeyRef
+PASS  control: the counter sees a known string

@@ -1,0 +1,38 @@
+EXPECTED RED LINES: all 34 FAIL lines are deliberate: the test was written before the manifests in k8s/obs exist (test first).
+---- raw output below, unchanged ----
+date_utc: 2026-11-23T03:39:58Z
+FAIL  10-rbac.yaml exists and is not empty
+FAIL  20-prometheus.yaml exists and is not empty
+FAIL  30-ksm.yaml exists and is not empty
+FAIL  40-grafana.yaml exists and is not empty
+FAIL  rbac has a ClusterRole (found 0, need 1)
+FAIL  rbac has no write verb (file empty or found 0)
+FAIL  prometheus PVC is 2Gi (found 0, need 1)
+FAIL  prometheus retention is 7d (found 0, need 1)
+FAIL  prometheus scrapes the three patroni pods on 8008 (found 0, need 3)
+FAIL  prometheus image placeholder (found 0, need 1)
+FAIL  ksm image placeholder (found 0, need 1)
+FAIL  grafana image placeholder (found 0, need 1)
+FAIL  20-prometheus.yaml never uses latest (file empty or found 0)
+FAIL  20-prometheus.yaml imagePullPolicy IfNotPresent (found 0, need 1)
+FAIL  20-prometheus.yaml runAsNonRoot (found 0, need 1)
+FAIL  20-prometheus.yaml no privilege escalation (found 0, need 1)
+FAIL  20-prometheus.yaml drops all capabilities (found 0, need 1)
+FAIL  20-prometheus.yaml seccomp RuntimeDefault (found 0, need 1)
+FAIL  30-ksm.yaml never uses latest (file empty or found 0)
+FAIL  30-ksm.yaml imagePullPolicy IfNotPresent (found 0, need 1)
+FAIL  30-ksm.yaml runAsNonRoot (found 0, need 1)
+FAIL  30-ksm.yaml no privilege escalation (found 0, need 1)
+FAIL  30-ksm.yaml drops all capabilities (found 0, need 1)
+FAIL  30-ksm.yaml seccomp RuntimeDefault (found 0, need 1)
+FAIL  40-grafana.yaml never uses latest (file empty or found 0)
+FAIL  40-grafana.yaml imagePullPolicy IfNotPresent (found 0, need 1)
+FAIL  40-grafana.yaml runAsNonRoot (found 0, need 1)
+FAIL  40-grafana.yaml no privilege escalation (found 0, need 1)
+FAIL  40-grafana.yaml drops all capabilities (found 0, need 1)
+FAIL  40-grafana.yaml seccomp RuntimeDefault (found 0, need 1)
+FAIL  prometheus runs as 65534 (found 0, need 1)
+FAIL  ksm runs as 65534 (found 0, need 1)
+FAIL  grafana runs as 472 (found 0, need 1)
+FAIL  grafana admin password comes from a secretKeyRef
+PASS  control: the counter sees a known string
