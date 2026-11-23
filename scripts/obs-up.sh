@@ -17,6 +17,7 @@ bash scripts/gen-grafana-secret.sh
 kubectl apply -f k8s/obs/10-rbac.yaml
 sed "s|__PROMETHEUS_IMAGE__|${P}|g" k8s/obs/20-prometheus.yaml | kubectl apply -f -
 sed "s|__KSM_IMAGE__|${K}|g" k8s/obs/30-ksm.yaml | kubectl apply -f -
+kubectl apply -f k8s/obs/50-dashboards.yaml
 sed "s|__GRAFANA_IMAGE__|${G}|g" k8s/obs/40-grafana.yaml | kubectl apply -f -
 kubectl -n pg-ha rollout status deploy/prometheus --timeout=300s
 kubectl -n pg-ha rollout status deploy/kube-state-metrics --timeout=300s

@@ -216,7 +216,7 @@ data:
           "targets": [
             {
               "refId": "A",
-              "expr": "kube_cronjob_status_last_schedule_time{cronjob=\"pgbackrest-backup\"}",
+              "expr": "kube_cronjob_status_last_schedule_time{cronjob=\"pgbackrest-backup\"} * 1000",
               "legendFormat": "{{instance}}"
             }
           ],

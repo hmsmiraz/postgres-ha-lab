@@ -54,6 +54,9 @@ if [ "${n:-0}" -ge 1 ]; then pass "dashboard JSON parses ($n)"; else bad "dashbo
 
 atleast "grafana news feed is disabled" "$graf" 'GF_NEWS_NEWS_FEED_ENABLED' 1
 
+atleast "dashboard schedule-time query is multiplied by 1000 (milliseconds)" "$dash" 'last_schedule_time.*\* 1000' 1
+atleast "obs-up applies the dashboards ConfigMap" scripts/obs-up.sh '50-dashboards\.yaml' 1
+
 ctl=$(mktemp)
 printf 'zzqx\n' > "$ctl"
 n=$(grep -cE -- zzqx "$ctl" || true)
