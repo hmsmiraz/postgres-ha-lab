@@ -1,0 +1,94 @@
+# OBS-3: promtool unit tests for the five alert rules (synthetic series).
+rule_files:
+  - rules.yml
+evaluation_interval: 15s
+tests:
+  - name: NoPrimary fires when no primary is reported
+    interval: 15s
+    input_series:
+      - series: 'patroni_primary{instance="a"}'
+        values: '1 1 1 0x10'
+    alert_rule_test:
+      - eval_time: 30s
+        alertname: NoPrimary
+        exp_alerts: []
+      - eval_time: 2m
+        alertname: NoPrimary
+        exp_alerts:
+          - exp_labels:
+              severity: critical
+            exp_annotations:
+              summary: No Patroni primary is reported
+  - name: ReplicationLag fires above 10 KiB
+    interval: 15s
+    input_series:
+      - series: 'pg_stat_replication_pg_wal_lsn_diff{application_name="r"}'
+        values: '0 0 50000x10'
+    alert_rule_test:
+      - eval_time: 30s
+        alertname: ReplicationLag
+        exp_alerts: []
+      - eval_time: 2m
+        alertname: ReplicationLag
+        exp_alerts:
+          - exp_labels:
+              severity: warning
+            exp_annotations:
+              summary: A replica is more than 10 KiB behind in replay
+  - name: SlotRetention fires below 256 MiB
+    interval: 15s
+    input_series:
+      - series: 'pg_replication_slots_safe_wal_size_bytes{slot_name="s"}'
+        values: '1000000000 100000000x10'
+    alert_rule_test:
+      - eval_time: 30s
+        alertname: SlotRetention
+        exp_alerts: []
+      - eval_time: 2m
+        alertname: SlotRetention
+        exp_alerts:
+          - exp_labels:
+              severity: warning
+            exp_annotations:
+              summary: A replication slot is close to the max_slot_wal_keep_size limit
+  - name: WalArchiveFailure fires when failed_count rises
+    interval: 15s
+    input_series:
+      - series: 'pg_stat_archiver_failed_count{instance="a"}'
+        values: '0 0+1x20'
+    alert_rule_test:
+      - eval_time: 30s
+        alertname: WalArchiveFailure
+        exp_alerts: []
+      - eval_time: 3m
+        alertname: WalArchiveFailure
+        exp_alerts:
+          - exp_labels:
+              severity: critical
+              instance: a
+            exp_annotations:
+              summary: WAL archiving failed in the last 5 minutes
+  - name: BackupTooOld fires when the last success is older than 36 h
+    interval: 15s
+    input_series:
+      - series: 'kube_cronjob_status_last_successful_time{cronjob="pgbackrest-backup",instance="k"}'
+        values: '-200000x10'
+    alert_rule_test:
+      - eval_time: 2m
+        alertname: BackupTooOld
+        exp_alerts:
+          - exp_labels:
+              severity: warning
+              cronjob: pgbackrest-backup
+              instance: k
+            exp_annotations:
+              summary: The last successful backup is older than 36 hours
+  - name: BackupTooOld stays quiet for a fresh backup
+    interval: 15s
+    input_series:
+      - series: 'kube_cronjob_status_last_successful_time{cronjob="pgbackrest-backup",instance="k"}'
+        values: '0x10'
+    alert_rule_test:
+      - eval_time: 2m
+        alertname: BackupTooOld
+        exp_alerts: []
