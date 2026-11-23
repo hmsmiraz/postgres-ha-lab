@@ -265,6 +265,32 @@ spec:
             - name: objstore-ca
               mountPath: /certs
               readOnly: true
+        - name: postgres-exporter
+          image: __PG_EXPORTER_IMAGE__
+          imagePullPolicy: IfNotPresent
+          ports:
+            - name: metrics
+              containerPort: 9187
+          env:
+            - name: DATA_SOURCE_NAME
+              value: "postgresql://postgres@/postgres?host=/run/postgresql&sslmode=disable"
+          readinessProbe:
+            tcpSocket:
+              port: 9187
+            periodSeconds: 10
+          resources:
+            requests:
+              cpu: 10m
+              memory: 32Mi
+            limits:
+              memory: 128Mi
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop: ["ALL"]
+          volumeMounts:
+            - name: run
+              mountPath: /run/postgresql
       volumes:
         - name: patroni-config
           configMap:

@@ -1,0 +1,16 @@
+date_utc: 2026-11-23T04:05:03Z
+PASS  sidecar container is named postgres-exporter (1)
+PASS  sidecar image is the placeholder (1)
+PASS  image placeholders in the statefulset (postgres, backup, pgserver, exporter) (4)
+PASS  statefulset never uses latest
+PASS  exporter port 9187 (1)
+PASS  exporter data source uses the socket (1)
+PASS  exporter data source names the run directory (1)
+PASS  exporter data source has no password (1)
+PASS  exporter data source has no sslmode require or password text
+PASS  every container drops all capabilities (4 containers) (4)
+PASS  every container blocks privilege escalation (4 containers) (4)
+PASS  exporter has a memory limit of 128Mi (2)
+PASS  pg-up fills the exporter image placeholder (1)
+PASS  pg-up uses the tag form of PG_EXPORTER_IMAGE (1)
+PASS  control: the counter sees a known string
