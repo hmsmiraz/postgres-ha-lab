@@ -1,0 +1,17 @@
+# image probe (anonymous pulls)
+date_utc: 2026-11-22T17:49:07Z
+--- docker.io/prom/prometheus:v3.16.0
+RESULT: pulled
+digest: prom/prometheus@sha256:e04987641b57704f408e31f6373ba4138ecf27cb4a165d24aabb6c38fddd0f06
+created: 2026-11-05T15:43:10.325824601Z arch: amd64 size: 271626134
+user=nobody entrypoint=["/bin/prometheus"] cmd=["--config.file=/etc/prometheus/prometheus.yml","--storage.tsdb.path=/prometheus"] ports={"9090/tcp":{}}
+--- quay.io/prometheuscommunity/postgres-exporter:v0.21.1
+RESULT: pulled
+digest: quay.io/prometheuscommunity/postgres-exporter@sha256:a88794758ad461c75f3825b51cde4bde730bdff04b3b24d00efe14217e41f615
+created: 2026-11-18T17:00:50.049152944Z arch: amd64 size: 24638228
+user=nobody entrypoint=["/bin/postgres_exporter"] cmd=null ports={"9187/tcp":{}}
+--- registry.k8s.io/kube-state-metrics/kube-state-metrics:v2.20.0
+RESULT: pulled
+digest: registry.k8s.io/kube-state-metrics/kube-state-metrics@sha256:42cfe3723a5f058171c627537fb57a3ea0f26e4380fa18555a95cb1a1b4cfc5b
+created: 2026-08-18T08:18:08.037235512Z arch: amd64 size: 63475987
+user=nobody entrypoint=["/kube-state-metrics","--port=8080","--telemetry-port=8081"] cmd=null ports={"8080/tcp":{},"8081/tcp":{}}

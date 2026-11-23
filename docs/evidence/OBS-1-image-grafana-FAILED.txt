@@ -1,0 +1,27 @@
+EXPECTED RED LINES: all 5 FAIL lines are deliberate: the test gained GRAFANA_IMAGE before its pin exists in versions.env (test first).
+---- raw output below, unchanged ----
+date_utc: 2026-11-22T18:20:28Z
+=== PROMETHEUS_IMAGE=docker.io/prom/prometheus:v3.16.0@sha256:e04987641b57704f408e31f6373ba4138ecf27cb4a165d24aabb6c38fddd0f06
+PASS  PROMETHEUS_IMAGE is defined in versions.env
+PASS  PROMETHEUS_IMAGE is pinned as name:tag@sha256:<64 hex>
+PASS  PROMETHEUS_IMAGE tag is not latest
+PASS  PROMETHEUS_IMAGE pulls anonymously
+PASS  PROMETHEUS_IMAGE pulled digest equals pinned digest
+=== PG_EXPORTER_IMAGE=quay.io/prometheuscommunity/postgres-exporter:v0.21.1@sha256:a88794758ad461c75f3825b51cde4bde730bdff04b3b24d00efe14217e41f615
+PASS  PG_EXPORTER_IMAGE is defined in versions.env
+PASS  PG_EXPORTER_IMAGE is pinned as name:tag@sha256:<64 hex>
+PASS  PG_EXPORTER_IMAGE tag is not latest
+PASS  PG_EXPORTER_IMAGE pulls anonymously
+PASS  PG_EXPORTER_IMAGE pulled digest equals pinned digest
+=== KSM_IMAGE=registry.k8s.io/kube-state-metrics/kube-state-metrics:v2.20.0@sha256:42cfe3723a5f058171c627537fb57a3ea0f26e4380fa18555a95cb1a1b4cfc5b
+PASS  KSM_IMAGE is defined in versions.env
+PASS  KSM_IMAGE is pinned as name:tag@sha256:<64 hex>
+PASS  KSM_IMAGE tag is not latest
+PASS  KSM_IMAGE pulls anonymously
+PASS  KSM_IMAGE pulled digest equals pinned digest
+=== GRAFANA_IMAGE=<unset>
+FAIL  GRAFANA_IMAGE is defined in versions.env
+FAIL  GRAFANA_IMAGE is pinned as name:tag@sha256:<64 hex>
+FAIL  GRAFANA_IMAGE tag is not latest
+FAIL  GRAFANA_IMAGE pulls anonymously
+FAIL  GRAFANA_IMAGE pulled digest equals pinned digest

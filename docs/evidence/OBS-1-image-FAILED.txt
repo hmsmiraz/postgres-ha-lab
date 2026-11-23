@@ -1,0 +1,21 @@
+EXPECTED RED LINES: all 15 FAIL lines are deliberate: the test was written before the three monitoring image pins exist in versions.env (test first).
+---- raw output below, unchanged ----
+date_utc: 2026-11-22T17:55:48Z
+=== PROMETHEUS_IMAGE=<unset>
+FAIL  PROMETHEUS_IMAGE is defined in versions.env
+FAIL  PROMETHEUS_IMAGE is pinned as name:tag@sha256:<64 hex>
+FAIL  PROMETHEUS_IMAGE tag is not latest
+FAIL  PROMETHEUS_IMAGE pulls anonymously
+FAIL  PROMETHEUS_IMAGE pulled digest equals pinned digest
+=== PG_EXPORTER_IMAGE=<unset>
+FAIL  PG_EXPORTER_IMAGE is defined in versions.env
+FAIL  PG_EXPORTER_IMAGE is pinned as name:tag@sha256:<64 hex>
+FAIL  PG_EXPORTER_IMAGE tag is not latest
+FAIL  PG_EXPORTER_IMAGE pulls anonymously
+FAIL  PG_EXPORTER_IMAGE pulled digest equals pinned digest
+=== KSM_IMAGE=<unset>
+FAIL  KSM_IMAGE is defined in versions.env
+FAIL  KSM_IMAGE is pinned as name:tag@sha256:<64 hex>
+FAIL  KSM_IMAGE tag is not latest
+FAIL  KSM_IMAGE pulls anonymously
+FAIL  KSM_IMAGE pulled digest equals pinned digest
