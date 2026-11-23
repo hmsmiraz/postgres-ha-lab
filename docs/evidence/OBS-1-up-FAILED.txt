@@ -1,0 +1,23 @@
+EXPECTED RED LINES: all 19 FAIL lines are deliberate: the test was written before scripts/obs-up.sh and scripts/gen-grafana-secret.sh exist (test first).
+---- raw output below, unchanged ----
+date_utc: 2026-11-23T03:56:57Z
+FAIL  scripts/obs-up.sh exists and is executable
+FAIL  scripts/gen-grafana-secret.sh exists and is executable
+FAIL  obs-up has set -euo pipefail (found 0, need 1)
+FAIL  obs-up sources versions.env (found 0, need 1)
+FAIL  obs-up uses the tag form of PROMETHEUS_IMAGE (found 0, need 1)
+FAIL  obs-up uses the tag form of KSM_IMAGE (found 0, need 1)
+FAIL  obs-up uses the tag form of GRAFANA_IMAGE (found 0, need 1)
+FAIL  obs-up fills the three image placeholders (found 0, need 3)
+FAIL  obs-up applies the four manifest files (found 0, need 4)
+FAIL  obs-up waits for the three rollouts (found 0, need 3)
+FAIL  obs-up never deletes anything (file empty or found 0)
+FAIL  obs-up creates the Secret before it applies 40-grafana.yaml
+FAIL  generator has set -euo pipefail (found 0, need 1)
+FAIL  generator defaults to namespace pg-ha (found 0, need 1)
+FAIL  generator writes the key admin-password (found 0, need 1)
+FAIL  generator draws the value from openssl rand (found 0, need 1)
+FAIL  generator keeps an existing Secret (found 0, need 1)
+FAIL  generator names the Secret grafana-admin (found 0, need 1)
+FAIL  generator never prints the value or traces (file empty or found 0)
+PASS  control: the counter sees a known string

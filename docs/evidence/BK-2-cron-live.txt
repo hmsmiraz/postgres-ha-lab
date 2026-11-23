@@ -1,0 +1,17 @@
+date_utc: 2026-11-23T03:58:05Z
+original schedule: 0 2 * * *  timeZone: Etc/UTC  suspend: false
+PASS  control: the owned-Job filter counts 1 of 2 in a synthetic list
+backups before: 7
+PASS  temporary schedule is set (1 4 * * *)
+PASS  original schedule is restored
+PASS  timeZone and suspend are unchanged
+PASS  the controller created a Job from the CronJob (pgbackrest-backup-29923441)
+PASS  the Job completed
+backup-cronjob: type=incr
+backup-cronjob: verify ok
+backup-cronjob: done
+PASS  log has verify ok
+PASS  log has done
+PASS  lastScheduleTime moved after the start (2026-11-23T04:01:00Z)
+backups after: 8
+PASS  the repository holds exactly one more backup
