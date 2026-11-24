@@ -1,0 +1,18 @@
+EXPECTED RED LINES: all 14 FAIL lines are deliberate: the test was written before the runbooks exist (test first).
+---- raw output below, unchanged ----
+date_utc: 2026-11-24T13:41:21Z
+PASS  control: the Restore section is found
+FAIL  section exists: ## Planned switchover
+FAIL  section exists: ## Minor-version upgrade
+FAIL  switchover: patronictl switchover
+FAIL  switchover: write probe
+FAIL  switchover: patronictl list
+FAIL  switchover: TLS check
+FAIL  switchover: timeline
+FAIL  switchover: rollback
+FAIL  upgrade: versions.env
+FAIL  upgrade: image build
+FAIL  upgrade: kind load by name:tag
+FAIL  upgrade: rollout status
+FAIL  upgrade: write probe
+FAIL  upgrade: rollback

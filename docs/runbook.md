@@ -80,3 +80,34 @@ holds copies of the live database passwords and the read-write object store key.
   the restore pods have a memory limit of 768Mi.
 - Moving applications to a restored cluster, and the NetworkPolicies this would need (none exist).
 - The full list is in docs/known-limitations.md.
+
+## Planned switchover
+
+Moves the leader role to the synchronous standby on purpose. Tested live on 24 Nov 2026 (docs/evidence/OPS-3-switchover.txt).
+
+### Preconditions
+
+- Patroni shows 1 leader and 2 streaming members: `kubectl -n pg-ha exec pg-ha-0 -c postgres -- patronictl -c /etc/patroni/patroni.yml list`
+- No backup Job is running (`kubectl -n pg-ha get jobs`) and it is not close to 02:00 UTC, when the backup CronJob starts.
+
+### Steps
+
+1. Start the write probe from tests/lib/probe.sh (function start_probe). It inserts a row every 100 ms through pg-primary.
+2. Note the leader and the Sync Standby in the patronictl list output.
+3. Run: `kubectl -n pg-ha exec <leader> -c postgres -- patronictl -c /etc/patroni/patroni.yml switchover --leader <leader> --candidate <sync standby> --force`
+4. Wait until patronictl list shows 1 leader and 2 streaming members again.
+5. The script tests/ops-switchover.sh does all of this and prints the results.
+
+### Checks afterwards
+
+- The candidate is the new leader and the timeline rose by 1.
+- No acknowledged probe write is missing, and exactly one pod is writable.
+- tests/sec-tls.sh shows 12 PASS (TLS still enforced) and tests/obs-exporter-live.sh shows 12 PASS.
+
+### Rollback
+
+Run the same switchover command again with the old leader as the candidate. The rollback was not tested.
+
+### Measured on 24 Nov 2026
+
+Leader pg-ha-2 to pg-ha-1, timeline 12 to 13, 87 writes acknowledged and 0 missing, largest gap between writes 16047 ms, 12 failed attempts, one run. Not tested: switchover under heavy load, during a backup, and the rollback.

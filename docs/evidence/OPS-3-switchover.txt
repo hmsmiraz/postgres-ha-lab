@@ -1,0 +1,43 @@
+date_utc: 2026-11-24T13:42:20Z
+leader: pg-ha-2  candidate (sync standby): pg-ha-1  timeline before: 12
+| pg-ha-1 | 192.168.195.218 | Leader  | running   | 12 |             |     |            |     |
+| pg-ha-2 | 192.168.162.170 | Replica | stopping  |    |     unknown |     |    unknown |     |
++---------+-----------------+---------+-----------+----+-------------+-----+------------+-----+
+PASS  cluster is back to 1 leader + 2 streaming replicas
+leader after: pg-ha-1  timeline after: 13 (before 12)
+PASS  the sync standby pg-ha-1 is the new leader
+PASS  timeline rose
+acknowledged writes: 87, failed attempts: 12, largest gap between writes: 16047 ms
+DIAG: acknowledged in log: 87, rows read from table: 104
+DIAG: first missing: 
+acknowledged writes missing from the table: 0
+PASS  no acknowledged write is missing
+PASS  exactly one writable primary
+=== tests/sec-tls.sh ===
+date_utc: 2026-11-24T13:43:37Z
+PASS  pg-ha-0 ssl is on
+PASS  pg-ha-0 has no non-SSL host rule
+PASS  pg-ha-1 ssl is on
+PASS  pg-ha-1 has no non-SSL host rule
+PASS  pg-ha-2 ssl is on
+PASS  pg-ha-2 has no non-SSL host rule
+PASS  Secret pg-tls holds exactly ca.crt, tls.crt, tls.key
+PASS  client connection with sslmode=require uses TLS
+PASS  client connection with sslmode=disable is rejected
+PASS  replica verify-ca not required (accepted gap, 2 replicas seen)
+PASS  all 2 walsender connections use TLS
+PASS  control: a local socket connection reports ssl false
+=== tests/obs-exporter-live.sh ===
+date_utc: 2026-11-24T13:43:58Z
+PASS  pg-ha-0 answers on 9187 (1374 lines)
+PASS  pg-ha-0 pg_up is 1
+PASS  pg-ha-0 has archiver metrics
+PASS  pg-ha-0 has replication slot metrics
+PASS  pg-ha-1 answers on 9187 (1382 lines)
+PASS  pg-ha-1 pg_up is 1
+PASS  pg-ha-1 has archiver metrics
+PASS  pg-ha-1 has replication slot metrics
+PASS  pg-ha-2 answers on 9187 (1374 lines)
+PASS  pg-ha-2 pg_up is 1
+PASS  pg-ha-2 has archiver metrics
+PASS  pg-ha-2 has replication slot metrics
