@@ -1,0 +1,16 @@
+date_utc: 2026-11-24T13:47:44Z
+PASS  control: the Restore section is found
+PASS  section exists: ## Planned switchover
+PASS  section exists: ## Minor-version upgrade
+PASS  switchover: patronictl switchover
+PASS  switchover: write probe
+PASS  switchover: patronictl list
+PASS  switchover: TLS check
+PASS  switchover: timeline
+PASS  switchover: rollback
+PASS  upgrade: versions.env
+PASS  upgrade: image build
+PASS  upgrade: kind load by name:tag
+PASS  upgrade: rollout status
+PASS  upgrade: write probe
+PASS  upgrade: rollback

@@ -111,3 +111,25 @@ Run the same switchover command again with the old leader as the candidate. The 
 ### Measured on 24 Nov 2026
 
 Leader pg-ha-2 to pg-ha-1, timeline 12 to 13, 87 writes acknowledged and 0 missing, largest gap between writes 16047 ms, 12 failed attempts, one run. Not tested: switchover under heavy load, during a backup, and the rollback.
+
+## Minor-version upgrade
+
+Moves the cluster to a newer PostgreSQL 18.x image. This procedure was NOT run as an upgrade: on 24 Nov 2026 the pinned 18.7 was already the newest 18.x tag. It is assembled from commands that were run in the exporter, TLS and config rollouts, so treat it as untested.
+
+### Steps
+
+1. Pick the target tag from Docker Hub (postgres, trixie variant). Probe it first: anonymous pull, digest.
+2. Edit versions.env: POSTGRES_VERSION, POSTGRES_BASE_IMAGE (tag and digest), IMAGE_TAG, and PGBACKREST_APT_VERSION if the PGDG repo of the new base carries another pgBackRest build. Update the pin tests first (test first).
+3. Build: `bash scripts/image-build.sh`
+4. Load into every node by name:tag: `kind load docker-image pg-ha:<IMAGE_TAG> --name kind`
+5. Start the write probe (tests/lib/probe.sh, function start_probe).
+6. Apply: `bash scripts/pg-up.sh`, then `kubectl -n pg-ha rollout status sts/pg-ha --timeout=900s`. Pods restart one at a time, the leader first, with a promotion and a timeline rise.
+7. Check: 1 leader and 2 streaming members, `select version()` on each pod, no acknowledged write missing, tests/sec-tls.sh and tests/obs-exporter-live.sh at 12 PASS.
+
+### Rollback
+
+Restore the old pins in versions.env and apply again as in steps 4 to 6, or run `kubectl -n pg-ha rollout undo sts/pg-ha`. Neither was tested for an upgrade.
+
+### Not tested
+
+No newer 18.x existed, so nothing was upgraded. The new base must have a matching PGDG pgBackRest package. About 20 scripts and tests mention IMAGE_TAG. Earlier rollouts of this kind showed write gaps of 2.5 s, 3.8 s and 16 s.
