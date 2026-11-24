@@ -1,0 +1,18 @@
+EXPECTED RED LINES: the FAIL lines are scan problems, not a verdict on the images (see the report of this run).
+---- raw output below, unchanged ----
+date_utc: 2026-11-24T13:11:38Z
+PASS  image 1: 1 analysed targets, CRITICAL=0 HIGH=0 MEDIUM=0 LOW=0 UNKNOWN=1 (quay.io/prometheuscommunity/postgres-exporter, from the earlier run)
+date_utc: 2026-11-24T13:11:38Z  image 2: registry.k8s.io/kube-state-metrics/kube-state-metrics:v2.20.0
+PASS  image 2: 2 analysed targets, CRITICAL=0 HIGH=11 MEDIUM=21 LOW=4 UNKNOWN=1
+date_utc: 2026-11-24T13:11:40Z  image 3: docker.io/nginxinc/nginx-unprivileged:1.30.6-alpine
+PASS  image 3: 1 analysed targets, CRITICAL=5 HIGH=15 MEDIUM=13 LOW=48 UNKNOWN=0
+date_utc: 2026-11-24T13:11:42Z  image 4: docker.io/dxflrs/garage:v2.5.0
+FAIL  image 4: no analysed target, the scan proves nothing
+date_utc: 2026-11-24T13:11:44Z  image 5: docker.io/prom/prometheus:v3.16.0
+PASS  image 5: 2 analysed targets, CRITICAL=0 HIGH=2 MEDIUM=4 LOW=0 UNKNOWN=2
+date_utc: 2026-11-24T13:11:51Z  image 6: pg-ha:18.7-patroni4.1.5-pgbackrest2.60.0
+PASS  image 6: 3 analysed targets, CRITICAL=2 HIGH=184 MEDIUM=295 LOW=200 UNKNOWN=35
+date_utc: 2026-11-24T13:12:17Z  image 7: postgres:18.7-trixie
+PASS  image 7: 2 analysed targets, CRITICAL=2 HIGH=154 MEDIUM=214 LOW=172 UNKNOWN=22
+date_utc: 2026-11-24T13:12:29Z  image 8: docker.io/grafana/grafana:13.3.1
+PASS  image 8: 17 analysed targets, CRITICAL=0 HIGH=20 MEDIUM=58 LOW=5 UNKNOWN=6
