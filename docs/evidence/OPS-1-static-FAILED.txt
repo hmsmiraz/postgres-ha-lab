@@ -1,0 +1,16 @@
+EXPECTED RED LINES: all 12 FAIL lines are deliberate: the test was written before the Makefile exists (test first).
+---- raw output below, unchanged ----
+date_utc: 2026-11-24T13:21:55Z
+FAIL  Makefile exists and is not empty
+FAIL  target up exists (found 0)
+FAIL  target down exists (found 0)
+FAIL  target test-quick exists (found 0)
+FAIL  target test exists (found 0)
+FAIL  target pull exists (found 0)
+FAIL  up order is 'none'
+FAIL  down calls restore-down.sh
+FAIL  down deletes the namespace pg-ha
+FAIL  no kind delete anywhere in the Makefile (found unknown, or empty file)
+FAIL  no latest tag in the Makefile
+FAIL  test-quick runs at least 5 tests (found 0)
+PASS  control: the counter sees a known string

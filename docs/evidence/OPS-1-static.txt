@@ -1,0 +1,14 @@
+date_utc: 2026-11-24T13:22:31Z
+PASS  Makefile exists and is not empty
+PASS  target up exists
+PASS  target down exists
+PASS  target test-quick exists
+PASS  target test exists
+PASS  target pull exists
+PASS  up runs cluster-up, image-build, objstore-up, pg-up, obs-up in order
+PASS  down calls restore-down.sh
+PASS  down deletes the namespace pg-ha
+PASS  no kind delete anywhere in the Makefile
+PASS  no latest tag in the Makefile
+PASS  test-quick runs at least 5 tests
+PASS  control: the counter sees a known string
