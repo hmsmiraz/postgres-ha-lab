@@ -1,0 +1,17 @@
+EXPECTED RED LINES: the FAIL line is a finding about make up on the live cluster (see the report of this run).
+---- raw output below, unchanged ----
+date_utc: 2026-11-24T13:25:10Z
+=== before ===
+timeline: 12
+restarts: grafana-5444dbdb9c-2p945/grafana=0 kube-state-metrics-549dc7f774-272x9/kube-state-metrics=2 objstore-0/garage=1 objstore-0/tls=1 objstore-init-5dbf6/init=0 pg-ha-0/backup=1 pg-ha-0/pgserver=1 pg-ha-0/postgres-exporter=1 pg-ha-0/postgres=1 pg-ha-1/backup=1 pg-ha-1/pgserver=1 pg-ha-1/postgres-exporter=1 pg-ha-1/postgres=1 pg-ha-2/backup=1 pg-ha-2/pgserver=1 pg-ha-2/postgres-exporter=1 pg-ha-2/postgres=1 pgbackrest-backup-29922040-8fpg5/backup=0 pgbackrest-backup-29923441-sc6tj/backup=0 prometheus-7c8d5bfbd5-vthpf/prometheus=1
+revisions: grafana=4 kube-state-metrics=1 objstore=3 pg-ha=5 prometheus=5
+cronjob: 0 2 * * *
+secrets: 8
+make up exit 0
+=== after ===
+timeline: 12
+restarts: grafana-5444dbdb9c-2p945/grafana=0 kube-state-metrics-549dc7f774-272x9/kube-state-metrics=2 objstore-0/garage=1 objstore-0/tls=1 objstore-init-qv77l/init=0 pg-ha-0/backup=1 pg-ha-0/pgserver=1 pg-ha-0/postgres-exporter=1 pg-ha-0/postgres=1 pg-ha-1/backup=1 pg-ha-1/pgserver=1 pg-ha-1/postgres-exporter=1 pg-ha-1/postgres=1 pg-ha-2/backup=1 pg-ha-2/pgserver=1 pg-ha-2/postgres-exporter=1 pg-ha-2/postgres=1 pgbackrest-backup-29922040-8fpg5/backup=0 pgbackrest-backup-29923441-sc6tj/backup=0 prometheus-7c8d5bfbd5-vthpf/prometheus=1
+revisions: grafana=4 kube-state-metrics=1 objstore=3 pg-ha=5 prometheus=5
+cronjob: 0 2 * * *
+secrets: 8
+FAIL  make up exit 0, or the snapshot changed (see before and after)
