@@ -59,6 +59,9 @@ atleast "grafana runs as 472" 40-grafana.yaml 'runAsUser: 472' 1
 n=$(grep -A3 GF_SECURITY_ADMIN_PASSWORD "$d/40-grafana.yaml" 2>/dev/null | grep -c secretKeyRef || true)
 if [ "${n:-0}" -ge 1 ]; then pass "grafana admin password comes from a secretKeyRef"; else bad "grafana admin password comes from a secretKeyRef"; fi
 
+atleast "grafana memory limit is 768Mi" 40-grafana.yaml 'memory: 768Mi' 1
+atleast "grafana has a startupProbe" 40-grafana.yaml 'startupProbe:' 1
+
 ctl=$(mktemp)
 printf 'zzqx\n' > "$ctl"
 n=$(grep -cE -- zzqx "$ctl" || true)

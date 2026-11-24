@@ -92,6 +92,12 @@ spec:
               value: "false"
             - name: GF_NEWS_NEWS_FEED_ENABLED
               value: "false"
+          startupProbe:
+            httpGet:
+              path: /api/health
+              port: 3000
+            periodSeconds: 10
+            failureThreshold: 30
           readinessProbe:
             httpGet:
               path: /api/health
@@ -108,7 +114,7 @@ spec:
               cpu: 50m
               memory: 128Mi
             limits:
-              memory: 384Mi
+              memory: 768Mi
           securityContext:
             allowPrivilegeEscalation: false
             capabilities:
