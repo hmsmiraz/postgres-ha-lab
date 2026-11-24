@@ -1,0 +1,20 @@
+EXPECTED RED LINES: all 16 FAIL lines are deliberate: the test was written before docs/design.md exists (test first). The PASS lines are the control and checks on the old README.
+---- raw output below, unchanged ----
+date_utc: 2026-11-24T14:02:32Z
+FAIL  docs/design.md exists
+FAIL  design.md has: sync vs async and RPO
+FAIL  design.md has: fencing and leader election
+FAIL  design.md has: measured RTO and method
+FAIL  design.md has: multi-zone changes
+FAIL  design.md has: generalisation
+FAIL  design.md has: determinism
+FAIL  design.md has: agent-agnostic
+FAIL  design.md has: threat model
+FAIL  design.md has: AI process
+FAIL  design.md quotes the FO-1 RTO 6731 ms
+FAIL  design.md quotes the FO-2 RTO 33420 ms
+FAIL  README has run instructions (make up)
+FAIL  README shows all 4 screenshots (found 0)
+FAIL  relative links and images resolve (checked 0, missing 0)
+FAIL  forbidden name hits or missing file: 0
+PASS  control: the counter sees a known string
