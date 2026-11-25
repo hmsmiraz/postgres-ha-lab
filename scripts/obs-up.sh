@@ -10,7 +10,7 @@ source versions.env
 P="${PROMETHEUS_IMAGE%%@*}"
 K="${KSM_IMAGE%%@*}"
 G="${GRAFANA_IMAGE%%@*}"
-for i in "$P" "$K" "$G"; do kind load docker-image "$i" --name kind; done
+for i in "$P" "$K" "$G"; do kind load docker-image "$i" --name "${KIND_CLUSTER_NAME:-kind}"; done
 
 kubectl apply -f k8s/pg/00-namespace.yaml
 bash scripts/gen-grafana-secret.sh

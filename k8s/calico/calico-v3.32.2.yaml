@@ -6910,12 +6910,6 @@ spec:
       storage: true
       subresources:
         status: {}
-status:
-  acceptedNames:
-    kind: ""
-    plural: ""
-  conditions: null
-  storedVersions: null
 ---
 # Source: calico/templates/calico-kube-controllers-rbac.yaml
 # Include a clusterrole for the kube-controllers component,

@@ -1,0 +1,1 @@
+PASS ShellCheck on 93 shell scripts and hooks

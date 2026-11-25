@@ -6,7 +6,7 @@ cd "$(dirname "$0")/.."
 source versions.env
 
 IMG="${IMAGE_NAME}:${IMAGE_TAG}"
-kind load docker-image "$IMG" --name kind
+kind load docker-image "$IMG" "${PG_EXPORTER_IMAGE%%@*}" --name "${KIND_CLUSTER_NAME:-kind}"
 
 kubectl apply -f k8s/pg/00-namespace.yaml
 bash scripts/gen-secrets.sh
@@ -14,7 +14,7 @@ bash scripts/gen-objstore-secrets.sh
 bash scripts/gen-pgbackrest-tls.sh
 bash scripts/gen-pg-tls.sh
 kubectl apply -f k8s/pg/10-rbac.yaml -f k8s/pg/20-config.yaml \
-              -f k8s/pg/25-pgbackrest.yaml -f k8s/pg/30-services.yaml -f k8s/pg/40-pdb.yaml
+              -f k8s/pg/25-pgbackrest.yaml -f k8s/pg/30-services.yaml -f k8s/pg/40-pdb.yaml -f k8s/pg/70-networkpolicy.yaml
 sed -e "s|__IMAGE__|${IMG}|g" -e "s|__PG_EXPORTER_IMAGE__|${PG_EXPORTER_IMAGE%%@*}|g" k8s/pg/50-statefulset.yaml | kubectl apply -f -
 kubectl -n pg-ha rollout status sts/pg-ha --timeout=600s
 sed "s|__IMAGE__|${IMG}|g" k8s/pg/60-backup-cronjob.yaml | kubectl apply -f -

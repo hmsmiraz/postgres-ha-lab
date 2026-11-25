@@ -1,0 +1,18 @@
+date: 2026-11-25T06:30:11Z
+PASS: pg-ha healthy: 1 leader and 2 streaming replicas
+PASS: restore-test.sh and its pod manifest are present
+PASS: controls: the leak scanner and the timeline matcher fire on planted input
+PASS: live rs_scratch written (300 rows, the changed-value control differs); WAL segment 00000013000000000000004B is archived
+INFO: newest timeline in the live archive before the restore test: 00000013
+restore-test: pod pg-restore-test started, waiting for the restore and the end of recovery
+restore-test: the scratch instance did not become ready (failed)
+2026-11-25 06:30:44.403 UTC [1] FATAL:  could not load server certificate file "/tls/tls.crt": No such file or directory
+2026-11-25 06:30:44.403 UTC [1] LOG:  database system is shut down
+FAIL: restore-test.sh failed (exit 1)
++ Cluster: pg-ha (7710621595341348900) ----+-----------+----+-------------+-----+------------+-----+
+| Member  | Host            | Role         | State     | TL | Receive LSN | Lag | Replay LSN | Lag |
++---------+-----------------+--------------+-----------+----+-------------+-----+------------+-----+
+| pg-ha-0 | 192.168.110.187 | Sync Standby | streaming | 19 |  0/4C000060 |   0 | 0/4C000060 |   0 |
+| pg-ha-1 | 192.168.195.239 | Replica      | streaming | 19 |  0/4C000060 |   0 | 0/4C000060 |   0 |
+| pg-ha-2 | 192.168.162.180 | Leader       | running   | 19 |             |     |            |     |
++---------+-----------------+--------------+-----------+----+-------------+-----+------------+-----+

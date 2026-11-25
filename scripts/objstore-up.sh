@@ -7,7 +7,7 @@ cd "$(dirname "$0")/.."
 source versions.env
 
 IMG="${IMAGE_NAME}:${IMAGE_TAG}"
-kind load docker-image "$IMG" --name kind
+kind load docker-image "$IMG" --name "${KIND_CLUSTER_NAME:-kind}"
 
 kubectl apply -f k8s/pg/00-namespace.yaml
 bash scripts/gen-objstore-secrets.sh

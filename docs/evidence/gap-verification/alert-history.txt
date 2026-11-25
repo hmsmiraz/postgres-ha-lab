@@ -1,0 +1,4 @@
+BackupTooOld 1
+ReplicationLag 1
+SlotRetention 1
+WalArchiveFailure 1

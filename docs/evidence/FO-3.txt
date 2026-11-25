@@ -1,3 +1,5 @@
+EXPECTED RED LINES: None expected. See the recorded checks below.
+---- raw output below, unchanged ----
 date: 2026-11-19T16:15:45Z
 leader before: pg-ha-0, pvc data-pg-ha-0, uid b9388c40-9006-4e3c-bfad-76f9a9d41e70, timeline 4
 PASS: probe writing before the failure (28 acknowledged writes)

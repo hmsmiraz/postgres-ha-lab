@@ -1,0 +1,14 @@
++ Cluster: pg-ha (7710621595341348900) ----+-----------+----+-------------+-----+------------+-----+
+| Member  | Host            | Role         | State     | TL | Receive LSN | Lag | Replay LSN | Lag |
++---------+-----------------+--------------+-----------+----+-------------+-----+------------+-----+
+| pg-ha-0 | 192.168.110.187 | Replica      | streaming | 20 |  0/75003DA0 |   0 | 0/75003DA0 |   0 |
+| pg-ha-1 | 192.168.195.239 | Sync Standby | streaming | 20 |  0/75003DA0 |   0 | 0/75003DA0 |   0 |
+| pg-ha-2 | 192.168.162.191 | Leader       | running   | 20 |             |     |            |     |
++---------+-----------------+--------------+-----------+----+-------------+-----+------------+-----+
+NAME                 STATUS   ROLES           AGE     VERSION
+kind-control-plane   Ready    control-plane   5d15h   v1.37.0
+kind-worker          Ready    <none>          5d15h   v1.37.0
+kind-worker2         Ready    <none>          5d15h   v1.37.0
+kind-worker3         Ready    <none>          5d15h   v1.37.0
+NAME                SCHEDULE    TIMEZONE   SUSPEND   ACTIVE   LAST SCHEDULE   AGE
+pgbackrest-backup   0 2 * * *   Etc/UTC    False     0        15m             3d13h

@@ -1,0 +1,26 @@
+set -a; source versions.env; set +a; \
+for i in "${OBJSTORE_IMAGE%%@*}" "${OBJSTORE_TLS_PROXY_IMAGE%%@*}" "${PROMETHEUS_IMAGE%%@*}" "${PG_EXPORTER_IMAGE%%@*}" "${KSM_IMAGE%%@*}" "${GRAFANA_IMAGE%%@*}"; do docker pull "$i"; done
+v2.5.0: Pulling from dxflrs/garage
+Digest: sha256:677e5b758e4425a325b811c425c026bf35a4bf42f7ddbaa773de3f4fd779a5a5
+Status: Image is up to date for dxflrs/garage:v2.5.0
+docker.io/dxflrs/garage:v2.5.0
+1.30.6-alpine: Pulling from nginxinc/nginx-unprivileged
+Digest: sha256:f5116ed4606f3eb015dd4a8e28cb9b351476dc0ad4bc6e9f93b19cec130cdf03
+Status: Image is up to date for nginxinc/nginx-unprivileged:1.30.6-alpine
+docker.io/nginxinc/nginx-unprivileged:1.30.6-alpine
+v3.16.0: Pulling from prom/prometheus
+Digest: sha256:e04987641b57704f408e31f6373ba4138ecf27cb4a165d24aabb6c38fddd0f06
+Status: Image is up to date for prom/prometheus:v3.16.0
+docker.io/prom/prometheus:v3.16.0
+v0.21.1: Pulling from prometheuscommunity/postgres-exporter
+Digest: sha256:a88794758ad461c75f3825b51cde4bde730bdff04b3b24d00efe14217e41f615
+Status: Image is up to date for quay.io/prometheuscommunity/postgres-exporter:v0.21.1
+quay.io/prometheuscommunity/postgres-exporter:v0.21.1
+v2.20.0: Pulling from kube-state-metrics/kube-state-metrics
+Digest: sha256:42cfe3723a5f058171c627537fb57a3ea0f26e4380fa18555a95cb1a1b4cfc5b
+Status: Image is up to date for registry.k8s.io/kube-state-metrics/kube-state-metrics:v2.20.0
+registry.k8s.io/kube-state-metrics/kube-state-metrics:v2.20.0
+13.3.1: Pulling from grafana/grafana
+Digest: sha256:0615ec4fbd4072004b7d86b46ded63013a74b7d6eb1119273dd89e8fa25c13cf
+Status: Image is up to date for grafana/grafana:13.3.1
+docker.io/grafana/grafana:13.3.1

@@ -1,0 +1,11 @@
+gobinary	stdlib	v1.24.6	1.24.11, 1.25.5
+gobinary	stdlib	v1.24.6	1.24.12, 1.25.6
+gobinary	stdlib	v1.24.6	1.24.13, 1.25.7, 1.26.0-rc.3
+gobinary	stdlib	v1.24.6	1.25.10, 1.26.3
+gobinary	stdlib	v1.24.6	1.25.11, 1.26.4
+gobinary	stdlib	v1.24.6	1.25.12, 1.26.5, 1.27.0-rc.2
+gobinary	stdlib	v1.24.6	1.25.13, 1.26.6, 1.27.0-rc.3
+gobinary	stdlib	v1.24.6	1.25.8, 1.26.1
+gobinary	stdlib	v1.24.6	1.25.9, 1.26.2
+gobinary	stdlib	v1.24.6	1.26.10, 1.27.3
+gobinary	stdlib	v1.24.6	1.26.9, 1.27.2

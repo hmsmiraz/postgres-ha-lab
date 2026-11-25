@@ -1,0 +1,8 @@
+docker.io/nginxinc/nginx-unprivileged:1.30.6-alpine
+CRITICAL	listed fix	5
+HIGH	listed fix	15
+pg-ha:18.7-patroni4.1.5-pgbackrest2.60.0
+CRITICAL	no listed fix	1
+CRITICAL	listed fix	1
+HIGH	no listed fix	102
+HIGH	listed fix	82

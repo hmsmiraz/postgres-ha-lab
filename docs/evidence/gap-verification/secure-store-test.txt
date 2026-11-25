@@ -1,0 +1,16 @@
+date: 2026-11-25T14:39:24Z
+PASS: cluster reachable, pg-ha present
+PASS: StatefulSet objstore ready
+PASS: Service objstore exposes exactly 3900 (S3) and 3903 (admin)
+PASS: Job objstore-init completed and logged INIT OK
+PASS: Secrets objstore-credentials and objstore-admin have all four values (values not printed)
+PASS: Secret objstore-tls holds exactly ca.crt, tls.crt, tls.key (no CA private key in the cluster)
+--- client log (final phase: Failed)
+PROBE host=objstore.pg-ha.svc.cluster.local port=3900 RESULT=closed
+PROBE host=objstore.pg-ha.svc.cluster.local port=3903 RESULT=closed
+PROBE host=192.168.195.254 port=3910 RESULT=closed
+PROBE host=192.168.195.254 port=3913 RESULT=closed
+PROBE host=192.168.195.254 port=3901 RESULT=closed
+STEP=negative-control RESULT=FAIL (unexpected error)
+---
+FAIL: port probe failed: expected 'host=objstore.pg-ha.svc.cluster.local port=3900 RESULT=open'

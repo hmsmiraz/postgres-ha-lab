@@ -1,0 +1,4 @@
+date_utc: 2026-11-25T07:08:54Z
+PASS  rules extracted from the ConfigMap
+PASS  all unit tests pass
+PASS  negative control: a wrong expectation fails

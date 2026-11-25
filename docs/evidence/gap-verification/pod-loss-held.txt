@@ -1,0 +1,22 @@
+Primary worker cordoned to hold replacement of local-volume pod until promotion
+node/kind-worker cordoned
+date: 2026-11-25T07:15:52Z
+leader before: pg-ha-2
+PASS: probe writing before the kill (21 acknowledged writes)
+killing pg-ha-2 (force delete, grace period 0) at 1795590972945
+PASS: writes through pg-primary resumed without any manual change
+leader after: pg-ha-2
+NOTE: pg-ha-2 restarted in place and kept its leader lock (no promotion)
++ Cluster: pg-ha (7710621595341348900) ----+-----------+----+-------------+-----+------------+-----+
+| Member  | Host            | Role         | State     | TL | Receive LSN | Lag | Replay LSN | Lag |
++---------+-----------------+--------------+-----------+----+-------------+-----+------------+-----+
+| pg-ha-0 | 192.168.110.187 | Replica      | streaming | 20 |  0/9D00C730 |   0 | 0/9D00C730 |   0 |
+| pg-ha-1 | 192.168.195.239 | Sync Standby | streaming | 20 |  0/9D00C730 |   0 | 0/9D00C730 |   0 |
+| pg-ha-2 |                 | Leader       |           |    |             |     |            |     |
++---------+-----------------+--------------+-----------+----+-------------+-----+------------+-----+
+PASS: cluster is back to 1 leader + 2 streaming replicas
+acknowledged writes: 24, failed attempts: 38
+time from kill to first successful write: 32 ms
+largest gap between acknowledged writes (RTO): 505 ms
+PASS: RTO 505 ms is within the 60 s target
+FAIL: 24 acknowledged write(s) are missing after failover

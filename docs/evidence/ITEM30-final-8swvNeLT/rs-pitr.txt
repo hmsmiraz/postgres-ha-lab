@@ -1,0 +1,26 @@
+date: 2026-11-25T06:28:22Z
+PASS: pg-ha healthy: 1 leader and 2 streaming replicas
+PASS: restore-full.sh and restore-down.sh are present and executable
+PASS: controls: the static matcher fires on planted input and tells RESTORE_TARGET from RESTORE_TARGET_ACTION
+PASS: restore-full.sh reads RESTORE_TYPE, RESTORE_TARGET and RESTORE_TARGET_ACTION
+PASS: controls: the leak scanner and the timeline matcher fire on planted input
+PASS: live rs_pitr holds 500 before rows and 500 after rows; the target time is 2026-11-25 06:28:31.889495+00
+PASS: WAL segment 00000013000000000000004A, which holds the after rows, is archived
+INFO: newest timeline in the live archive before the restore: 00000013
+PASS: pg-restore does not exist: the restore starts from an empty namespace
+PASS: restore-full.sh finished with exit 0 with a point-in-time target
+PASS: 3 restored pods are ready; Patroni reports 1 leader and 2 streaming replicas
+PASS: on all three restored pods: 500 rows, 500 before rows with the live checksum, 0 after rows
+PASS: archive_mode is off on every restored member
+INFO: restored timeline 00000014, newest live archive timeline before 00000013 and after 00000013
+PASS: the restored cluster is on a newer timeline and the live archive got no newer timeline
+PASS: pg-ha was not restarted by the restore
+PASS: no secret value in the restored pod logs or the restore script output
+ALL CHECKS PASSED
++ Cluster: pg-ha (7710621595341348900) ----+-----------+----+-------------+-----+------------+-----+
+| Member  | Host            | Role         | State     | TL | Receive LSN | Lag | Replay LSN | Lag |
++---------+-----------------+--------------+-----------+----+-------------+-----+------------+-----+
+| pg-ha-0 | 192.168.110.187 | Sync Standby | streaming | 19 |  0/4B000728 |   0 | 0/4B000728 |   0 |
+| pg-ha-1 | 192.168.195.239 | Replica      | streaming | 19 |  0/4B000728 |   0 | 0/4B000728 |   0 |
+| pg-ha-2 | 192.168.162.180 | Leader       | running   | 19 |             |     |            |     |
++---------+-----------------+--------------+-----------+----+-------------+-----+------------+-----+

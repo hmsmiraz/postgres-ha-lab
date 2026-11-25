@@ -25,14 +25,14 @@ test-quick:
 	bash tests/sec-tls-static.sh
 	bash tests/sec-netpol-static.sh
 	bash tests/sec-rbac.sh
-	bash tests/sec-psa.sh
 
 test: test-quick
 	@echo "WARNING: the live suites below change the running cluster"
 	bash tests/rep-topology.sh
 	bash tests/con-endpoints.sh
 	bash tests/bk-wal.sh
-	bash tests/bk-verify.sh
 	bash tests/rs-full.sh
+	bash tests/sec-psa.sh
+	bash tests/bk-verify.sh
 	bash tests/obs-live.sh
 	bash tests/obs-alerts-live.sh

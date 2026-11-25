@@ -1,3 +1,5 @@
+EXPECTED RED LINES: Diagnostic notes from the drill.
+---- raw output below, unchanged ----
 # REP-3: lagging replica behind a silent network cut (observed 2026-11-20)
 
 Setup: max_slot_wal_keep_size lowered to 128MB, replica pg-ha-2 cut off with an nftables drop,

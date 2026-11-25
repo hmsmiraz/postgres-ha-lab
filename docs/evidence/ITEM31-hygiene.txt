@@ -1,0 +1,65 @@
+Wed Nov 25 06:50:24 UTC 2026
+ShellCheck - shell script analysis tool
+version: 0.11.0
+license: GNU General Public License, version 3
+website: https://www.shellcheck.net
+v0.8.0
+ShellCheck files: 90
+ShellCheck exit=0
+k8s/calico/calico-v3.32.2.yaml - CustomResourceDefinition bgpconfigurations.crd.projectcalico.org failed validation: could not find schema for CustomResourceDefinition
+k8s/calico/calico-v3.32.2.yaml - CustomResourceDefinition bgpfilters.crd.projectcalico.org failed validation: could not find schema for CustomResourceDefinition
+k8s/calico/calico-v3.32.2.yaml - CustomResourceDefinition bgppeers.crd.projectcalico.org failed validation: could not find schema for CustomResourceDefinition
+k8s/calico/calico-v3.32.2.yaml - CustomResourceDefinition blockaffinities.crd.projectcalico.org failed validation: could not find schema for CustomResourceDefinition
+k8s/calico/calico-v3.32.2.yaml - CustomResourceDefinition caliconodestatuses.crd.projectcalico.org failed validation: could not find schema for CustomResourceDefinition
+k8s/calico/calico-v3.32.2.yaml - CustomResourceDefinition clusterinformations.crd.projectcalico.org failed validation: could not find schema for CustomResourceDefinition
+k8s/calico/calico-v3.32.2.yaml - CustomResourceDefinition felixconfigurations.crd.projectcalico.org failed validation: could not find schema for CustomResourceDefinition
+k8s/calico/calico-v3.32.2.yaml - CustomResourceDefinition globalnetworkpolicies.crd.projectcalico.org failed validation: could not find schema for CustomResourceDefinition
+k8s/calico/calico-v3.32.2.yaml - CustomResourceDefinition globalnetworksets.crd.projectcalico.org failed validation: could not find schema for CustomResourceDefinition
+k8s/calico/calico-v3.32.2.yaml - CustomResourceDefinition hostendpoints.crd.projectcalico.org failed validation: could not find schema for CustomResourceDefinition
+k8s/calico/calico-v3.32.2.yaml - CustomResourceDefinition ipamblocks.crd.projectcalico.org failed validation: could not find schema for CustomResourceDefinition
+k8s/calico/calico-v3.32.2.yaml - CustomResourceDefinition ipamconfigs.crd.projectcalico.org failed validation: could not find schema for CustomResourceDefinition
+k8s/calico/calico-v3.32.2.yaml - CustomResourceDefinition ipamhandles.crd.projectcalico.org failed validation: could not find schema for CustomResourceDefinition
+k8s/calico/calico-v3.32.2.yaml - CustomResourceDefinition ippools.crd.projectcalico.org failed validation: could not find schema for CustomResourceDefinition
+k8s/calico/calico-v3.32.2.yaml - CustomResourceDefinition ipreservations.crd.projectcalico.org failed validation: could not find schema for CustomResourceDefinition
+k8s/calico/calico-v3.32.2.yaml - CustomResourceDefinition kubecontrollersconfigurations.crd.projectcalico.org failed validation: could not find schema for CustomResourceDefinition
+k8s/calico/calico-v3.32.2.yaml - CustomResourceDefinition networkpolicies.crd.projectcalico.org failed validation: could not find schema for CustomResourceDefinition
+k8s/calico/calico-v3.32.2.yaml - CustomResourceDefinition networksets.crd.projectcalico.org failed validation: could not find schema for CustomResourceDefinition
+k8s/calico/calico-v3.32.2.yaml - CustomResourceDefinition stagedglobalnetworkpolicies.crd.projectcalico.org failed validation: could not find schema for CustomResourceDefinition
+k8s/calico/calico-v3.32.2.yaml - CustomResourceDefinition stagedkubernetesnetworkpolicies.crd.projectcalico.org failed validation: could not find schema for CustomResourceDefinition
+k8s/calico/calico-v3.32.2.yaml - CustomResourceDefinition stagednetworkpolicies.crd.projectcalico.org failed validation: could not find schema for CustomResourceDefinition
+k8s/calico/calico-v3.32.2.yaml - CustomResourceDefinition tiers.crd.projectcalico.org failed validation: could not find schema for CustomResourceDefinition
+k8s/calico/calico-v3.32.2.yaml - CustomResourceDefinition clusternetworkpolicies.policy.networking.k8s.io failed validation: could not find schema for CustomResourceDefinition
+Summary: 84 resources found in 27 files - Valid: 61, Invalid: 0, Errors: 23, Skipped: 0
+kubeconform exit=1
+diff check exit=0
+Calico strict validation using the local Kubernetes API
+PASS Calico server dry-run
+/home/hmsmiraz/.local/bin/gitleaks
+docs/evidence/ITEM30-FO-2-dNvaKPVM/work/docs/evidence/FO-2-probe.log
+docs/evidence/ITEM30-FO-2-dNvaKPVM/work/tests/fo-node-stop.sh
+docs/evidence/ITEM30-FO-2-dNvaKPVM/work/tests/lib/probe.sh
+docs/evidence/ITEM30-FO-2-dNvaKPVM/work/tests/lib/write-probe.yaml
+docs/evidence/ITEM30-FO-2-dNvaKPVM/work/versions.env
+a994ca7549c54e1726c3e6487ef7e610534d8612ca148bfa3455a9862d6e696d  Screenshots/Grafana.png
+307e6f54d100173e6b0163a63ac8e70c3b7f2c375c0fc90dde66851a86946cfe  Screenshots/Prometheus.png
+56c3c4f4572d2ca925a505f0431a9681c5dd83d50345726e567ee1c254e4fc81  Screenshots/Resources 01.png
+688ac10b472e65ce30cd48fa1014a04daab1c5c819abaad96da9d425bae422fd  Screenshots/Resources 02.png
+a994ca7549c54e1726c3e6487ef7e610534d8612ca148bfa3455a9862d6e696d  docs/images/grafana-dashboard.png
+307e6f54d100173e6b0163a63ac8e70c3b7f2c375c0fc90dde66851a86946cfe  docs/images/prometheus-queries.png
+56c3c4f4572d2ca925a505f0431a9681c5dd83d50345726e567ee1c254e4fc81  docs/images/resources-01.png
+688ac10b472e65ce30cd48fa1014a04daab1c5c819abaad96da9d425bae422fd  docs/images/resources-02.png
+kubeconform rerun with the active API server's apiextensions/v1 schema for CRDs
+k8s/calico/calico-v3.32.2.yaml - CustomResourceDefinition clusternetworkpolicies.policy.networking.k8s.io is invalid: problem validating schema. Check JSON formatting: jsonschema validation failed with 'file:///tmp/tmp.q5CcU2NcRq/customresourcedefinition.json#' - at '/status': 'allOf' failed   - at '/status': validation failed     - at '/status/conditions': got null, want array     - at '/status/storedVersions': got null, want array
+Summary: 84 resources found in 27 files - Valid: 83, Invalid: 1, Errors: 0, Skipped: 0
+PASS gitleaks working-tree scan of tracked and nonignored untracked files
+date_utc: 2026-11-25T06:52:23Z
+PASS  gitleaks over all commits and refs: 0 leaks (81 commits)
+PASS  gitleaks over the tracked files: 0 leaks (343 files)
+PASS  forbidden name: 0 hits in content, messages and authors
+PASS  forbidden name: 0 hits in content, messages and authors
+PASS  no co-author or contributor trailer
+PASS  secret value list is usable (10 values, none short)
+PASS  no live secret value in tracked files (0) or in any commit (0)
+PASS  control: a planted token makes gitleaks fail
+PASS  control: the value matcher finds a known string
+PASS git diff --check

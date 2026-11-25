@@ -1,3 +1,5 @@
+EXPECTED RED LINES: Diagnostic notes from the drill.
+---- raw output below, unchanged ----
 # FO-5: how the replication cut was built (observations from 2026-11-19)
 
 Goal: commit rows on the primary that never reach any replica, then lose the primary.

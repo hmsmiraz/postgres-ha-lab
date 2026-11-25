@@ -31,7 +31,7 @@ spec:
           mkdir -p /pgdata/data
           chmod 0700 /pgdata/data
           pgbackrest --stanza=pg-ha --archive-mode=off restore
-          exec /usr/lib/postgresql/18/bin/postgres -D /pgdata/data -c archive_mode=off -c listen_addresses= -c synchronous_standby_names= -c unix_socket_directories=/run/postgresql
+          exec /usr/lib/postgresql/18/bin/postgres -D /pgdata/data -c archive_mode=off -c listen_addresses= -c ssl=off -c synchronous_standby_names= -c unix_socket_directories=/run/postgresql
       env:
         - name: PGBACKREST_STANZA
           value: pg-ha

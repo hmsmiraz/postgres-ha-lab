@@ -5,13 +5,19 @@ cd "$(dirname "$0")/.."
 # shellcheck source=/dev/null
 source versions.env
 
-CLUSTER=kind
+CLUSTER=${KIND_CLUSTER_NAME:-kind}
 if kind get clusters 2>/dev/null | grep -qx "$CLUSTER"; then
   echo "kind cluster '$CLUSTER' already exists, reusing it"
 else
   kind create cluster --name "$CLUSTER" \
     --config k8s/kind-config.yaml \
     --image "kindest/node:${KIND_NODE_IMAGE}"
+  # Load the CNI once from the host so four cold nodes do not race registry pulls.
+  for component in cni node kube-controllers; do
+    image="quay.io/calico/${component}:${CALICO_VERSION}"
+    docker pull "$image"
+    kind load docker-image "$image" --name "$CLUSTER"
+  done
 fi
 kubectl config use-context "kind-${CLUSTER}" >/dev/null
 

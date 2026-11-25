@@ -1,3 +1,5 @@
+EXPECTED RED LINES: None expected. See the recorded checks below.
+---- raw output below, unchanged ----
 date: 2026-11-19T15:53:31Z
 + Cluster: pg-ha (7709910619747762213) ----+-----------+----+-------------+-----+------------+-----+
 | Member  | Host            | Role         | State     | TL | Receive LSN | Lag | Replay LSN | Lag |

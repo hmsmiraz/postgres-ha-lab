@@ -46,3 +46,7 @@ Second run (tests/rep-degraded-sync.sh, ADR1-degraded.txt), same contract assert
 - With the primary's node powered off for 90 s, neither replica promoted itself (8 "not the healthiest
   node" log lines on each); 56 s after the node restart a writable primary was back (the old one).
 - 45 of 45 acknowledged writes survived; all three nodes held the same 46 rows afterwards.
+
+### Standby recovery from the archive
+
+Standbys request missing WAL through the existing pgBackRest archive-get command. The capped-slot drill now requires streaming recovery without a reinitialization. Replication connections use verify-ca with the mounted database CA.

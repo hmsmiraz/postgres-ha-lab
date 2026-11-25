@@ -1,0 +1,24 @@
+date_utc: 2026-11-25T07:02:38Z
+PASS: kubeconform: Summary: 4 resources found in 3 files - Valid: 4, Invalid: 0, Errors: 0, Skipped: 0
+PASS: WAL archiving enabled with pgBackRest archive-push
+PASS: 50-statefulset.yaml: backup configuration, secret references and mounts are consistent
+PASS: control A (CA volume removed): the check reports 1 problem(s)
+PASS: control B (a probe changed): the check reports 1 problem(s)
+PASS: control C (secret-like key in the ConfigMap): the check reports 1 problem(s)
+PASS: backup-loop.sh extracted from the ConfigMap (31 lines)
+PYTHON CHECKS DONE
+PASS: shellcheck is clean on backup-loop.sh
+PASS: backup-loop.sh passes sh -n in the pg-ha image
+SCENARIO primary-missing: loop exit=124 repo-ls=4 stanza-create=4
+SCENARIO primary-present: loop exit=124 repo-ls=4 stanza-create=0
+SCENARIO replica: loop exit=124 repo-ls=0 stanza-create=0
+SCENARIO psql-error: loop exit=124 repo-ls=0 stanza-create=0
+SCENARIO create-fails: loop exit=124 repo-ls=4 stanza-create=4
+SCENARIO term: loop exit=0 still-running=no
+PASS: leader without a stanza: stanza-create runs
+PASS: leader with a stanza: repository listed, stanza-create not run
+PASS: replica: nothing is run
+PASS: psql unavailable: nothing is run
+PASS: stanza-create failing: the loop retries (stanza-create ran 4 times in 4 s)
+PASS: SIGTERM during the idle wait: the loop exits with status 0 within 3 s
+ALL BK-1 STATIC CHECKS PASSED

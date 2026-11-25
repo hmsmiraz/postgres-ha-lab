@@ -53,12 +53,16 @@ data:
         ssl: "on"
         ssl_cert_file: /tls/tls.crt
         ssl_key_file: /tls/tls.key
+      recovery_conf:
+        restore_command: "pgbackrest --stanza=pg-ha archive-get %f %p"
       pgpass: /tmp/pgpass
       authentication:
         superuser:
           username: postgres
         replication:
           username: replicator
+          sslmode: verify-ca
+          sslrootcert: /tls/ca.crt
         rewind:
           username: rewind_user
       pg_hba:

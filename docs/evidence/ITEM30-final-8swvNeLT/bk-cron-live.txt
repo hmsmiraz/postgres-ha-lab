@@ -1,0 +1,24 @@
+date_utc: 2026-11-25T06:22:36Z
+original schedule: 0 2 * * *  timeZone: Etc/UTC  suspend: false
+PASS  control: the owned-Job filter counts 1 of 2 in a synthetic list
+backups before: 6
+PASS  temporary schedule is set (25 6 * * *)
+PASS  original schedule is restored
+PASS  timeZone and suspend are unchanged
+PASS  the controller created a Job from the CronJob (pgbackrest-backup-29926465)
+PASS  the Job completed
+backup-cronjob: type=incr
+backup-cronjob: verify ok
+backup-cronjob: done
+PASS  log has verify ok
+PASS  log has done
+PASS  lastScheduleTime moved after the start (2026-11-25T06:25:00Z)
+backups after: 7
+PASS  the repository holds exactly one more backup
++ Cluster: pg-ha (7710621595341348900) ----+-----------+----+-------------+-----+------------+-----+
+| Member  | Host            | Role         | State     | TL | Receive LSN | Lag | Replay LSN | Lag |
++---------+-----------------+--------------+-----------+----+-------------+-----+------------+-----+
+| pg-ha-0 | 192.168.110.187 | Sync Standby | streaming | 19 |  0/48000060 |   0 | 0/48000060 |   0 |
+| pg-ha-1 | 192.168.195.239 | Replica      | streaming | 19 |  0/48000060 |   0 | 0/48000060 |   0 |
+| pg-ha-2 | 192.168.162.180 | Leader       | running   | 19 |             |     |            |     |
++---------+-----------------+--------------+-----------+----+-------------+-----+------------+-----+

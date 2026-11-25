@@ -1,0 +1,14 @@
+date_utc: 2026-11-25T07:08:47Z
+PASS  rules extracted from the ConfigMap
+FAIL  all unit tests pass
+Processing test file: /r/unit.yml
+  FAILED:
+    name: NoPrimary fires when all Patroni targets disappear,
+    alertname: NoPrimary, time: 2m, 
+        exp:[
+            0:
+              Labels:{alertname="NoPrimary", severity="critical"}
+              Annotations:{summary="No Patroni primary is reported"}
+            ], 
+        got:[]
+PASS  negative control: a wrong expectation fails

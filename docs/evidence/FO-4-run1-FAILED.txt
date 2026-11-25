@@ -1,3 +1,5 @@
+EXPECTED RED LINES: No replica promoted during this partition attempt.
+---- raw output below, unchanged ----
 date: 2026-11-19T16:18:32Z
 leader before: pg-ha-1 (timeline 5), API server address: 172.18.0.5
 PASS: method check: pg-ha-1 can reach the API server before the partition

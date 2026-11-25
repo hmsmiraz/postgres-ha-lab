@@ -99,3 +99,14 @@ tests:
       - eval_time: 2m
         alertname: BackupTooOld
         exp_alerts: []
+  - name: NoPrimary fires when all Patroni targets disappear
+    interval: 15s
+    input_series: []
+    alert_rule_test:
+      - eval_time: 2m
+        alertname: NoPrimary
+        exp_alerts:
+          - exp_labels:
+              severity: critical
+            exp_annotations:
+              summary: No Patroni primary is reported

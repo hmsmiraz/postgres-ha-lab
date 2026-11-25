@@ -1,3 +1,5 @@
+EXPECTED RED LINES: None expected. See the recorded checks below.
+---- raw output below, unchanged ----
 date: 2026-11-19T15:53:35Z
 PASS: pg-primary reaches a primary (pg_is_in_recovery = f)
 PASS: write through pg-primary works

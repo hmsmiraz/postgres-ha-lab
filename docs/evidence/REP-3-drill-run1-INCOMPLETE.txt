@@ -1,3 +1,5 @@
+EXPECTED RED LINES: The run stopped before the checkpoint drill produced a verdict.
+---- raw output below, unchanged ----
 date: 2026-11-20T13:55:25Z
 leader: pg-ha-0 on kind-worker (192.168.162.136); drill replica: pg-ha-2 (192.168.195.196), slot pg_ha_2
 slot before: reserved|-|true

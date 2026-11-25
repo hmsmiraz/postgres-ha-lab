@@ -142,7 +142,7 @@ echo "pg_wal size now: $(wal_mb) MB (informational: Postgres keeps recycled segm
 
 recovered=""
 st=""
-for _ in $(seq 1 15); do
+for _ in $(seq 1 60); do
   st=$(cluster_json | jq -r --arg m "$target" '.[] | select(.Member == $m) | .State')
   if [ "$st" = streaming ]; then recovered=yes; break; fi
   sleep 4
@@ -150,13 +150,14 @@ done
 if [ -n "$recovered" ]; then
   echo "OBSERVATION: $target caught up and is streaming again on its own"
 else
-  echo "OBSERVATION: $target did NOT recover on its own (state: ${st:-unknown}); the WAL it needs was removed and there is no WAL archive yet"
+  echo "OBSERVATION: $target did NOT recover on its own (state: ${st:-unknown}); the required WAL was removed from the primary"
   echo "running: patronictl reinit pg-ha $target (manual step, recorded as a finding)"
   ctl reinit pg-ha "$target" --force >/dev/null
 fi
 wait_healthy 400 || { cluster_table || true; fail "cluster did not return to 1 leader + 2 streaming replicas"; }
 cluster_table
 pass "cluster is back to 1 leader + 2 streaming replicas"
+[ -n "$recovered" ] || fail "the lagging replica required reinitialization"
 
 ctl edit-config -p "max_slot_wal_keep_size=$ORIG" --force >/dev/null
 cap_changed=""

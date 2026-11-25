@@ -155,7 +155,11 @@ run_job bk-schedule-test-3 BACKUP_FULL_INTERVAL_SECONDS=0
 info3=$(info_json) || fail "cannot read pgbackrest info after job 3"
 f3=$(count_type "$info3" full)
 i3=$(count_type "$info3" incr)
-{ [ "$f3" = $((f2 + 1)) ] && [ "$i3" = "$i2" ]; } || fail "job 3 should add exactly one full backup (full $f2 to $f3, incr $i2 to $i3)"
+# Retention can expire an old full and its incrementals in the same Job.
+added=$(jq -nr --argjson before "$info2" --argjson after "$info3" '
+  [$before[0].backup[]?.label] as $known |
+  [$after[0].backup[]? | select(.label as $l | $known | index($l) == null) | .type] | join(",")')
+[ "$added" = full ] || fail "job 3 should add exactly one new full backup (new types: $added)"
 [ "$(grep -c 'backup-cronjob: type=full' <<<"$LOG" || true)" = 1 ] || fail "the job 3 log does not say type=full exactly once"
 pass "control: with the interval at 0, job 3 added one full backup (full $f2 to $f3)"
 

@@ -1,0 +1,28 @@
+date: 2026-11-25T06:25:28Z
+PASS: pg-ha healthy: 1 leader and 2 streaming replicas
+PASS: CronJob pgbackrest-backup exists
+PASS: restore-full.sh and restore-down.sh are present and executable
+PASS: controls: the leak scanner and the timeline matcher fire on planted input
+PASS: sentinel table rs_sentinel written in the live appdb: 1000 rows; the changed-value control differs
+INFO: full backups in the repository: 2
+PASS: a full backup made after the sentinel exists in the repository
+INFO: live timeline 19, newest timeline in the repository before the restore: 00000013
+PASS: pg-restore does not exist: the restore starts from an empty namespace
+PASS: restore-full.sh finished with exit 0
+PASS: 3 restored pods are ready; Patroni reports 1 leader and 2 streaming replicas
+PASS: pg-restore holds exactly the three expected Secrets, and objstore-ca holds only ca.crt (no private key copied)
+PASS: row count 1000 and checksum equal the live ones on all three restored pods
+PASS: control: the changed-value checksum matches its live twin and differs from the plain checksum
+PASS: archive_mode is off on every restored member
+INFO: restored timeline 00000014, newest repository timeline before 00000013 and after 00000013
+PASS: the restored cluster is on a newer timeline and the live archive got no newer timeline
+PASS: pg-ha was not restarted by the restore
+PASS: no secret value in the restored pod logs or the restore script output
+ALL CHECKS PASSED
++ Cluster: pg-ha (7710621595341348900) ----+-----------+----+-------------+-----+------------+-----+
+| Member  | Host            | Role         | State     | TL | Receive LSN | Lag | Replay LSN | Lag |
++---------+-----------------+--------------+-----------+----+-------------+-----+------------+-----+
+| pg-ha-0 | 192.168.110.187 | Sync Standby | streaming | 19 |  0/4A008318 |   0 | 0/4A008318 |   0 |
+| pg-ha-1 | 192.168.195.239 | Replica      | streaming | 19 |  0/4A008318 |   0 | 0/4A008318 |   0 |
+| pg-ha-2 | 192.168.162.180 | Leader       | running   | 19 |             |     |            |     |
++---------+-----------------+--------------+-----------+----+-------------+-----+------------+-----+

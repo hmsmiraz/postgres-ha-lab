@@ -1,0 +1,44 @@
+date: 2026-11-25T06:30:51Z
+leader: pg-ha-2 on kind-worker (192.168.162.180); drill replica: pg-ha-1 (192.168.195.239), slot pg_ha_1
+replica replay position: 0/4C000130, WAL file it needs: 00000013000000000000004C
+slot before: reserved|-|active=true|safe_wal_size=1090518736
+pg_wal size before: 209 MB
+PASS: max_slot_wal_keep_size lowered to 128MB for the drill
+cutting pg-ha-1 off from the primary (nftables) at 12:30:59
+generating 24 WAL segments (about 384 MB) while pg-ha-1 is cut off
+PASS: the primary kept accepting writes while pg-ha-1 was cut off
+slot after the writes: unreserved|-|active=true|safe_wal_size=-251658240
+PASS: the slot is past the cap (unreserved)
+starting CHECKPOINT in the background (client limit 600 s) at 12:31:08
+checkpointer waiting on ReplicationSlotDrop: 1 (1 = yes)
+pg_wal size when the checkpoint started: 577 MB
+primary keeps writing for 60 s while the checkpoint waits (the cut stays in place)
+PASS: the primary kept accepting writes during the wait (13 segments of 16 MB written)
+MEASURED: pg_wal grew from 577 MB to 785 MB in 60 s while the checkpoint waited
+removing the cut at 12:32:15
+checkpoint (client view): rc=0 after 99s
+MEASURED: seconds from removing the cut to checkpoint completion: 32
+PASS: the checkpoint completed once the dead connection was gone
+slot after the checkpoint: unreserved|-|active=false|safe_wal_size=-67109000
+PASS: the WAL file 00000013000000000000004C needed by pg-ha-1 is gone from the primary (retention is capped)
+pg_wal size now: 785 MB (informational: Postgres keeps recycled segments)
+OBSERVATION: pg-ha-1 did NOT recover on its own (state: running); the WAL it needs was removed and there is no WAL archive yet
+running: patronictl reinit pg-ha pg-ha-1 (manual step, recorded as a finding)
++ Cluster: pg-ha (7710621595341348900) ----+-----------+----+-------------+-----+------------+-----+
+| Member  | Host            | Role         | State     | TL | Receive LSN | Lag | Replay LSN | Lag |
++---------+-----------------+--------------+-----------+----+-------------+-----+------------+-----+
+| pg-ha-0 | 192.168.110.187 | Sync Standby | streaming | 19 |  0/73000000 |   0 | 0/73000000 |   0 |
+| pg-ha-1 | 192.168.195.239 | Replica      | streaming | 19 |  0/73000000 |   0 | 0/73000000 |   0 |
+| pg-ha-2 | 192.168.162.180 | Leader       | running   | 19 |             |     |            |     |
++---------+-----------------+--------------+-----------+----+-------------+-----+------------+-----+
+PASS: cluster is back to 1 leader + 2 streaming replicas
+PASS: max_slot_wal_keep_size restored to 1GB
+PASS: exactly one pod accepts writes
+ALL CHECKS PASSED
++ Cluster: pg-ha (7710621595341348900) ----+-----------+----+-------------+-----+------------+-----+
+| Member  | Host            | Role         | State     | TL | Receive LSN | Lag | Replay LSN | Lag |
++---------+-----------------+--------------+-----------+----+-------------+-----+------------+-----+
+| pg-ha-0 | 192.168.110.187 | Sync Standby | streaming | 19 |  0/73000060 |   0 | 0/73000060 |   0 |
+| pg-ha-1 | 192.168.195.239 | Replica      | streaming | 19 |  0/73000060 |   0 | 0/73000060 |   0 |
+| pg-ha-2 | 192.168.162.180 | Leader       | running   | 19 |             |     |            |     |
++---------+-----------------+--------------+-----------+----+-------------+-----+------------+-----+

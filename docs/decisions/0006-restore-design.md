@@ -38,3 +38,7 @@ Why: the human changed RS-3 to an on-demand restore test (SPEC edit in commit a3
 name said "scheduled" for a test that is not scheduled.
 What did not change: the checks of the test. Only one comment sentence changed. docs/evidence/RS-3.txt was produced under the old
 name, and the test was not rerun after the rename (its output does not print the file name).
+
+### On-demand restore from a TLS-enabled backup (2026-11-25)
+
+The scratch PostgreSQL process listens only on a Unix socket. Set ssl=off on its command line so it can start from a backup containing live server certificate paths. pgBackRest still verifies the object store certificate using the mounted CA.

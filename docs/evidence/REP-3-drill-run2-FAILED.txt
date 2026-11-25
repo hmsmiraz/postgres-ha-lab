@@ -1,3 +1,5 @@
+EXPECTED RED LINES: The checkpoint command timed out while the replica was isolated.
+---- raw output below, unchanged ----
 date: 2026-11-20T14:09:57Z
 leader: pg-ha-0 on kind-worker (192.168.162.136); drill replica: pg-ha-2 (192.168.195.196), slot pg_ha_2
 replica replay position: 0/21000168, WAL file it needs: 000000070000000000000021

@@ -1,0 +1,29 @@
+date: 2026-11-25T06:07:24Z
+leader before: pg-ha-1 on node kind-worker3
+PASS: probe writing before the failure (26 acknowledged writes)
+powering off node kind-worker3 (docker kill) at 1795586855607
+PASS: writes through pg-primary resumed without any manual change
+leader after: pg-ha-2
+PASS: replica pg-ha-2 was promoted automatically (the old primary's node is down)
+acknowledged writes: 40, failed attempts: 34
+time from node power-off to first successful write: 50 ms
+largest gap between acknowledged writes (RTO): 32048 ms
+PASS: RTO 32048 ms is within the 90 s target
+DIAG: could not read fo_probe (attempt 1), retrying in 5 s
+DIAG: acknowledged in log: 40, rows read from table: 71
+DIAG: first missing: 
+PASS: no acknowledged write was lost (0 missing out of 40)
+starting node kind-worker3 again
++ Cluster: pg-ha (7710621595341348900) ----+-----------+----+-------------+-----+------------+-----+
+| Member  | Host            | Role         | State     | TL | Receive LSN | Lag | Replay LSN | Lag |
++---------+-----------------+--------------+-----------+----+-------------+-----+------------+-----+
+| pg-ha-0 | 192.168.110.187 | Sync Standby | streaming | 16 |  0/4102B230 |   0 | 0/4102B230 |   0 |
+| pg-ha-1 | 192.168.195.235 | Replica      | streaming | 16 |  0/4102BE48 |   0 | 0/4102BE48 |   0 |
+| pg-ha-2 | 192.168.162.176 | Leader       | running   | 16 |             |     |            |     |
++---------+-----------------+--------------+-----------+----+-------------+-----+------------+-----+
+old primary pg-ha-1 now has role: Replica
+PASS: old primary pg-ha-1 rejoined automatically as a replica
+timeline before: 15, after: 16
+PASS: timeline advanced (15 -> 16)
+PASS: exactly one pod accepts writes after the node returned
+ALL CHECKS PASSED

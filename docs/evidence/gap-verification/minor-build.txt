@@ -1,0 +1,398 @@
+#0 building with "default" instance using docker driver
+
+#1 [internal] load build definition from Dockerfile
+#1 transferring dockerfile: 30B 0.0s
+#1 transferring dockerfile: 1.31kB 0.1s done
+#1 DONE 0.1s
+
+#2 [internal] load metadata for docker.io/library/postgres:18.6-trixie@sha256:e3d24f6906d0760bf4da0dae872415391ededefad23fd471c47dc53b0ddf3c42
+#2 DONE 6.6s
+
+#3 [internal] load .dockerignore
+#3 transferring context: 67B 0.0s done
+#3 DONE 0.1s
+
+#4 [internal] load build context
+#4 DONE 0.0s
+
+#5 [1/6] FROM docker.io/library/postgres:18.6-trixie@sha256:e3d24f6906d0760bf4da0dae872415391ededefad23fd471c47dc53b0ddf3c42
+#5 DONE 0.6s
+
+#4 [internal] load build context
+#4 transferring context: 70B done
+#4 DONE 0.1s
+
+#5 [1/6] FROM docker.io/library/postgres:18.6-trixie@sha256:e3d24f6906d0760bf4da0dae872415391ededefad23fd471c47dc53b0ddf3c42
+#5 resolve docker.io/library/postgres:18.6-trixie@sha256:e3d24f6906d0760bf4da0dae872415391ededefad23fd471c47dc53b0ddf3c42 0.1s done
+#5 sha256:8bca9649e52d948114ccc8164b55b7ab26b64e729893e420114bb5c87bf7c7cc 10.05kB / 10.05kB done
+#5 sha256:e3d24f6906d0760bf4da0dae872415391ededefad23fd471c47dc53b0ddf3c42 10.23kB / 10.23kB done
+#5 sha256:e923a22ac074261dd73970c57edf659475bf0497cb9456f17d98ed7cdd3ca913 3.44kB / 3.44kB done
+#5 sha256:e9dd37612d7b4ff5055c29761c1f0749046cd441a0c25bcea140668c96e90e8b 0B / 1.17kB 0.3s
+#5 sha256:369949eb022916f3146429477ecab4755d31a11fcce70162eda5bc5e1dd5c3c6 0B / 6.44MB 0.6s
+#5 sha256:7e0f86eb8508984ab8e61d55b8dbfe900c95ef73de1b45b505f87bb6c17a907f 0B / 1.26MB 0.6s
+#5 sha256:e9dd37612d7b4ff5055c29761c1f0749046cd441a0c25bcea140668c96e90e8b 1.17kB / 1.17kB 0.8s done
+#5 extracting sha256:e9dd37612d7b4ff5055c29761c1f0749046cd441a0c25bcea140668c96e90e8b
+#5 extracting sha256:e9dd37612d7b4ff5055c29761c1f0749046cd441a0c25bcea140668c96e90e8b 0.1s done
+#5 sha256:da434b32d4803cadad93923bc2dc4ab9f85685873a5999c91264edf23f5e409e 0B / 8.20MB 1.0s
+#5 sha256:369949eb022916f3146429477ecab4755d31a11fcce70162eda5bc5e1dd5c3c6 1.05MB / 6.44MB 3.6s
+#5 sha256:369949eb022916f3146429477ecab4755d31a11fcce70162eda5bc5e1dd5c3c6 2.10MB / 6.44MB 5.6s
+#5 sha256:7e0f86eb8508984ab8e61d55b8dbfe900c95ef73de1b45b505f87bb6c17a907f 0B / 1.26MB 5.6s
+#5 sha256:da434b32d4803cadad93923bc2dc4ab9f85685873a5999c91264edf23f5e409e 0B / 8.20MB 6.1s
+#5 sha256:7e0f86eb8508984ab8e61d55b8dbfe900c95ef73de1b45b505f87bb6c17a907f 1.05MB / 1.26MB 6.3s
+#5 sha256:da434b32d4803cadad93923bc2dc4ab9f85685873a5999c91264edf23f5e409e 1.05MB / 8.20MB 6.7s
+#5 sha256:7e0f86eb8508984ab8e61d55b8dbfe900c95ef73de1b45b505f87bb6c17a907f 1.26MB / 1.26MB 7.3s done
+#5 sha256:bcc75ab4e0104e18cb8684dbd012d05e5bd9bdefbd5da7c93bf41fe931446680 0B / 1.31MB 7.4s
+#5 sha256:369949eb022916f3146429477ecab4755d31a11fcce70162eda5bc5e1dd5c3c6 3.15MB / 6.44MB 8.0s
+#5 sha256:da434b32d4803cadad93923bc2dc4ab9f85685873a5999c91264edf23f5e409e 2.10MB / 8.20MB 10.4s
+#5 sha256:369949eb022916f3146429477ecab4755d31a11fcce70162eda5bc5e1dd5c3c6 4.19MB / 6.44MB 10.7s
+#5 sha256:bcc75ab4e0104e18cb8684dbd012d05e5bd9bdefbd5da7c93bf41fe931446680 1.05MB / 1.31MB 11.7s
+#5 sha256:369949eb022916f3146429477ecab4755d31a11fcce70162eda5bc5e1dd5c3c6 5.24MB / 6.44MB 12.5s
+#5 sha256:bcc75ab4e0104e18cb8684dbd012d05e5bd9bdefbd5da7c93bf41fe931446680 1.31MB / 1.31MB 13.4s done
+#5 sha256:a28de24f57c01d5ed53c5a829b762171f2c37369a391a403b4fdd3304b8e0c5b 0B / 116B 13.7s
+#5 sha256:a28de24f57c01d5ed53c5a829b762171f2c37369a391a403b4fdd3304b8e0c5b 116B / 116B 14.5s
+#5 sha256:a28de24f57c01d5ed53c5a829b762171f2c37369a391a403b4fdd3304b8e0c5b 116B / 116B 14.5s done
+#5 sha256:6d141360b363af231c3eddeac824438fc2268e983e9cbc0194c43d2d861aecf4 0B / 3.15kB 14.8s
+#5 sha256:da434b32d4803cadad93923bc2dc4ab9f85685873a5999c91264edf23f5e409e 2.10MB / 8.20MB 15.6s
+#5 sha256:da434b32d4803cadad93923bc2dc4ab9f85685873a5999c91264edf23f5e409e 3.15MB / 8.20MB 15.8s
+#5 sha256:6d141360b363af231c3eddeac824438fc2268e983e9cbc0194c43d2d861aecf4 3.15kB / 3.15kB 15.8s
+#5 sha256:6d141360b363af231c3eddeac824438fc2268e983e9cbc0194c43d2d861aecf4 3.15kB / 3.15kB 16.0s done
+#5 sha256:fcd0e951406297ac5814e0485ac62a981805fe202829537876931bc18b8e10e5 0B / 115.40MB 16.2s
+#5 sha256:369949eb022916f3146429477ecab4755d31a11fcce70162eda5bc5e1dd5c3c6 6.29MB / 6.44MB 16.6s
+#5 sha256:369949eb022916f3146429477ecab4755d31a11fcce70162eda5bc5e1dd5c3c6 6.44MB / 6.44MB 17.3s done
+#5 extracting sha256:369949eb022916f3146429477ecab4755d31a11fcce70162eda5bc5e1dd5c3c6
+#5 sha256:cbe0afc9eb7bab5cc2b78d0a6d2157d77364a2f6322e34d76614a12fc8c9d33a 0B / 19.43kB 18.4s
+#5 sha256:cbe0afc9eb7bab5cc2b78d0a6d2157d77364a2f6322e34d76614a12fc8c9d33a 19.43kB / 19.43kB 19.3s done
+#5 sha256:fc6c21aca07c567e2b19461ec7c62c0e8b4303c10f9ceb0ffd8e80bc67aa533b 0B / 127B 19.6s
+#5 sha256:da434b32d4803cadad93923bc2dc4ab9f85685873a5999c91264edf23f5e409e 4.19MB / 8.20MB 20.4s
+#5 sha256:fc6c21aca07c567e2b19461ec7c62c0e8b4303c10f9ceb0ffd8e80bc67aa533b 127B / 127B 20.4s
+#5 sha256:fc6c21aca07c567e2b19461ec7c62c0e8b4303c10f9ceb0ffd8e80bc67aa533b 127B / 127B 20.8s done
+#5 sha256:2a59118cca0e865fbccc1e706069b45dc9210c9d9fc4e58644645fbf24f17d57 0B / 6.11kB 21.1s
+#5 sha256:fcd0e951406297ac5814e0485ac62a981805fe202829537876931bc18b8e10e5 1.05MB / 115.40MB 21.3s
+#5 sha256:2a59118cca0e865fbccc1e706069b45dc9210c9d9fc4e58644645fbf24f17d57 6.11kB / 6.11kB 21.7s
+#5 sha256:2a59118cca0e865fbccc1e706069b45dc9210c9d9fc4e58644645fbf24f17d57 6.11kB / 6.11kB 22.0s done
+#5 sha256:eac25292b61391b522f697b80462618b0975d82274583089e3152f9eab8400e0 0B / 184B 22.1s
+#5 sha256:da434b32d4803cadad93923bc2dc4ab9f85685873a5999c91264edf23f5e409e 5.24MB / 8.20MB 22.6s
+#5 extracting sha256:369949eb022916f3146429477ecab4755d31a11fcce70162eda5bc5e1dd5c3c6 5.0s
+#5 sha256:eac25292b61391b522f697b80462618b0975d82274583089e3152f9eab8400e0 184B / 184B 22.8s done
+#5 extracting sha256:369949eb022916f3146429477ecab4755d31a11fcce70162eda5bc5e1dd5c3c6 6.0s done
+#5 extracting sha256:7e0f86eb8508984ab8e61d55b8dbfe900c95ef73de1b45b505f87bb6c17a907f
+#5 extracting sha256:7e0f86eb8508984ab8e61d55b8dbfe900c95ef73de1b45b505f87bb6c17a907f 0.4s done
+#5 sha256:da434b32d4803cadad93923bc2dc4ab9f85685873a5999c91264edf23f5e409e 6.29MB / 8.20MB 25.3s
+#5 sha256:fcd0e951406297ac5814e0485ac62a981805fe202829537876931bc18b8e10e5 3.15MB / 115.40MB 26.4s
+#5 sha256:da434b32d4803cadad93923bc2dc4ab9f85685873a5999c91264edf23f5e409e 7.34MB / 8.20MB 28.4s
+#5 sha256:da434b32d4803cadad93923bc2dc4ab9f85685873a5999c91264edf23f5e409e 8.20MB / 8.20MB 31.0s
+#5 extracting sha256:da434b32d4803cadad93923bc2dc4ab9f85685873a5999c91264edf23f5e409e
+#5 sha256:da434b32d4803cadad93923bc2dc4ab9f85685873a5999c91264edf23f5e409e 8.20MB / 8.20MB 31.1s done
+#5 sha256:fcd0e951406297ac5814e0485ac62a981805fe202829537876931bc18b8e10e5 5.24MB / 115.40MB 31.5s
+#5 extracting sha256:da434b32d4803cadad93923bc2dc4ab9f85685873a5999c91264edf23f5e409e 5.1s
+#5 sha256:fcd0e951406297ac5814e0485ac62a981805fe202829537876931bc18b8e10e5 7.34MB / 115.40MB 36.6s
+#5 extracting sha256:da434b32d4803cadad93923bc2dc4ab9f85685873a5999c91264edf23f5e409e 9.7s done
+#5 extracting sha256:bcc75ab4e0104e18cb8684dbd012d05e5bd9bdefbd5da7c93bf41fe931446680
+#5 sha256:fcd0e951406297ac5814e0485ac62a981805fe202829537876931bc18b8e10e5 10.49MB / 115.40MB 41.7s
+#5 extracting sha256:bcc75ab4e0104e18cb8684dbd012d05e5bd9bdefbd5da7c93bf41fe931446680 0.7s done
+#5 extracting sha256:a28de24f57c01d5ed53c5a829b762171f2c37369a391a403b4fdd3304b8e0c5b done
+#5 extracting sha256:6d141360b363af231c3eddeac824438fc2268e983e9cbc0194c43d2d861aecf4 done
+#5 sha256:fcd0e951406297ac5814e0485ac62a981805fe202829537876931bc18b8e10e5 12.58MB / 115.40MB 46.7s
+#5 sha256:fcd0e951406297ac5814e0485ac62a981805fe202829537876931bc18b8e10e5 13.63MB / 115.40MB 51.7s
+#5 sha256:fcd0e951406297ac5814e0485ac62a981805fe202829537876931bc18b8e10e5 15.73MB / 115.40MB 56.7s
+#5 sha256:fcd0e951406297ac5814e0485ac62a981805fe202829537876931bc18b8e10e5 19.92MB / 115.40MB 61.8s
+#5 sha256:fcd0e951406297ac5814e0485ac62a981805fe202829537876931bc18b8e10e5 22.02MB / 115.40MB 66.8s
+#5 sha256:fcd0e951406297ac5814e0485ac62a981805fe202829537876931bc18b8e10e5 22.02MB / 115.40MB 71.9s
+#5 sha256:fcd0e951406297ac5814e0485ac62a981805fe202829537876931bc18b8e10e5 22.02MB / 115.40MB 77.1s
+#5 sha256:fcd0e951406297ac5814e0485ac62a981805fe202829537876931bc18b8e10e5 24.12MB / 115.40MB 82.3s
+#5 sha256:fcd0e951406297ac5814e0485ac62a981805fe202829537876931bc18b8e10e5 26.21MB / 115.40MB 87.3s
+#5 sha256:fcd0e951406297ac5814e0485ac62a981805fe202829537876931bc18b8e10e5 27.26MB / 115.40MB 92.3s
+#5 sha256:fcd0e951406297ac5814e0485ac62a981805fe202829537876931bc18b8e10e5 29.36MB / 115.40MB 97.4s
+#5 sha256:fcd0e951406297ac5814e0485ac62a981805fe202829537876931bc18b8e10e5 30.41MB / 115.40MB 102.5s
+#5 sha256:fcd0e951406297ac5814e0485ac62a981805fe202829537876931bc18b8e10e5 32.51MB / 115.40MB 107.5s
+#5 sha256:fcd0e951406297ac5814e0485ac62a981805fe202829537876931bc18b8e10e5 35.65MB / 115.40MB 112.7s
+#5 sha256:fcd0e951406297ac5814e0485ac62a981805fe202829537876931bc18b8e10e5 38.80MB / 115.40MB 117.7s
+#5 sha256:fcd0e951406297ac5814e0485ac62a981805fe202829537876931bc18b8e10e5 39.85MB / 115.40MB 122.7s
+#5 sha256:fcd0e951406297ac5814e0485ac62a981805fe202829537876931bc18b8e10e5 41.94MB / 115.40MB 127.7s
+#5 sha256:fcd0e951406297ac5814e0485ac62a981805fe202829537876931bc18b8e10e5 41.94MB / 115.40MB 132.9s
+#5 sha256:fcd0e951406297ac5814e0485ac62a981805fe202829537876931bc18b8e10e5 44.04MB / 115.40MB 138.0s
+#5 sha256:fcd0e951406297ac5814e0485ac62a981805fe202829537876931bc18b8e10e5 45.09MB / 115.40MB 143.1s
+#5 sha256:fcd0e951406297ac5814e0485ac62a981805fe202829537876931bc18b8e10e5 46.14MB / 115.40MB 148.3s
+#5 sha256:fcd0e951406297ac5814e0485ac62a981805fe202829537876931bc18b8e10e5 48.23MB / 115.40MB 153.5s
+#5 sha256:fcd0e951406297ac5814e0485ac62a981805fe202829537876931bc18b8e10e5 50.33MB / 115.40MB 158.6s
+#5 sha256:fcd0e951406297ac5814e0485ac62a981805fe202829537876931bc18b8e10e5 55.57MB / 115.40MB 163.6s
+#5 sha256:fcd0e951406297ac5814e0485ac62a981805fe202829537876931bc18b8e10e5 57.67MB / 115.40MB 168.7s
+#5 sha256:fcd0e951406297ac5814e0485ac62a981805fe202829537876931bc18b8e10e5 59.77MB / 115.40MB 173.7s
+#5 sha256:fcd0e951406297ac5814e0485ac62a981805fe202829537876931bc18b8e10e5 63.96MB / 115.40MB 178.8s
+#5 sha256:fcd0e951406297ac5814e0485ac62a981805fe202829537876931bc18b8e10e5 66.06MB / 115.40MB 183.9s
+#5 sha256:fcd0e951406297ac5814e0485ac62a981805fe202829537876931bc18b8e10e5 70.25MB / 115.40MB 189.0s
+#5 sha256:fcd0e951406297ac5814e0485ac62a981805fe202829537876931bc18b8e10e5 72.35MB / 115.40MB 194.1s
+#5 sha256:fcd0e951406297ac5814e0485ac62a981805fe202829537876931bc18b8e10e5 74.45MB / 115.40MB 199.2s
+#5 sha256:fcd0e951406297ac5814e0485ac62a981805fe202829537876931bc18b8e10e5 75.50MB / 115.40MB 204.2s
+#5 sha256:fcd0e951406297ac5814e0485ac62a981805fe202829537876931bc18b8e10e5 76.55MB / 115.40MB 209.3s
+#5 sha256:fcd0e951406297ac5814e0485ac62a981805fe202829537876931bc18b8e10e5 79.69MB / 115.40MB 214.5s
+#5 sha256:fcd0e951406297ac5814e0485ac62a981805fe202829537876931bc18b8e10e5 82.84MB / 115.40MB 219.5s
+#5 sha256:fcd0e951406297ac5814e0485ac62a981805fe202829537876931bc18b8e10e5 85.98MB / 115.40MB 224.6s
+#5 sha256:fcd0e951406297ac5814e0485ac62a981805fe202829537876931bc18b8e10e5 90.18MB / 115.40MB 229.6s
+#5 sha256:fcd0e951406297ac5814e0485ac62a981805fe202829537876931bc18b8e10e5 94.37MB / 115.40MB 234.8s
+#5 sha256:fcd0e951406297ac5814e0485ac62a981805fe202829537876931bc18b8e10e5 100.66MB / 115.40MB 239.7s
+#5 sha256:fcd0e951406297ac5814e0485ac62a981805fe202829537876931bc18b8e10e5 105.91MB / 115.40MB 244.8s
+#5 sha256:fcd0e951406297ac5814e0485ac62a981805fe202829537876931bc18b8e10e5 109.05MB / 115.40MB 249.8s
+#5 sha256:fcd0e951406297ac5814e0485ac62a981805fe202829537876931bc18b8e10e5 113.25MB / 115.40MB 255.0s
+#5 sha256:fcd0e951406297ac5814e0485ac62a981805fe202829537876931bc18b8e10e5 115.40MB / 115.40MB 256.2s done
+#5 extracting sha256:fcd0e951406297ac5814e0485ac62a981805fe202829537876931bc18b8e10e5
+#5 extracting sha256:fcd0e951406297ac5814e0485ac62a981805fe202829537876931bc18b8e10e5 5.6s
+#5 extracting sha256:fcd0e951406297ac5814e0485ac62a981805fe202829537876931bc18b8e10e5 11.1s
+#5 extracting sha256:fcd0e951406297ac5814e0485ac62a981805fe202829537876931bc18b8e10e5 16.5s
+#5 extracting sha256:fcd0e951406297ac5814e0485ac62a981805fe202829537876931bc18b8e10e5 21.6s
+#5 extracting sha256:fcd0e951406297ac5814e0485ac62a981805fe202829537876931bc18b8e10e5 26.8s
+#5 extracting sha256:fcd0e951406297ac5814e0485ac62a981805fe202829537876931bc18b8e10e5 31.8s
+#5 extracting sha256:fcd0e951406297ac5814e0485ac62a981805fe202829537876931bc18b8e10e5 37.0s
+#5 extracting sha256:fcd0e951406297ac5814e0485ac62a981805fe202829537876931bc18b8e10e5 42.2s
+#5 extracting sha256:fcd0e951406297ac5814e0485ac62a981805fe202829537876931bc18b8e10e5 47.4s
+#5 extracting sha256:fcd0e951406297ac5814e0485ac62a981805fe202829537876931bc18b8e10e5 52.9s
+#5 extracting sha256:fcd0e951406297ac5814e0485ac62a981805fe202829537876931bc18b8e10e5 58.7s
+#5 extracting sha256:fcd0e951406297ac5814e0485ac62a981805fe202829537876931bc18b8e10e5 63.9s
+#5 extracting sha256:fcd0e951406297ac5814e0485ac62a981805fe202829537876931bc18b8e10e5 69.3s
+#5 extracting sha256:fcd0e951406297ac5814e0485ac62a981805fe202829537876931bc18b8e10e5 75.1s
+#5 extracting sha256:fcd0e951406297ac5814e0485ac62a981805fe202829537876931bc18b8e10e5 76.9s done
+#5 extracting sha256:cbe0afc9eb7bab5cc2b78d0a6d2157d77364a2f6322e34d76614a12fc8c9d33a
+#5 extracting sha256:cbe0afc9eb7bab5cc2b78d0a6d2157d77364a2f6322e34d76614a12fc8c9d33a done
+#5 extracting sha256:fc6c21aca07c567e2b19461ec7c62c0e8b4303c10f9ceb0ffd8e80bc67aa533b
+#5 extracting sha256:fc6c21aca07c567e2b19461ec7c62c0e8b4303c10f9ceb0ffd8e80bc67aa533b done
+#5 extracting sha256:2a59118cca0e865fbccc1e706069b45dc9210c9d9fc4e58644645fbf24f17d57
+#5 extracting sha256:2a59118cca0e865fbccc1e706069b45dc9210c9d9fc4e58644645fbf24f17d57 0.0s done
+#5 extracting sha256:eac25292b61391b522f697b80462618b0975d82274583089e3152f9eab8400e0
+#5 extracting sha256:eac25292b61391b522f697b80462618b0975d82274583089e3152f9eab8400e0 done
+#5 DONE 339.4s
+
+#6 [2/6] RUN apt-get update  && apt-get install -y --no-install-recommends       python3 python3-venv tini       "pgbackrest=2.60.0-1.pgdg13+1"  && rm -rf /var/lib/apt/lists/*
+#6 5.029 Get:1 http://deb.debian.org/debian trixie InRelease [140 kB]
+#6 5.455 Get:2 http://deb.debian.org/debian trixie-updates InRelease [47.3 kB]
+#6 5.482 Get:3 http://deb.debian.org/debian-security trixie-security InRelease [43.4 kB]
+#6 5.482 Get:4 http://apt.postgresql.org/pub/repos/apt trixie-pgdg InRelease [241 kB]
+#6 5.834 Get:5 http://deb.debian.org/debian trixie/main amd64 Packages [9,679 kB]
+#6 6.282 Get:6 http://apt.postgresql.org/pub/repos/apt trixie-pgdg/main amd64 Packages [1,197 kB]
+#6 8.899 Get:7 http://apt.postgresql.org/pub/repos/apt trixie-pgdg/18 amd64 Packages [4,113 B]
+#6 16.34 Get:8 http://deb.debian.org/debian trixie-updates/main amd64 Packages [1,108 B]
+#6 16.34 Get:9 http://deb.debian.org/debian-security trixie-security/main amd64 Packages [310 kB]
+#6 22.35 Fetched 11.7 MB in 18s (660 kB/s)
+#6 22.35 Reading package lists...
+#6 32.32 Reading package lists...
+#6 41.03 Building dependency tree...
+#6 43.51 Reading state information...
+#6 47.33 The following additional packages will be installed:
+#6 47.34   ca-certificates libexpat1 libpython3-stdlib libpython3.13-minimal
+#6 47.35   libpython3.13-stdlib libssh2-1t64 media-types python3-minimal
+#6 47.35   python3-pip-whl python3-setuptools-whl python3.13 python3.13-minimal
+#6 47.35   python3.13-venv
+#6 47.36 Suggested packages:
+#6 47.37   pgbackrest-doc check-pgbackrest python3-doc python3-tk python3.13-doc
+#6 47.37   binutils binfmt-support
+#6 48.37 The following NEW packages will be installed:
+#6 48.39   ca-certificates libexpat1 libpython3-stdlib libpython3.13-minimal
+#6 48.40   libpython3.13-stdlib libssh2-1t64 media-types pgbackrest python3
+#6 48.40   python3-minimal python3-pip-whl python3-setuptools-whl python3-venv
+#6 48.41   python3.13 python3.13-minimal python3.13-venv tini
+#6 49.11 0 upgraded, 17 newly installed, 0 to remove and 21 not upgraded.
+#6 49.11 Need to get 10.0 MB of archives.
+#6 49.11 After this operation, 29.2 MB of additional disk space will be used.
+#6 49.11 Get:1 http://deb.debian.org/debian trixie/main amd64 libexpat1 amd64 2.9.0-1~deb13u1 [126 kB]
+#6 49.30 Get:2 http://deb.debian.org/debian trixie/main amd64 libpython3.13-minimal amd64 3.13.5-2+deb13u5 [863 kB]
+#6 49.67 Get:3 http://apt.postgresql.org/pub/repos/apt trixie-pgdg/main amd64 pgbackrest amd64 2.60.0-1.pgdg13+1 [509 kB]
+#6 50.61 Get:4 http://deb.debian.org/debian trixie/main amd64 python3.13-minimal amd64 3.13.5-2+deb13u5 [2,225 kB]
+#6 52.96 Get:5 http://deb.debian.org/debian trixie/main amd64 python3-minimal amd64 3.13.5-1 [27.2 kB]
+#6 53.01 Get:6 http://deb.debian.org/debian trixie/main amd64 media-types all 13.0.0 [29.3 kB]
+#6 53.01 Get:7 http://deb.debian.org/debian trixie/main amd64 libpython3.13-stdlib amd64 3.13.5-2+deb13u5 [1,959 kB]
+#6 55.55 Get:8 http://deb.debian.org/debian trixie/main amd64 python3.13 amd64 3.13.5-2+deb13u5 [757 kB]
+#6 56.30 Get:9 http://deb.debian.org/debian trixie/main amd64 libpython3-stdlib amd64 3.13.5-1 [10.2 kB]
+#6 56.30 Get:10 http://deb.debian.org/debian trixie/main amd64 python3 amd64 3.13.5-1 [28.2 kB]
+#6 56.33 Get:11 http://deb.debian.org/debian trixie/main amd64 ca-certificates all 20250419+deb13u1 [161 kB]
+#6 56.54 Get:12 http://deb.debian.org/debian trixie/main amd64 libssh2-1t64 amd64 1.11.1-1+deb13u2 [245 kB]
+#6 56.87 Get:13 http://deb.debian.org/debian trixie/main amd64 python3-pip-whl all 25.1.1+dfsg-1 [1,507 kB]
+#6 58.21 Get:14 http://deb.debian.org/debian trixie/main amd64 python3-setuptools-whl all 78.1.1-0.1 [1,268 kB]
+#6 59.51 Get:15 http://deb.debian.org/debian trixie/main amd64 python3.13-venv amd64 3.13.5-2+deb13u5 [5,476 B]
+#6 59.57 Get:16 http://deb.debian.org/debian trixie/main amd64 python3-venv amd64 3.13.5-1 [1,180 B]
+#6 59.57 Get:17 http://deb.debian.org/debian trixie/main amd64 tini amd64 0.19.0-3+b8 [280 kB]
+#6 62.58 debconf: unable to initialize frontend: Dialog
+#6 62.58 debconf: (TERM is not set, so the dialog frontend is not usable.)
+#6 62.58 debconf: falling back to frontend: Readline
+#6 62.76 debconf: unable to initialize frontend: Readline
+#6 62.76 debconf: (This frontend requires a controlling tty.)
+#6 62.76 debconf: falling back to frontend: Teletype
+#6 62.86 debconf: unable to initialize frontend: Teletype
+#6 62.86 debconf: (This frontend requires a controlling tty.)
+#6 62.86 debconf: falling back to frontend: Noninteractive
+#6 70.92 Preconfiguring packages ...
+#6 71.84 Fetched 10.0 MB in 11s (885 kB/s)
+#6 72.14 Selecting previously unselected package libexpat1:amd64.
+#6 72.14 (Reading database ... (Reading database ... 5%(Reading database ... 10%(Reading database ... 15%(Reading database ... 20%(Reading database ... 25%(Reading database ... 30%(Reading database ... 35%(Reading database ... 40%(Reading database ... 45%(Reading database ... 50%(Reading database ... 55%(Reading database ... 60%(Reading database ... 65%(Reading database ... 70%(Reading database ... 75%(Reading database ... 80%(Reading database ... 85%(Reading database ... 90%(Reading database ... 95%(Reading database ... 100%(Reading database ... 11555 files and directories currently installed.)
+#6 72.79 Preparing to unpack .../libexpat1_2.9.0-1~deb13u1_amd64.deb ...
+#6 72.87 Unpacking libexpat1:amd64 (2.9.0-1~deb13u1) ...
+#6 73.47 Selecting previously unselected package libpython3.13-minimal:amd64.
+#6 73.54 Preparing to unpack .../libpython3.13-minimal_3.13.5-2+deb13u5_amd64.deb ...
+#6 73.58 Unpacking libpython3.13-minimal:amd64 (3.13.5-2+deb13u5) ...
+#6 74.77 Selecting previously unselected package python3.13-minimal.
+#6 74.80 Preparing to unpack .../python3.13-minimal_3.13.5-2+deb13u5_amd64.deb ...
+#6 75.01 Unpacking python3.13-minimal (3.13.5-2+deb13u5) ...
+#6 77.69 Setting up libpython3.13-minimal:amd64 (3.13.5-2+deb13u5) ...
+#6 77.88 Setting up libexpat1:amd64 (2.9.0-1~deb13u1) ...
+#6 78.00 Setting up python3.13-minimal (3.13.5-2+deb13u5) ...
+#6 90.00 Selecting previously unselected package python3-minimal.
+#6 90.00 (Reading database ... (Reading database ... 5%(Reading database ... 10%(Reading database ... 15%(Reading database ... 20%(Reading database ... 25%(Reading database ... 30%(Reading database ... 35%(Reading database ... 40%(Reading database ... 45%(Reading database ... 50%(Reading database ... 55%(Reading database ... 60%(Reading database ... 65%(Reading database ... 70%(Reading database ... 75%(Reading database ... 80%(Reading database ... 85%(Reading database ... 90%(Reading database ... 95%(Reading database ... 100%(Reading database ... 11889 files and directories currently installed.)
+#6 90.50 Preparing to unpack .../python3-minimal_3.13.5-1_amd64.deb ...
+#6 90.55 Unpacking python3-minimal (3.13.5-1) ...
+#6 91.02 Selecting previously unselected package media-types.
+#6 91.04 Preparing to unpack .../media-types_13.0.0_all.deb ...
+#6 91.09 Unpacking media-types (13.0.0) ...
+#6 91.90 Selecting previously unselected package libpython3.13-stdlib:amd64.
+#6 91.90 Preparing to unpack .../libpython3.13-stdlib_3.13.5-2+deb13u5_amd64.deb ...
+#6 91.94 Unpacking libpython3.13-stdlib:amd64 (3.13.5-2+deb13u5) ...
+#6 93.73 Selecting previously unselected package python3.13.
+#6 93.75 Preparing to unpack .../python3.13_3.13.5-2+deb13u5_amd64.deb ...
+#6 93.79 Unpacking python3.13 (3.13.5-2+deb13u5) ...
+#6 94.43 Selecting previously unselected package libpython3-stdlib:amd64.
+#6 94.43 Preparing to unpack .../libpython3-stdlib_3.13.5-1_amd64.deb ...
+#6 94.49 Unpacking libpython3-stdlib:amd64 (3.13.5-1) ...
+#6 95.40 Setting up python3-minimal (3.13.5-1) ...
+#6 98.61 Selecting previously unselected package python3.
+#6 98.61 (Reading database ... (Reading database ... 5%(Reading database ... 10%(Reading database ... 15%(Reading database ... 20%(Reading database ... 25%(Reading database ... 30%(Reading database ... 35%(Reading database ... 40%(Reading database ... 45%(Reading database ... 50%(Reading database ... 55%(Reading database ... 60%(Reading database ... 65%(Reading database ... 70%(Reading database ... 75%(Reading database ... 80%(Reading database ... 85%(Reading database ... 90%(Reading database ... 95%(Reading database ... 100%(Reading database ... 12343 files and directories currently installed.)
+#6 98.68 Preparing to unpack .../0-python3_3.13.5-1_amd64.deb ...
+#6 98.80 Unpacking python3 (3.13.5-1) ...
+#6 99.47 Selecting previously unselected package ca-certificates.
+#6 99.47 Preparing to unpack .../1-ca-certificates_20250419+deb13u1_all.deb ...
+#6 99.56 Unpacking ca-certificates (20250419+deb13u1) ...
+#6 101.0 Selecting previously unselected package libssh2-1t64:amd64.
+#6 101.0 Preparing to unpack .../2-libssh2-1t64_1.11.1-1+deb13u2_amd64.deb ...
+#6 101.0 Unpacking libssh2-1t64:amd64 (1.11.1-1+deb13u2) ...
+#6 101.6 Selecting previously unselected package pgbackrest.
+#6 101.7 Preparing to unpack .../3-pgbackrest_2.60.0-1.pgdg13+1_amd64.deb ...
+#6 101.7 Unpacking pgbackrest (2.60.0-1.pgdg13+1) ...
+#6 102.4 Selecting previously unselected package python3-pip-whl.
+#6 102.4 Preparing to unpack .../4-python3-pip-whl_25.1.1+dfsg-1_all.deb ...
+#6 102.4 Unpacking python3-pip-whl (25.1.1+dfsg-1) ...
+#6 103.7 Selecting previously unselected package python3-setuptools-whl.
+#6 103.7 Preparing to unpack .../5-python3-setuptools-whl_78.1.1-0.1_all.deb ...
+#6 103.7 Unpacking python3-setuptools-whl (78.1.1-0.1) ...
+#6 104.9 Selecting previously unselected package python3.13-venv.
+#6 104.9 Preparing to unpack .../6-python3.13-venv_3.13.5-2+deb13u5_amd64.deb ...
+#6 104.9 Unpacking python3.13-venv (3.13.5-2+deb13u5) ...
+#6 105.5 Selecting previously unselected package python3-venv.
+#6 105.5 Preparing to unpack .../7-python3-venv_3.13.5-1_amd64.deb ...
+#6 105.6 Unpacking python3-venv (3.13.5-1) ...
+#6 106.1 Selecting previously unselected package tini.
+#6 106.1 Preparing to unpack .../8-tini_0.19.0-3+b8_amd64.deb ...
+#6 106.1 Unpacking tini (0.19.0-3+b8) ...
+#6 106.9 Setting up media-types (13.0.0) ...
+#6 107.1 Setting up python3-setuptools-whl (78.1.1-0.1) ...
+#6 107.2 Setting up ca-certificates (20250419+deb13u1) ...
+#6 108.7 debconf: unable to initialize frontend: Dialog
+#6 108.7 debconf: (TERM is not set, so the dialog frontend is not usable.)
+#6 108.7 debconf: falling back to frontend: Readline
+#6 108.9 debconf: unable to initialize frontend: Readline
+#6 108.9 debconf: (This frontend requires a controlling tty.)
+#6 108.9 debconf: falling back to frontend: Teletype
+#6 108.9 debconf: unable to initialize frontend: Teletype
+#6 108.9 debconf: (This frontend requires a controlling tty.)
+#6 108.9 debconf: falling back to frontend: Noninteractive
+#6 119.8 Updating certificates in /etc/ssl/certs...
+#6 173.2 148 added, 0 removed; done.
+#6 175.3 Setting up tini (0.19.0-3+b8) ...
+#6 175.7 Setting up libssh2-1t64:amd64 (1.11.1-1+deb13u2) ...
+#6 175.9 Setting up libpython3.13-stdlib:amd64 (3.13.5-2+deb13u5) ...
+#6 176.3 Setting up libpython3-stdlib:amd64 (3.13.5-1) ...
+#6 176.5 Setting up python3.13 (3.13.5-2+deb13u5) ...
+#6 194.5 Setting up python3-pip-whl (25.1.1+dfsg-1) ...
+#6 194.7 Setting up pgbackrest (2.60.0-1.pgdg13+1) ...
+#6 201.5 Setting up python3 (3.13.5-1) ...
+#6 201.7 running python rtupdate hooks for python3.13...
+#6 201.7 running python post-rtupdate hooks for python3.13...
+#6 203.6 Setting up python3.13-venv (3.13.5-2+deb13u5) ...
+#6 205.2 Setting up python3-venv (3.13.5-1) ...
+#6 205.4 Processing triggers for libc-bin (2.41-12+deb13u4) ...
+#6 207.4 Processing triggers for ca-certificates (20250419+deb13u1) ...
+#6 207.6 Updating certificates in /etc/ssl/certs...
+#6 221.0 0 added, 0 removed; done.
+#6 221.0 Running hooks in /etc/ca-certificates/update.d...
+#6 221.0 done.
+#6 DONE 221.7s
+
+#7 [3/6] COPY image/requirements.lock /tmp/requirements.lock
+#7 DONE 0.4s
+
+#8 [4/6] RUN python3 -m venv /opt/patroni  && /opt/patroni/bin/pip install --no-cache-dir --require-virtualenv -r /tmp/requirements.lock  && rm /tmp/requirements.lock
+#8 21.79 Collecting certifi==2026.10.23 (from -r /tmp/requirements.lock (line 1))
+#8 23.06   Downloading certifi-2026.10.23-py3-none-any.whl.metadata (2.5 kB)
+#8 25.35 Collecting charset-normalizer==3.5.2 (from -r /tmp/requirements.lock (line 2))
+#8 25.51   Downloading charset_normalizer-3.5.2-cp313-cp313-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl.metadata (46 kB)
+#8 26.28 Collecting click==8.5.1 (from -r /tmp/requirements.lock (line 3))
+#8 26.33   Downloading click-8.5.1-py3-none-any.whl.metadata (2.6 kB)
+#8 26.59 Collecting idna==3.20 (from -r /tmp/requirements.lock (line 4))
+#8 26.73   Downloading idna-3.20-py3-none-any.whl.metadata (7.2 kB)
+#8 27.35 Collecting patroni==4.1.5 (from -r /tmp/requirements.lock (line 5))
+#8 27.61   Downloading patroni-4.1.5-py3-none-any.whl.metadata (12 kB)
+#8 28.03 Collecting prettytable==3.19.0 (from -r /tmp/requirements.lock (line 6))
+#8 28.32   Downloading prettytable-3.19.0-py3-none-any.whl.metadata (37 kB)
+#8 29.46 Collecting psutil==7.2.2 (from -r /tmp/requirements.lock (line 7))
+#8 29.52   Downloading psutil-7.2.2-cp36-abi3-manylinux2010_x86_64.manylinux_2_12_x86_64.manylinux_2_28_x86_64.whl.metadata (22 kB)
+#8 30.84 Collecting psycopg2-binary==2.9.13 (from -r /tmp/requirements.lock (line 8))
+#8 30.93   Downloading psycopg2_binary-2.9.13-cp313-cp313-manylinux2014_x86_64.manylinux_2_17_x86_64.whl.metadata (4.9 kB)
+#8 31.40 Collecting py-consul==1.8.0 (from -r /tmp/requirements.lock (line 9))
+#8 31.84   Downloading py_consul-1.8.0-py2.py3-none-any.whl.metadata (6.7 kB)
+#8 32.10 Collecting python-dateutil==4.0.0 (from -r /tmp/requirements.lock (line 10))
+#8 32.18   Downloading python_dateutil-4.0.0-py3-none-any.whl.metadata (7.3 kB)
+#8 33.00 Collecting PyYAML==6.0.3 (from -r /tmp/requirements.lock (line 11))
+#8 33.08   Downloading pyyaml-6.0.3-cp313-cp313-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl.metadata (2.4 kB)
+#8 33.56 Collecting requests==2.34.2 (from -r /tmp/requirements.lock (line 12))
+#8 33.72   Downloading requests-2.34.2-py3-none-any.whl.metadata (4.8 kB)
+#8 33.94 Collecting tzdata==2026.6 (from -r /tmp/requirements.lock (line 13))
+#8 34.00   Downloading tzdata-2026.6-py2.py3-none-any.whl.metadata (1.4 kB)
+#8 34.36 Collecting urllib3==2.8.0 (from -r /tmp/requirements.lock (line 14))
+#8 34.76   Downloading urllib3-2.8.0-py3-none-any.whl.metadata (7.4 kB)
+#8 35.94 Collecting wcwidth==0.9.4 (from -r /tmp/requirements.lock (line 15))
+#8 36.38   Downloading wcwidth-0.9.4-cp310-abi3-manylinux2014_x86_64.manylinux_2_17_x86_64.whl.metadata (23 kB)
+#8 37.86 Collecting ydiff==1.4.2 (from -r /tmp/requirements.lock (line 16))
+#8 38.25   Downloading ydiff-1.4.2.tar.gz (16 kB)
+#8 38.54   Installing build dependencies: started
+#8 66.69   Installing build dependencies: finished with status 'done'
+#8 66.71   Getting requirements to build wheel: started
+#8 71.05   Getting requirements to build wheel: finished with status 'done'
+#8 71.29   Preparing metadata (pyproject.toml): started
+#8 77.94   Preparing metadata (pyproject.toml): finished with status 'done'
+#8 79.36 Downloading certifi-2026.10.23-py3-none-any.whl (135 kB)
+#8 79.67 Downloading charset_normalizer-3.5.2-cp313-cp313-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl (254 kB)
+#8 80.19 Downloading click-8.5.1-py3-none-any.whl (126 kB)
+#8 80.51 Downloading idna-3.20-py3-none-any.whl (69 kB)
+#8 80.71 Downloading patroni-4.1.5-py3-none-any.whl (378 kB)
+#8 81.24 Downloading prettytable-3.19.0-py3-none-any.whl (37 kB)
+#8 81.32 Downloading psutil-7.2.2-cp36-abi3-manylinux2010_x86_64.manylinux_2_12_x86_64.manylinux_2_28_x86_64.whl (155 kB)
+#8 81.73 Downloading psycopg2_binary-2.9.13-cp313-cp313-manylinux2014_x86_64.manylinux_2_17_x86_64.whl (4.3 MB)
+#8 90.01    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 4.3/4.3 MB 515.4 kB/s eta 0:00:00
+#8 90.22 Downloading py_consul-1.8.0-py2.py3-none-any.whl (56 kB)
+#8 90.75 Downloading python_dateutil-4.0.0-py3-none-any.whl (92 kB)
+#8 91.25 Downloading pyyaml-6.0.3-cp313-cp313-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl (801 kB)
+#8 92.48    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 801.6/801.6 kB 620.5 kB/s eta 0:00:00
+#8 92.52 Downloading requests-2.34.2-py3-none-any.whl (73 kB)
+#8 92.67 Downloading urllib3-2.8.0-py3-none-any.whl (135 kB)
+#8 92.90 Downloading tzdata-2026.6-py2.py3-none-any.whl (348 kB)
+#8 93.43 Downloading wcwidth-0.9.4-cp310-abi3-manylinux2014_x86_64.manylinux_2_17_x86_64.whl (785 kB)
+#8 94.55    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 785.9/785.9 kB 1.1 MB/s eta 0:00:00
+#8 94.78 Building wheels for collected packages: ydiff
+#8 94.81   Building wheel for ydiff (pyproject.toml): started
+#8 97.42   Building wheel for ydiff (pyproject.toml): finished with status 'done'
+#8 97.42   Created wheel for ydiff: filename=ydiff-1.4.2-py3-none-any.whl size=16306 sha256=1833863145a2aefadd8928064b70d62c8b36cd8b85e5fa701273036fc8737d9d
+#8 97.44   Stored in directory: /tmp/pip-ephem-wheel-cache-fx_jjaeb/wheels/02/62/2c/71550cb951d2700f4d07fde357144b600dc71d1f5585609bb5
+#8 97.46 Successfully built ydiff
+#8 97.92 Installing collected packages: ydiff, wcwidth, urllib3, tzdata, PyYAML, psycopg2-binary, psutil, idna, click, charset-normalizer, certifi, requests, python-dateutil, prettytable, py-consul, patroni
+#8 125.2 
+#8 125.2 Successfully installed PyYAML-6.0.3 certifi-2026.10.23 charset-normalizer-3.5.2 click-8.5.1 idna-3.20 patroni-4.1.5 prettytable-3.19.0 psutil-7.2.2 psycopg2-binary-2.9.13 py-consul-1.8.0 python-dateutil-4.0.0 requests-2.34.2 tzdata-2026.6 urllib3-2.8.0 wcwidth-0.9.4 ydiff-1.4.2
+#8 DONE 127.2s
+
+#9 [5/6] RUN mkdir -p /pgdata /etc/patroni  && chown postgres:postgres /pgdata  && chmod 700 /pgdata
+#9 DONE 5.4s
+
+#10 [6/6] WORKDIR /home/postgres
+#10 DONE 0.9s
+
+#11 exporting to image
+#11 exporting layers
+#11 exporting layers 18.8s done
+#11 writing image sha256:7813e9496a1b5a4cd5c6337a27f735145ec70193292a46aa616b302c53c86b88 0.0s done
+#11 naming to docker.io/library/pg-ha:gap-upgrade-18.6 0.0s done
+#11 DONE 19.1s
+postgres (PostgreSQL) 18.6 (Debian 18.6-1.pgdg13+2)

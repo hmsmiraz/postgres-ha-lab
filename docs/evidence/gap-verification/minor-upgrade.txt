@@ -1,0 +1,102 @@
+Wed Nov 25 14:20:55 UTC 2026
+Image: "pg-ha:gap-upgrade-18.6" with ID "sha256:7813e9496a1b5a4cd5c6337a27f735145ec70193292a46aa616b302c53c86b88" not yet present on node "kind-worker3", loading...
+Image: "pg-ha:gap-upgrade-18.6" with ID "sha256:7813e9496a1b5a4cd5c6337a27f735145ec70193292a46aa616b302c53c86b88" not yet present on node "kind-control-plane", loading...
+Image: "pg-ha:gap-upgrade-18.6" with ID "sha256:7813e9496a1b5a4cd5c6337a27f735145ec70193292a46aa616b302c53c86b88" not yet present on node "kind-worker", loading...
+Image: "pg-ha:gap-upgrade-18.6" with ID "sha256:7813e9496a1b5a4cd5c6337a27f735145ec70193292a46aa616b302c53c86b88" not yet present on node "kind-worker2", loading...
+Warning: resource namespaces/pg-minor-rehearsal is missing the kubectl.kubernetes.io/last-applied-configuration annotation which is required by kubectl apply. kubectl apply should only be used on resources created declaratively by either kubectl create --save-config or kubectl apply. The missing annotation will be patched automatically.
+namespace/pg-minor-rehearsal configured
+secret objstore-credentials created
+secret objstore-admin created
+secret objstore-tls created
+configmap/objstore-config created
+service/objstore created
+statefulset.apps/objstore created
+Waiting for 1 pods to be ready...
+partitioned roll out complete: 1 new pods have been updated...
+configmap/objstore-init created
+job.batch/objstore-init created
+job.batch/objstore-init condition met
+Image: "pg-ha:gap-upgrade-18.6" with ID "sha256:7813e9496a1b5a4cd5c6337a27f735145ec70193292a46aa616b302c53c86b88" found to be already present on all nodes.
+Image: "quay.io/prometheuscommunity/postgres-exporter:v0.21.1" with ID "sha256:d75080f7313a9dece64a6070c554616fec0648bfa9fc35edfb4a0cdd17fd8e9d" found to be already present on all nodes.
+namespace/pg-minor-rehearsal unchanged
+secret/pg-credentials created
+secret objstore-credentials already exists, keeping it
+secret objstore-admin already exists, keeping it
+secret objstore-tls already exists, keeping it
+secret pgbackrest-tls-server created
+secret pgbackrest-tls-client created
+secret pg-tls created
+serviceaccount/patroni created
+role.rbac.authorization.k8s.io/patroni created
+rolebinding.rbac.authorization.k8s.io/patroni created
+configmap/patroni-static-config created
+configmap/pgbackrest-env created
+configmap/pgbackrest-scripts created
+service/pg-primary created
+service/pg-replica created
+service/pg-minor-rehearsal-headless created
+poddisruptionbudget.policy/pg-minor-rehearsal created
+networkpolicy.networking.k8s.io/pg-minor-rehearsal-ingress created
+networkpolicy.networking.k8s.io/objstore-ingress created
+statefulset.apps/pg-minor-rehearsal created
+Waiting for 3 pods to be ready...
+Waiting for 2 pods to be ready...
+Waiting for 1 pods to be ready...
+partitioned roll out complete: 3 new pods have been updated...
+configmap/pgbackrest-cronjob-scripts created
+cronjob.batch/pgbackrest-backup created
+pg-minor-rehearsal-0 before 180006
+pg-minor-rehearsal-1 before 180006
+pg-minor-rehearsal-2 before 180006
+Image: "pg-ha:18.7-patroni4.1.5-pgbackrest2.60.0" with ID "sha256:3e0026e32c00002e03c61ac21837557cf5b1b41f04c79dd0463f50debcda5f57" found to be already present on all nodes.
+Image: "quay.io/prometheuscommunity/postgres-exporter:v0.21.1" with ID "sha256:d75080f7313a9dece64a6070c554616fec0648bfa9fc35edfb4a0cdd17fd8e9d" found to be already present on all nodes.
+namespace/pg-minor-rehearsal unchanged
+secret pg-credentials already exists, keeping it
+secret objstore-credentials already exists, keeping it
+secret objstore-admin already exists, keeping it
+secret objstore-tls already exists, keeping it
+secret pgbackrest-tls-server already exists, keeping it
+secret pgbackrest-tls-client already exists, keeping it
+secret pg-tls already exists, keeping it
+serviceaccount/patroni unchanged
+role.rbac.authorization.k8s.io/patroni unchanged
+rolebinding.rbac.authorization.k8s.io/patroni unchanged
+configmap/patroni-static-config unchanged
+configmap/pgbackrest-env unchanged
+configmap/pgbackrest-scripts unchanged
+service/pg-primary unchanged
+service/pg-replica unchanged
+service/pg-minor-rehearsal-headless unchanged
+poddisruptionbudget.policy/pg-minor-rehearsal configured
+networkpolicy.networking.k8s.io/pg-minor-rehearsal-ingress unchanged
+networkpolicy.networking.k8s.io/objstore-ingress unchanged
+statefulset.apps/pg-minor-rehearsal configured
+Waiting for partitioned roll out to finish: 0 out of 3 new pods have been updated...
+Waiting for 1 pods to be ready...
+Waiting for 1 pods to be ready...
+Waiting for 1 pods to be ready...
+Waiting for partitioned roll out to finish: 1 out of 3 new pods have been updated...
+Waiting for 1 pods to be ready...
+Waiting for 1 pods to be ready...
+Waiting for 1 pods to be ready...
+Waiting for partitioned roll out to finish: 2 out of 3 new pods have been updated...
+Waiting for 1 pods to be ready...
+Waiting for 1 pods to be ready...
+Waiting for 1 pods to be ready...
+partitioned roll out complete: 3 new pods have been updated...
+configmap/pgbackrest-cronjob-scripts unchanged
+cronjob.batch/pgbackrest-backup configured
+pg-minor-rehearsal-0 after 180007
+pg-minor-rehearsal-1 after 180007
+pg-minor-rehearsal-2 after 180007
+DIAG: acknowledged in log: 211, rows read from table: 215
+DIAG: first missing: 
+missing acknowledged writes: 0
++ Cluster: pg-minor-rehearsal (7712116538586566693) ----+-----------+----+-------------+-----+------------+-----+
+| Member               | Host            | Role         | State     | TL | Receive LSN | Lag | Replay LSN | Lag |
++----------------------+-----------------+--------------+-----------+----+-------------+-----+------------+-----+
+| pg-minor-rehearsal-0 | 192.168.110.134 | Replica      | streaming |  3 |   0/700E788 |   0 |  0/700E6D8 |   0 |
+| pg-minor-rehearsal-1 | 192.168.162.142 | Sync Standby | streaming |  3 |   0/700E6D8 |   0 |  0/700E6D8 |   0 |
+| pg-minor-rehearsal-2 | 192.168.195.252 | Leader       | running   |  3 |             |     |            |     |
++----------------------+-----------------+--------------+-----------+----+-------------+-----+------------+-----+
+PASS rolling 18.6 to 18.7 on three isolated members

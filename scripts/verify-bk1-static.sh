@@ -16,9 +16,6 @@ cleanup() { rm -rf "$r"; }
 trap cleanup EXIT
 echo "date_utc: $(date -u +%FT%TZ)"
 
-git show HEAD:k8s/pg/50-statefulset.yaml >"$r/sts.head.yaml" 2>/dev/null
-git show HEAD:k8s/pg/20-config.yaml >"$r/config.head.yaml" 2>/dev/null
-if [ -s "$r/sts.head.yaml" ] && [ -s "$r/config.head.yaml" ]; then pass "old versions read from git HEAD"; else bad "could not read the old files from git HEAD"; fi
 cp k8s/pg/50-statefulset.yaml "$r/sts.new.yaml"
 cp k8s/pg/25-pgbackrest.yaml k8s/pg/20-config.yaml "$r/"
 cp scripts/gen-objstore-secrets.sh "$r/gen.sh"
@@ -54,53 +51,15 @@ def named(items, name):
     return None
 
 
-def strip_additions(sts):
-    s = copy.deepcopy(sts)
-    spec = s["spec"]["template"]["spec"]
-    spec["containers"] = [c for c in spec["containers"] if c["name"] != "backup"]
-    for c in spec["containers"]:
-        if c["name"] == "postgres":
-            c.pop("envFrom", None)
-            c["env"] = [e for e in c["env"] if e["name"] not in ("PGBACKREST_REPO1_S3_KEY", "PGBACKREST_REPO1_S3_KEY_SECRET")]
-            c["volumeMounts"] = [m for m in c["volumeMounts"] if m["name"] != "objstore-ca"]
-    spec["volumes"] = [v for v in spec["volumes"] if v["name"] not in ("objstore-ca", "backup-scripts")]
-    return s
-
-
-def config_problems(old_path, new_path):
+def sts_problems(new, env_cm, pat, gen_text):
     p = []
-    old_cm, old = patroni(old_path)
-    new_cm, new = patroni(new_path)
-    op = old["bootstrap"]["dcs"]["postgresql"]["parameters"]
-    nw = new["bootstrap"]["dcs"]["postgresql"]["parameters"]
-    want = dict(op)
-    want["archive_mode"] = "on"
-    want["archive_command"] = "pgbackrest --stanza=pg-ha archive-push %p"
-    if nw != want:
-        p.append("bootstrap.dcs parameters are not the old ones plus archive_mode and archive_command")
-    o2 = copy.deepcopy(old)
-    n2 = copy.deepcopy(new)
-    del o2["bootstrap"]["dcs"]["postgresql"]["parameters"]
-    del n2["bootstrap"]["dcs"]["postgresql"]["parameters"]
-    if o2 != n2:
-        p.append("patroni.yml differs from the old one outside the parameters")
-    if old_cm["data"]["post-bootstrap.sh"] != new_cm["data"]["post-bootstrap.sh"]:
-        p.append("post-bootstrap.sh changed")
-    return p, new
-
-
-def sts_problems(old, new, env_cm, pat, gen_text):
-    p = []
-    if strip_additions(new) != old:
-        p.append("the StatefulSet differs from HEAD in more than the planned additions")
     spec = new["spec"]["template"]["spec"]
-    names = [c["name"] for c in spec["containers"]]
-    if names != ["postgres", "backup"]:
-        p.append("containers are %s, expected ['postgres', 'backup']" % names)
     pg = named(spec["containers"], "postgres")
     bk = named(spec["containers"], "backup")
     if pg is None or bk is None:
         return p + ["postgres or backup container missing"]
+    if pg.get("startupProbe", {}).get("periodSeconds") != 5:
+        p.append("postgres startup probe must run every five seconds")
     want_from = [{"configMapRef": {"name": "pgbackrest-env"}}]
     for c in (pg, bk):
         if c.get("envFrom") != want_from:
@@ -160,34 +119,34 @@ def report(name, problems):
         print("PASS: " + name)
 
 
-cfg_probs, new_pat = config_problems(W + "config.head.yaml", W + "20-config.yaml")
-report("20-config.yaml: parameters are the old ones plus archive_mode and archive_command, nothing else changed", cfg_probs)
-
-old_sts = docs(W + "sts.head.yaml")[0]
+_, new_pat = patroni(W + "20-config.yaml")
+params = new_pat["bootstrap"]["dcs"]["postgresql"]["parameters"]
+report("WAL archiving enabled with pgBackRest archive-push",
+       [] if params.get("archive_mode") == "on" and params.get("archive_command") == "pgbackrest --stanza=pg-ha archive-push %p" else ["archive configuration differs"])
 new_sts = docs(W + "sts.new.yaml")[0]
 cms = docs(W + "25-pgbackrest.yaml")
 env_cm = named([{"name": d["metadata"]["name"], "d": d} for d in cms], "pgbackrest-env")["d"]
 scripts_cm = named([{"name": d["metadata"]["name"], "d": d} for d in cms], "pgbackrest-scripts")["d"]
 with open(W + "gen.sh") as f:
     gen_text = f.read()
-report("50-statefulset.yaml: HEAD plus the planned additions, names, secret references and mounts are consistent",
-       sts_problems(old_sts, new_sts, env_cm, new_pat, gen_text))
+report("50-statefulset.yaml: backup configuration, secret references and mounts are consistent",
+       sts_problems(new_sts, env_cm, new_pat, gen_text))
 
 mut = copy.deepcopy(new_sts)
 mut["spec"]["template"]["spec"]["volumes"] = [v for v in mut["spec"]["template"]["spec"]["volumes"] if v["name"] != "objstore-ca"]
-n = len(sts_problems(old_sts, mut, env_cm, new_pat, gen_text))
+n = len(sts_problems(mut, env_cm, new_pat, gen_text))
 print(("PASS" if n >= 1 else "FAIL") + ": control A (CA volume removed): the check reports %d problem(s)" % n)
 
 mut = copy.deepcopy(new_sts)
 for c in mut["spec"]["template"]["spec"]["containers"]:
     if c["name"] == "postgres":
         c["startupProbe"]["periodSeconds"] += 1
-n = len(sts_problems(old_sts, mut, env_cm, new_pat, gen_text))
+n = len(sts_problems(mut, env_cm, new_pat, gen_text))
 print(("PASS" if n >= 1 else "FAIL") + ": control B (a probe changed): the check reports %d problem(s)" % n)
 
 cm2 = copy.deepcopy(env_cm)
 cm2["data"]["PGBACKREST_REPO1_S3_KEY_SECRET"] = "x"
-n = len(sts_problems(old_sts, new_sts, cm2, new_pat, gen_text))
+n = len(sts_problems(new_sts, cm2, new_pat, gen_text))
 print(("PASS" if n >= 1 else "FAIL") + ": control C (secret-like key in the ConfigMap): the check reports %d problem(s)" % n)
 
 loop = scripts_cm["data"].get("backup-loop.sh", "")

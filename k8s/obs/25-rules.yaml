@@ -10,7 +10,7 @@ data:
       - name: pg-ha
         rules:
           - alert: NoPrimary
-            expr: sum(patroni_primary) < 1
+            expr: (sum(patroni_primary) or vector(0)) < 1
             for: 30s
             labels:
               severity: critical

@@ -1,0 +1,12 @@
+date_utc: 2026-11-25T07:02:17Z
+PASS  pg_hba has 4 hostssl rules (4)
+PASS  pg_hba has no plain host rule
+PASS  ssl is on (1)
+PASS  ssl_cert_file is /tls/tls.crt (1)
+PASS  ssl_key_file is /tls/tls.key (1)
+PASS  replication verifies the primary CA (1)
+PASS  replication trusts the mounted CA (1)
+PASS  statefulset uses the Secret pg-tls (1)
+PASS  statefulset mounts /tls in postgres and pgserver (2)
+PASS  pg-up.sh calls the pg-tls generator (1)
+PASS  control: the counter sees a known string

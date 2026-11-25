@@ -1,0 +1,37 @@
+date: 2026-11-25T06:14:15Z
+leader before: pg-ha-2, pvc data-pg-ha-2, uid c74b7ad3-5c7f-4be6-9253-5c6e3908298a, timeline 16
+PASS: probe writing before the failure (24 acknowledged writes)
+deleting pvc data-pg-ha-2 and force-deleting pod pg-ha-2 at 1795587269225
+PASS: writes through pg-primary resumed without any manual change
+leader after: pg-ha-0
+PASS: replica pg-ha-0 was promoted automatically
++ Cluster: pg-ha (7710621595341348900) ----+-----------+----+-------------+-----+------------+-----+
+| Member  | Host            | Role         | State     | TL | Receive LSN | Lag | Replay LSN | Lag |
++---------+-----------------+--------------+-----------+----+-------------+-----+------------+-----+
+| pg-ha-0 | 192.168.110.187 | Leader       | running   | 17 |             |     |            |     |
+| pg-ha-1 | 192.168.195.235 | Sync Standby | streaming | 17 |  0/430002E8 |   0 | 0/430002E8 |   0 |
+| pg-ha-2 | 192.168.162.180 | Replica      | streaming | 17 |  0/43000E50 |   0 | 0/43000E50 |   0 |
++---------+-----------------+--------------+-----------+----+-------------+-----+------------+-----+
+pvc uid after: 27569f18-9dd3-47fe-a74e-7cc664402054
+PASS: storage was really replaced (new PVC uid)
+old primary pg-ha-2 now has role: Replica
+PASS: old pod pg-ha-2 re-cloned and rejoined as a replica
+--- how pg-ha-2 got its data (from its log) ---
+2026-11-25 06:14:44,681 INFO: released leader key voluntarily as data dir empty and currently leader
+2026-11-25 06:14:44,683 INFO: trying to bootstrap from leader 'pg-ha-0'
+pg_basebackup: error: could not initiate base backup: ERROR:  the standby was promoted during online backup
+pg_basebackup:2026-11-25 06:14:45,890 INFO: Lock owner: pg-ha-0; I am pg-ha-2
+2026-11-25 06:14:46,254 INFO: bootstrap from leader 'pg-ha-0' in progress
+2026-11-25 06:14:46,267 ERROR: Error when fetching backup: pg_basebackup exited with code=1
+2026-11-25 06:14:46,613 INFO: bootstrap from leader 'pg-ha-0' in progress
+2026-11-25 06:14:56,538 INFO: bootstrap from leader 'pg-ha-0' in progress
+acknowledged writes: 154, failed attempts: 25
+largest gap between acknowledged writes (RTO): 15095 ms
+PASS: RTO 15095 ms is within the 90 s target
+DIAG: acknowledged in log: 154, rows read from table: 160
+DIAG: first missing: 
+PASS: no acknowledged write was lost (0 missing out of 154)
+timeline before: 16, after: 17
+PASS: timeline advanced (16 -> 17)
+PASS: exactly one pod accepts writes
+ALL CHECKS PASSED

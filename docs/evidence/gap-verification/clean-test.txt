@@ -1,0 +1,129 @@
+bash tests/obs-manifests.sh
+date_utc: 2026-11-25T07:49:24Z
+PASS  10-rbac.yaml exists and is not empty
+PASS  20-prometheus.yaml exists and is not empty
+PASS  30-ksm.yaml exists and is not empty
+PASS  40-grafana.yaml exists and is not empty
+PASS  rbac has a ClusterRole (1)
+PASS  rbac has no write verb
+PASS  prometheus PVC is 2Gi (1)
+PASS  prometheus retention is 7d (1)
+PASS  prometheus scrapes the three patroni pods on 8008 (3)
+PASS  prometheus has a postgres-exporter job (1)
+PASS  prometheus scrapes the three exporters on 9187 (3)
+PASS  prometheus image placeholder (1)
+PASS  ksm image placeholder (1)
+PASS  grafana image placeholder (1)
+PASS  20-prometheus.yaml never uses latest
+PASS  20-prometheus.yaml imagePullPolicy IfNotPresent (1)
+PASS  20-prometheus.yaml runAsNonRoot (1)
+PASS  20-prometheus.yaml no privilege escalation (1)
+PASS  20-prometheus.yaml drops all capabilities (1)
+PASS  20-prometheus.yaml seccomp RuntimeDefault (1)
+PASS  30-ksm.yaml never uses latest
+PASS  30-ksm.yaml imagePullPolicy IfNotPresent (1)
+PASS  30-ksm.yaml runAsNonRoot (1)
+PASS  30-ksm.yaml no privilege escalation (1)
+PASS  30-ksm.yaml drops all capabilities (1)
+PASS  30-ksm.yaml seccomp RuntimeDefault (1)
+PASS  40-grafana.yaml never uses latest
+PASS  40-grafana.yaml imagePullPolicy IfNotPresent (1)
+PASS  40-grafana.yaml runAsNonRoot (1)
+PASS  40-grafana.yaml no privilege escalation (1)
+PASS  40-grafana.yaml drops all capabilities (1)
+PASS  40-grafana.yaml seccomp RuntimeDefault (1)
+PASS  prometheus runs as 65534 (1)
+PASS  ksm runs as 65534 (1)
+PASS  grafana runs as 472 (1)
+PASS  grafana admin password comes from a secretKeyRef
+PASS  grafana memory limit is 768Mi (1)
+PASS  grafana has a startupProbe (1)
+PASS  control: the counter sees a known string
+bash tests/obs-up-static.sh
+date_utc: 2026-11-25T07:49:25Z
+PASS  scripts/obs-up.sh exists and is executable
+PASS  scripts/gen-grafana-secret.sh exists and is executable
+PASS  obs-up has set -euo pipefail (1)
+PASS  obs-up sources versions.env (1)
+PASS  obs-up uses the tag form of PROMETHEUS_IMAGE (1)
+PASS  obs-up uses the tag form of KSM_IMAGE (1)
+PASS  obs-up uses the tag form of GRAFANA_IMAGE (1)
+PASS  obs-up fills the three image placeholders (3)
+PASS  obs-up applies the four manifest files (4)
+PASS  obs-up waits for the three rollouts (3)
+PASS  obs-up never deletes anything
+PASS  obs-up creates the Secret before it applies 40-grafana.yaml
+PASS  generator has set -euo pipefail (1)
+PASS  generator defaults to namespace pg-ha (1)
+PASS  generator writes the key admin-password (1)
+PASS  generator draws the value from openssl rand (1)
+PASS  generator keeps an existing Secret (1)
+PASS  generator names the Secret grafana-admin (5)
+PASS  generator never prints the value or traces
+PASS  control: the counter sees a known string
+bash tests/obs-rules-static.sh
+date_utc: 2026-11-25T07:49:26Z
+PASS  k8s/obs/25-rules.yaml exists and is not empty
+PASS  rules ConfigMap is named prometheus-rules (1)
+PASS  alert NoPrimary is defined (1)
+PASS  alert ReplicationLag is defined (1)
+PASS  alert SlotRetention is defined (1)
+PASS  alert WalArchiveFailure is defined (1)
+PASS  alert BackupTooOld is defined (1)
+PASS  every alert has a for: duration (5)
+PASS  prometheus config loads the rule files (1)
+PASS  prometheus mounts the rules (1)
+PASS  prometheus has the rules volume (1)
+PASS  promtool check rules is clean
+PASS  ReplicationLag has for 15s
+PASS  control: the counter sees a known string
+bash tests/sec-tls-static.sh
+date_utc: 2026-11-25T08:19:39Z
+PASS  pg_hba has 4 hostssl rules (4)
+PASS  pg_hba has no plain host rule
+PASS  ssl is on (1)
+PASS  ssl_cert_file is /tls/tls.crt (1)
+PASS  ssl_key_file is /tls/tls.key (1)
+PASS  replication verifies the primary CA (1)
+PASS  replication trusts the mounted CA (1)
+PASS  statefulset uses the Secret pg-tls (1)
+PASS  statefulset mounts /tls in postgres and pgserver (2)
+PASS  pg-up.sh calls the pg-tls generator (1)
+PASS  control: the counter sees a known string
+bash tests/sec-netpol-static.sh
+date_utc: 2026-11-25T08:19:40Z
+PASS  file has 2 documents
+PASS  policies are pg-ha-ingress and objstore-ingress
+PASS  both policies are in pg-ha
+PASS  policyTypes is Ingress only
+PASS  ports are 3900, 3903, 5432, 8008, 8432, 9187
+PASS  no ipBlock rule
+PASS  no 0.0.0.0/0
+PASS  objstore allows the pg-restore namespace
+PASS  control: the counter sees a known string
+bash tests/sec-rbac.sh
+date_utc: 2026-11-25T08:19:51Z
+PASS  control: admin identity can get secrets (the check can say yes)
+PASS  patroni can get configmaps in pg-ha
+PASS  patroni can patch pods in pg-ha
+PASS  patroni cannot get secrets in pg-ha
+PASS  patroni cannot create pods in pg-ha
+PASS  patroni cannot delete pods in pg-ha
+PASS  patroni cannot create deployments in pg-ha
+PASS  patroni cannot get secrets in pg-restore
+PASS  patroni cannot list nodes
+PASS  kube-state-metrics cannot get secrets
+PASS  kube-state-metrics cannot create pods
+PASS  default account in pg-ha cannot get secrets
+PASS  RBAC manifests name no secrets resource and no wildcard
+ACCEPTED (not asserted): patroni can delete configmaps: yes; deletecollection: yes. Need not tested.
+bash tests/sec-psa.sh
+date_utc: 2026-11-25T08:20:24Z
+PASS  control: the checker reports 4 violations for a synthetic bad container
+PASS  namespace pg-ha enforces restricted
+PASS  pg-ha: 8 pods, 19 containers, 0 violations
+FAIL  namespace pg-restore enforces restricted (label: 'none')
+FAIL  pg-restore: 0 pods, 0 containers, violations: 0
+
+PASS  control: a privileged pod is rejected by Pod Security admission
+make: *** [Makefile:28: test-quick] Error 1

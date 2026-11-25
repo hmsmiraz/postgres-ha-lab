@@ -1,0 +1,18 @@
+date_utc: 2026-11-25T14:09:44Z
+PASS  docs/design.md exists
+PASS  design.md has: sync vs async and RPO
+PASS  design.md has: fencing and leader election
+PASS  design.md has: measured RTO and method
+PASS  design.md has: multi-zone changes
+PASS  design.md has: generalisation
+PASS  design.md has: determinism
+PASS  design.md has: agent-agnostic
+PASS  design.md has: threat model
+PASS  design.md has: AI process
+PASS  design.md quotes the FO-1 RTO 6731 ms
+PASS  design.md quotes the FO-2 RTO 33420 ms
+PASS  README has run instructions (make up)
+PASS  README shows all 4 screenshots
+PASS  all 40 relative links and images resolve
+PASS  no forbidden name in design.md and README.md
+PASS  control: the counter sees a known string

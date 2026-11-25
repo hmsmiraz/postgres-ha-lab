@@ -1,0 +1,13 @@
+date_utc: 2026-11-25T07:01:01Z
+PASS  pg-ha-0 ssl is on
+PASS  pg-ha-0 has no non-SSL host rule
+PASS  pg-ha-1 ssl is on
+PASS  pg-ha-1 has no non-SSL host rule
+PASS  pg-ha-2 ssl is on
+PASS  pg-ha-2 has no non-SSL host rule
+PASS  Secret pg-tls holds exactly ca.crt, tls.crt, tls.key
+PASS  client connection with sslmode=require uses TLS
+PASS  client connection with sslmode=disable is rejected
+FAIL  verified replicas: 0 of 2
+PASS  all 2 walsender connections use TLS
+PASS  control: a local socket connection reports ssl false

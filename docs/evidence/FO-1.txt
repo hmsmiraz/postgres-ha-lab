@@ -1,3 +1,5 @@
+EXPECTED RED LINES: Writes recovered with the same pod as leader.
+---- raw output below, unchanged ----
 date: 2026-11-19T16:03:32Z
 leader before: pg-ha-1
 PASS: probe writing before the kill (26 acknowledged writes)

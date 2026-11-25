@@ -1,0 +1,4 @@
+CRITICAL	no listed fix	1
+CRITICAL	listed fix	1
+HIGH	no listed fix	102
+HIGH	listed fix	25

@@ -30,7 +30,7 @@ for p in pg-ha-0 pg-ha-1 pg-ha-2; do
     if [ "$(q "$p" "select position('sslmode=verify-ca' in current_setting('primary_conninfo')) > 0")" = t ]; then good=$((good + 1)); fi
   fi
 done
-ok "replica verify-ca not required (accepted gap, $checked replicas seen)"
+if [ "$checked" = 2 ] && [ "$good" = 2 ]; then ok "both replicas verify the primary CA"; else bad "verified replicas: $good of $checked"; fi
 
 leader=$(kubectl -n "$NS" get pods -l application=pg-ha,role=primary -o jsonpath='{.items[0].metadata.name}' 2>/dev/null || true)
 tot=$(q "$leader" "select count(*) from pg_stat_replication")

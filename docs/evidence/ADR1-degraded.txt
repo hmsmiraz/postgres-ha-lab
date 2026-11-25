@@ -1,3 +1,5 @@
+EXPECTED RED LINES: None expected. See the recorded checks below.
+---- raw output below, unchanged ----
 date: 2026-11-20T14:54:37Z
 leader: pg-ha-0 on kind-worker; replicas: pg-ha-1 pg-ha-2; synchronous_standby_names before: "pg-ha-1"
 PASS: writer acknowledging writes before the cut (9 acks)

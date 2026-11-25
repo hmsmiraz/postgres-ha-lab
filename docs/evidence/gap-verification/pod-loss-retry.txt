@@ -1,0 +1,5 @@
+Hold replacement by cordoning the local-volume worker until promotion.
+node/kind-worker2 cordoned
+date: 2026-11-25T13:52:45Z
+leader before: pg-ha-0
+FAIL: probe is not writing before the kill (19 acknowledged writes)

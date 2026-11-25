@@ -1,0 +1,57 @@
+date: 2026-11-25T06:19:38Z
+leader before: pg-ha-1 (timeline 18) on kind-worker3, replicas: pg-ha-0 pg-ha-2
+PASS: baseline row replicated to both replicas
+cutting replication between pg-ha-1 and its replicas (nftables, API access stays up)
+table ip pgha_fence {
+	chain isolate {
+		type filter hook forward priority mangle; policy accept;
+		ip saddr 192.168.195.235 ip daddr 192.168.110.187 counter packets 5 bytes 1856 drop
+		ip saddr 192.168.110.187 ip daddr 192.168.195.235 counter packets 0 bytes 0 drop
+		ip saddr 192.168.195.235 ip daddr 192.168.162.180 counter packets 3 bytes 840 drop
+		ip saddr 192.168.162.180 ip daddr 192.168.195.235 counter packets 0 bytes 0 drop
+	}
+}
+PASS: 5 rows exist only on the old primary pg-ha-1 (replicas still have none after 15 s)
+powering off node kind-worker3 (docker kill)
+leader after: pg-ha-2
+PASS: replica pg-ha-2 was promoted (it never had the divergent rows)
+starting node kind-worker3 again
++ Cluster: pg-ha (7710621595341348900) ----+-----------+----+-------------+-----+------------+-----+
+| Member  | Host            | Role         | State     | TL | Receive LSN | Lag | Replay LSN | Lag |
++---------+-----------------+--------------+-----------+----+-------------+-----+------------+-----+
+| pg-ha-0 | 192.168.110.187 | Sync Standby | streaming | 19 |  0/4403BDB8 |   0 | 0/4403BDB8 |   0 |
+| pg-ha-1 | 192.168.195.239 | Replica      | streaming | 19 |  0/4403BDB8 |   0 | 0/4403BDB8 |   0 |
+| pg-ha-2 | 192.168.162.180 | Leader       | running   | 19 |             |     |            |     |
++---------+-----------------+--------------+-----------+----+-------------+-----+------------+-----+
+old primary pg-ha-1 now has role: Replica
+PASS: old primary pg-ha-1 rejoined as a replica with no manual step
+pg-ha-0: divergent rows=0, baseline rows=1
+pg-ha-1: divergent rows=0, baseline rows=1
+pg-ha-2: divergent rows=0, baseline rows=1
+PASS: divergent rows are gone from every node, the baseline row is on every node
+--- rejoin-related log lines from pg-ha-1 ---
+2026-11-25 06:21:57,142 INFO: pg_rewind exit code=0
+2026-11-25 06:21:57,142 INFO:  stderr=pg_rewind: servers diverged at WAL location 0/4403B0D8 on timeline 18
+pg_rewind: rewinding from last common checkpoint at 0/44007220 on timeline 18
+pg_rewind: Done!
+2026-11-25 06:09:33,398 INFO: running pg_rewind from pg-ha-2
+2026-11-25 06:09:33,939 INFO: running pg_rewind from dbname=postgres user=rewind_user host=192.168.162.176 port=5432 target_session_attrs=read-write
+2026-11-25 06:09:38,430 INFO: running pg_rewind from pg-ha-2 in progress
+2026-11-25 06:09:48,363 INFO: running pg_rewind from pg-ha-2 in progress
+2026-11-25 06:09:49,296 INFO: pg_rewind exit code=0
+2026-11-25 06:09:49,297 INFO:  stderr=pg_rewind: servers diverged at WAL location 0/410106A8 on timeline 15
+pg_rewind: rewinding from last common checkpoint at 0/41000130 on timeline 15
+pg_rewind: Done!
+rejoin method: pg_rewind
+PASS: rejoin method identified from the logs: pg_rewind
+timeline before: 18, after: 19
+PASS: timeline advanced (18 -> 19)
+PASS: exactly one pod accepts writes
+ALL CHECKS PASSED
++ Cluster: pg-ha (7710621595341348900) ----+-----------+----+-------------+-----+------------+-----+
+| Member  | Host            | Role         | State     | TL | Receive LSN | Lag | Replay LSN | Lag |
++---------+-----------------+--------------+-----------+----+-------------+-----+------------+-----+
+| pg-ha-0 | 192.168.110.187 | Sync Standby | streaming | 19 |  0/4403DCD0 |   0 | 0/4403DCD0 |   0 |
+| pg-ha-1 | 192.168.195.239 | Replica      | streaming | 19 |  0/4403DCD0 |   0 | 0/4403DCD0 |   0 |
+| pg-ha-2 | 192.168.162.180 | Leader       | running   | 19 |             |     |            |     |
++---------+-----------------+--------------+-----------+----+-------------+-----+------------+-----+

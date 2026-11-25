@@ -1,0 +1,52 @@
+date: 2026-11-25T06:18:17Z
+leader before: pg-ha-0 (timeline 17) on node kind-worker2, pod IP 192.168.110.187, API server 172.18.0.5
+PASS: probe writing before the partition (25 acknowledged writes)
+cutting pg-ha-0 off from the Kubernetes API (iptables DROP on kind-worker2) at 1795587514359
+leader lock renewTime at +2 s: 2026-11-25T06:18:26.487602+00:00
+leader lock renewTime at +16 s: 2026-11-25T06:18:26.487602+00:00
+PASS: method check: pg-ha-0 can no longer renew the leader lock (renewTime stopped)
+leader after: pg-ha-1
+PASS: replica pg-ha-1 was promoted automatically
+PASS: the partitioned old primary pg-ha-0 demoted itself (now read-only)
+PASS: a direct write to the old primary pg-ha-0 is rejected
+healing the partition
++ Cluster: pg-ha (7710621595341348900) ----+-----------+----+-------------+-----+------------+-----+
+| Member  | Host            | Role         | State     | TL | Receive LSN | Lag | Replay LSN | Lag |
++---------+-----------------+--------------+-----------+----+-------------+-----+------------+-----+
+| pg-ha-0 | 192.168.110.187 | Replica      | streaming | 18 |  0/4400A570 |   0 | 0/4400A570 |   0 |
+| pg-ha-1 | 192.168.195.235 | Leader       | running   | 18 |             |     |            |     |
+| pg-ha-2 | 192.168.162.180 | Sync Standby | streaming | 18 |  0/4400A570 |   0 | 0/4400A570 |   0 |
++---------+-----------------+--------------+-----------+----+-------------+-----+------------+-----+
+old primary pg-ha-0 now has role: Replica
+PASS: old primary pg-ha-0 rejoined as a replica after the partition healed
+--- rewind-related lines from pg-ha-0 (informational) ---
+2026-11-25 06:19:05.839 UTC [1621] LOG:  started streaming WAL from primary at 0/44000000 on timeline 17
+2026-11-25 06:19:05.841 UTC [1621] DETAIL:  End of WAL reached on timeline 17 at 0/440000A0.
+2026-11-25 06:19:05.848 UTC [1497] LOG:  new target timeline is 18
+2026-11-25 06:19:05.875 UTC [1621] LOG:  restarted WAL streaming at 0/44000000 on timeline 18
+2026-11-25 06:19:09,457 INFO: Local timeline=18 lsn=0/4400A150
+2026-11-25 06:19:09,503 INFO: primary_timeline=18
+2026-11-25 06:19:09,538 INFO: Local timeline=18 lsn=0/4400A150
+2026-11-25 06:19:09,589 INFO: primary_timeline=18
+NOTE: pods are sampled about 0.3 s apart within a round, so this shows no sustained overlap.
+sampling rounds: 26, most writable pods seen in one round: 1
+PASS: never more than one writable primary in 26 sampling rounds
+old primary read-only 14776 ms after the partition started
+new primary writable 23895 ms after the partition started
+acknowledged writes: 194, failed attempts: 46
+largest gap between acknowledged writes (RTO): 11845 ms
+PASS: RTO 11845 ms is within the 90 s target
+DIAG: acknowledged in log: 194, rows read from table: 198
+DIAG: first missing: 
+PASS: no acknowledged write was lost (0 missing out of 194)
+timeline before: 17, after: 18
+PASS: timeline advanced (17 -> 18)
+PASS: exactly one pod accepts writes at the end
+ALL CHECKS PASSED
++ Cluster: pg-ha (7710621595341348900) ----+-----------+----+-------------+-----+------------+-----+
+| Member  | Host            | Role         | State     | TL | Receive LSN | Lag | Replay LSN | Lag |
++---------+-----------------+--------------+-----------+----+-------------+-----+------------+-----+
+| pg-ha-0 | 192.168.110.187 | Replica      | streaming | 18 |  0/44011A60 |   0 | 0/44011A60 |   0 |
+| pg-ha-1 | 192.168.195.235 | Leader       | running   | 18 |             |     |            |     |
+| pg-ha-2 | 192.168.162.180 | Sync Standby | streaming | 18 |  0/44011A60 |   0 | 0/44011A60 |   0 |
++---------+-----------------+--------------+-----------+----+-------------+-----+------------+-----+

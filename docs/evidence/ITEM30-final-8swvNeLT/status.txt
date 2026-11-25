@@ -1,0 +1,10 @@
+fo-split-brain exit=0
+fo-rejoin exit=0
+bk-wal exit=0
+bk-cron-live exit=0
+rs-full exit=0
+rs-pitr exit=0
+rs-restore-test exit=1
+rep-slot-disk exit=0
+rep-degraded-sync exit=0
+rs-restore-test retry exit=0

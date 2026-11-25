@@ -1,3 +1,5 @@
+EXPECTED RED LINES: None expected. See the recorded checks below.
+---- raw output below, unchanged ----
 PASS: line count is unchanged
 PASS: only the intended lines changed (secrets, the 3-line key block, the 3 name lines)
 PASS: no fake secret value is left in the output

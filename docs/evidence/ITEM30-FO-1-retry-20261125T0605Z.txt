@@ -1,0 +1,22 @@
+date: 2026-11-25T06:05:08Z
+leader before: pg-ha-1
+PASS: probe writing before the kill (23 acknowledged writes)
+killing pg-ha-1 (force delete, grace period 0) at 1795586719259
+PASS: writes through pg-primary resumed without any manual change
+leader after: pg-ha-1
+NOTE: pg-ha-1 restarted in place and kept its leader lock (no promotion)
++ Cluster: pg-ha (7710621595341348900) ---------+----+-------------+-----+------------+-----+
+| Member  | Host            | Role    | State   | TL | Receive LSN | Lag | Replay LSN | Lag |
++---------+-----------------+---------+---------+----+-------------+-----+------------+-----+
+| pg-ha-0 | 192.168.110.187 | Replica | running | 14 |  0/40008C70 |  16 | 0/40008C70 |  16 |
+| pg-ha-1 | 192.168.195.233 | Leader  | stopped |    |             |     |            |     |
+| pg-ha-2 | 192.168.162.176 | Replica | running | 14 |  0/40008C70 |  16 | 0/40008C70 |  16 |
++---------+-----------------+---------+---------+----+-------------+-----+------------+-----+
+PASS: cluster is back to 1 leader + 2 streaming replicas
+acknowledged writes: 68, failed attempts: 20
+time from kill to first successful write: 75 ms
+largest gap between acknowledged writes (RTO): 12190 ms
+PASS: RTO 12190 ms is within the 60 s target
+PASS: no acknowledged write was lost (0 missing out of 68)
+PASS: exactly one pod accepts writes
+ALL CHECKS PASSED

@@ -114,7 +114,7 @@ Leader pg-ha-2 to pg-ha-1, timeline 12 to 13, 87 writes acknowledged and 0 missi
 
 ## Minor-version upgrade
 
-Moves the cluster to a newer PostgreSQL 18.x image. This procedure was NOT run as an upgrade: on 24 Nov 2026 the pinned 18.7 was already the newest 18.x tag. It is assembled from commands that were run in the exporter, TLS and config rollouts, so treat it as untested.
+A three-member rehearsal upgraded PostgreSQL 18.6 to 18.7 using the rollout below in a separate namespace with its own data volumes and object store. All members reported 180006 before and 180007 afterward. The probe found zero missing acknowledged writes. [Rehearsal output](evidence/gap-verification/minor-upgrade.txt)
 
 ### Steps
 
@@ -123,7 +123,7 @@ Moves the cluster to a newer PostgreSQL 18.x image. This procedure was NOT run a
 3. Build: `bash scripts/image-build.sh`
 4. Load into every node by name:tag: `kind load docker-image pg-ha:<IMAGE_TAG> --name kind`
 5. Start the write probe (tests/lib/probe.sh, function start_probe).
-6. Apply: `bash scripts/pg-up.sh`, then `kubectl -n pg-ha rollout status sts/pg-ha --timeout=900s`. Pods restart one at a time, the leader first, with a promotion and a timeline rise.
+6. Apply: `bash scripts/pg-up.sh`, then `kubectl -n pg-ha rollout status sts/pg-ha --timeout=900s`. The StatefulSet restarts pods in ordinal order. Which member holds the leader lock can change during the rollout.
 7. Check: 1 leader and 2 streaming members, `select version()` on each pod, no acknowledged write missing, tests/sec-tls.sh and tests/obs-exporter-live.sh at 12 PASS.
 
 ### Rollback
@@ -132,4 +132,4 @@ Restore the old pins in versions.env and apply again as in steps 4 to 6, or run 
 
 ### Not tested
 
-No newer 18.x existed, so nothing was upgraded. The new base must have a matching PGDG pgBackRest package. About 20 scripts and tests mention IMAGE_TAG. Earlier rollouts of this kind showed write gaps of 2.5 s, 3.8 s and 16 s.
+The rehearsal covered the forward 18.6-to-18.7 rollout. Rollback and later minor releases remain untested. The new base must have a matching PGDG pgBackRest package. About 20 scripts and tests mention IMAGE_TAG. Earlier rollouts of this kind showed write gaps of 2.5 s, 3.8 s and 16 s.
