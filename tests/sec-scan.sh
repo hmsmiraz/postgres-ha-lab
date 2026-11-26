@@ -9,7 +9,7 @@ n=${1:-}
 case "$n" in
   1) img=${PG_EXPORTER_IMAGE%%@*} ;;
   2) img=${KSM_IMAGE%%@*} ;;
-  3) img=${OBJSTORE_TLS_PROXY_IMAGE%%@*} ;;
+  3) img=$OBJSTORE_PROXY_RUNTIME_IMAGE ;;
   4) img=${OBJSTORE_IMAGE%%@*} ;;
   5) img=${PROMETHEUS_IMAGE%%@*} ;;
   6) img="${IMAGE_NAME}:${IMAGE_TAG}" ;;

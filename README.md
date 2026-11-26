@@ -2,6 +2,8 @@
 
 PostgreSQL 18 runs on one PC in a four-node kind cluster under WSL. Patroni manages one primary and two streaming replicas. pgBackRest sends backups and archived WAL to Garage, an S3-compatible object store in the same cluster. The workers share a physical host, and Garage has a single local data volume. [Requirements](SPEC.md)
 
+The assessment lists S3, GCS, Azure Blob and in-cluster MinIO. This submission uses Garage through its S3-compatible API to keep the backup path on the local PC. [Storage decision](docs/decisions/0004-object-store.md)
+
 ## Architecture
 
 Clients use role-based Services. After a promotion, the new primary serves writes through the same endpoint. Each database pod has its own volume. During healthy operation one synchronous standby confirms commits.
@@ -44,7 +46,7 @@ Run from the repository root in WSL with Docker, Make, kind, kubectl, jq and Ope
     make test         # adds live suites; WARNING: they change the running cluster
     make down         # removes pg-restore and pg-ha, keeps the kind cluster
 
-`make up` was re-run on the existing cluster and changed nothing material. A clean-machine run and `make down` were not run by the assistant (see known limitations).
+On 26 November a fresh four-node kind cluster on the local PC completed `make up`, `make test` and `make down`. The suite exercised a full restore, and teardown removed both lab namespaces. The PC already had Docker and cached images. [Bring-up](docs/evidence/gap-verification/window3-up.txt), [acceptance tests](docs/evidence/gap-verification/window3-test.txt) and [teardown](docs/evidence/gap-verification/window3-down.txt).
 Open the UIs on this PC only: `bash scripts/obs-open.sh` (Prometheus http://localhost:9090, Grafana http://localhost:3000, user admin, password copied to the Windows clipboard).
 Restore, switchover and upgrade procedures: [docs/runbook.md](docs/runbook.md).
 
@@ -91,5 +93,8 @@ The final live check on 25 November 2026 showed one primary, two streaming stand
 
 **Backup and rollout checks**
 
-- The Job scheduled for 02:00 UTC started at 03:44:40 UTC and finished at 03:45:18 UTC with a verified backup. The 23-hour catch-up window allows a missed local run to start later that day. Starting on time still depends on the PC and controller being available. [Controller evidence](docs/evidence/gap-verification/daily-catchup.txt)
+- The Job scheduled for 02:00 UTC started at 03:44:40 UTC and finished at 03:45:18 UTC with a verified backup. The 23-hour catch-up window allows a missed local run to start later that day. The evidence establishes catch-up and backup verification. Starting during the scheduled minute was not observed. [Controller evidence](docs/evidence/gap-verification/daily-catchup.txt)
 - The updated proxy passed the S3 write, read and delete test under the deployed ingress policy. The database rollout preserved all 262 acknowledged writes. Both the WAL and scratch restore checks passed. [Object-store test](docs/evidence/gap-verification/secure-store-job.txt), [rollout](docs/evidence/gap-verification/secure-rollout.txt) and [scratch recovery](docs/evidence/gap-verification/secure-scratch.txt)
+- The locally built, unprivileged nginx proxy has all nine pinned Alpine security updates. Its scan reported zero findings. The PostgreSQL r4 scan still reported one critical and 102 high findings. Trivy lists no vendor fix for any of those 103 findings. [Proxy package check](docs/evidence/gap-verification/proxy-patch-packages.txt), [proxy scan](docs/evidence/gap-verification/proxy-patch-scan.txt), [PostgreSQL scan](docs/evidence/gap-verification/patched-scan.txt) and [vendor-fix counts](docs/evidence/gap-verification/patched-fixability.txt)
+- On the original kind cluster, all three PostgreSQL r4 pods reached 4/4 ready and the patched object store reached 2/2. Patroni reported one leader and two streaming replicas. Primary writes, replica reads, S3 operations and WAL archiving passed. A fresh Job from the backup CronJob template completed pgBackRest verification. [Rollout and backup](docs/evidence/gap-verification/item2-original.txt), [topology](docs/evidence/gap-verification/item2-topology.txt), [routing](docs/evidence/gap-verification/item2-endpoints.txt), [S3](docs/evidence/gap-verification/item2-s3.txt) and [WAL](docs/evidence/gap-verification/item2-wal.txt).
+- The one-time backup on 26 November started at 17:21:02 Dhaka time, two seconds after its scheduled time. The Job completed in 20 seconds and pgBackRest verification passed. [Backup evidence](docs/evidence/gap-verification/pg-ha-extra-20261126-1121.txt)

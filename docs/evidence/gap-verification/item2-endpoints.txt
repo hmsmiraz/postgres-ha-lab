@@ -1,0 +1,7 @@
+date: 2026-11-26T10:48:55Z
+PASS: pg-primary reaches a primary (pg_is_in_recovery = f)
+NOTICE:  relation "con_probe" already exists, skipping
+PASS: write through pg-primary works
+PASS: pg-replica reaches a replica (pg_is_in_recovery = t)
+PASS: write through pg-replica is rejected
+ALL CHECKS PASSED

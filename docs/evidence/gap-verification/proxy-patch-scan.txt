@@ -1,0 +1,2 @@
+date_utc: 2026-11-26T09:03:50Z  image 3: pg-ha-nginx:1.31.7-alpine-r1
+PASS  image 3: 1 analysed targets, CRITICAL=0 HIGH=0 MEDIUM=0 LOW=0 UNKNOWN=0

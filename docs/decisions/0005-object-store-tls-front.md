@@ -86,3 +86,5 @@ Not verified:
   container instances and lines already rotated were not scanned.
 - Garage at a higher log verbosity than the default.
 - Other pod logs after BK-1: tests/bk-wal.sh scans the Postgres pod logs for all four values.
+
+The local build derives its runtime proxy from the digest-pinned unprivileged nginx image. Alpine package versions are pinned in versions.env so the runtime can receive vendor fixes between upstream image rebuilds. The container runs as UID 101. The package test and Trivy scan target the locally built image loaded into kind.

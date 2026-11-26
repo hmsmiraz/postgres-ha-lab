@@ -7,12 +7,12 @@ cd "$(dirname "$0")/.."
 source versions.env
 
 IMG="${IMAGE_NAME}:${IMAGE_TAG}"
-kind load docker-image "$IMG" --name "${KIND_CLUSTER_NAME:-kind}"
+kind load docker-image "$IMG" "$OBJSTORE_PROXY_RUNTIME_IMAGE" --name "${KIND_CLUSTER_NAME:-kind}"
 
 kubectl apply -f k8s/pg/00-namespace.yaml
 bash scripts/gen-objstore-secrets.sh
 kubectl apply -f k8s/objstore/10-config.yaml -f k8s/objstore/20-service.yaml
-sed -e "s|__GARAGE_IMAGE__|${OBJSTORE_IMAGE}|g" -e "s|__PROXY_IMAGE__|${OBJSTORE_TLS_PROXY_IMAGE}|g" \
+sed -e "s|__GARAGE_IMAGE__|${OBJSTORE_IMAGE}|g" -e "s|__PROXY_IMAGE__|${OBJSTORE_PROXY_RUNTIME_IMAGE}|g" \
   k8s/objstore/30-statefulset.yaml | kubectl apply -f -
 kubectl -n pg-ha rollout status sts/objstore --timeout=300s
 

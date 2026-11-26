@@ -1,0 +1,7 @@
+Scheduled: 2026-11-26 11:21:00 UTC
+Thu Nov 26 11:21:00 UTC 2026
+job.batch/pg-ha-extra-20261126-1121 created
+job.batch/pg-ha-extra-20261126-1121 condition met
+backup-cronjob: verify ok
+2026-11-26T11:21:02Z
+PASS extra backup completed and verified

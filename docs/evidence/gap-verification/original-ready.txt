@@ -1,0 +1,11 @@
+NAME                                  READY   STATUS      RESTARTS       AGE
+grafana-5444dbdb9c-8zsj2              1/1     Running     7 (12m ago)    42h
+kube-state-metrics-549dc7f774-5bbbq   1/1     Running     10 (10m ago)   42h
+objstore-0                            2/2     Running     6 (12m ago)    18h
+objstore-init-lssz6                   0/1     Completed   0              18h
+pg-ha-0                               4/4     Running     12 (12m ago)   5h16m
+pg-ha-1                               4/4     Running     12 (12m ago)   5h16m
+pg-ha-2                               4/4     Running     12 (12m ago)   5h13m
+pgbackrest-backup-29926465-trvzk      0/1     Completed   0              26h
+pgbackrest-backup-29927640-9kpxd      0/1     Completed   0              5h15m
+prometheus-7dcd9ff69-9tgfc            1/1     Running     3 (12m ago)    25h

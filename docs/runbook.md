@@ -1,7 +1,10 @@
 # Runbook
 
-This file holds the operating procedures written so far. Only the Restore section exists. The runbooks for a planned switchover and
-a minor-version upgrade (OPS-3) are not written.
+This runbook covers backup verification, restore, planned switchover and PostgreSQL minor-version upgrades on the local kind cluster.
+
+## Verify a scheduled backup
+
+With the original cluster selected, run `bash tests/bk-daily-run.sh` to check the latest successful controller-owned Job scheduled for 02:00 UTC (08:00 Dhaka). The check reads the pgBackRest verification result and reports the controller delay. To check whether the backup container started during the scheduled minute on a specific UTC date, pass that date as `YYYY-MM-DD`. A sleeping PC can delay the Job until the cluster resumes within the 23-hour catch-up window. A one-time Job from the same template verifies the backup path independently of the daily schedule.
 
 ## Restore
 

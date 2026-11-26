@@ -75,15 +75,15 @@ Scope: the pg-ha and pg-restore namespaces in one kind cluster on one laptop. As
 | Threat | Control | Evidence | Gap |
 |---|---|---|---|
 | Two primaries (split brain) | Leader key in the Kubernetes API, self-demotion, sync standby | FO-4 | Software fencing only, no watchdog |
-| Traffic sniffed or altered inside the cluster | `ssl on`, hostssl rules only, scram-sha-256 | SEC-2 (docs/evidence/SEC-2-accepted.txt) | verify-ca for replication dropped; REST API on 8008 is plain HTTP; no certificate rotation |
+| Traffic sniffed or altered inside the cluster | `ssl on`, hostssl rules only, scram-sha-256 | SEC-2 (docs/evidence/SEC-2-accepted.txt) | Streaming replicas verify the primary certificate against the mounted CA; REST API on 8008 is plain HTTP; no certificate rotation |
 | Another pod reaches the database or the store | Ingress NetworkPolicies on the Postgres pods and the object store | SEC-3 (docs/evidence/SEC-3.txt) | No egress policy; Grafana, Prometheus and pg-restore unrestricted; labels not identity |
 | Over-broad Kubernetes rights | Narrow Patroni Role; read-only kube-state-metrics ClusterRole without Secrets | SEC-4 | Patroni can delete ConfigMaps (need not tested); the exporter is a superuser |
 | Container breakout | Restricted Pod Security, non-root, drop ALL, seccomp | SEC-5 | readOnlyRootFilesystem not set |
-| Vulnerable images | trivy scan, counts recorded | SEC-6 | 7 of 8 scanned, none fixed, Garage not scannable |
+| Vulnerable images | trivy scan, counts recorded | SEC-6 | Patched nginx scan reported zero findings. PostgreSQL r4 retained one critical and 102 high findings with no listed vendor fix. Garage yielded no analyzable target |
 | Secrets in the public repository | Generated at deploy, gitleaks, value and name scans | SEC-1 | Binary files, older history and git-ignored raw logs not covered; screenshots checked by eye only |
-| Data loss | WAL archive, backups with verify, restore tests | BK-1 to BK-4, RS-1 to RS-3 | Store shares fate with the cluster; the real 02:00 UTC firing never seen |
+| Data loss | WAL archive, backups with verify, restore tests | BK-1 to BK-4, RS-1 to RS-3 | Store shares fate with the cluster; the controller created a delayed Job for the 02:00 UTC schedule and pgBackRest verified it |
 | Copies of live secrets left in pg-restore | Deleted by scripts/restore-down.sh | ADR-0006 | Present until someone runs it |
-| Unnoticed failure | Five Prometheus alert rules | OBS-2, OBS-3 | No Alertmanager, nothing is sent; two rules only unit-tested, one reached pending only |
+| Unnoticed failure | Five Prometheus alert rules | OBS-2, OBS-3 | No Alertmanager, nothing is sent; all five rules reached firing in Prometheus |
 
 Not tested: a hostile pod inside pg-ha, certificate expiry, a stolen Secret, denial of service on the API server, a compromised node. This models a lab setup and is not a security assessment.
 

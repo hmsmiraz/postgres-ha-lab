@@ -1,0 +1,240 @@
+bash tests/proxy-image.sh
+nginx version: nginx/1.31.7
+PASS brotli-libs=1.2.1-r0
+PASS curl=8.23.0-r0
+PASS libcurl=8.23.0-r0
+PASS libexpat=2.11.0-r0
+PASS libxml2=2.13.9-r3
+PASS libxslt=1.1.43-r4
+PASS musl=1.2.6-r3
+PASS musl-utils=1.2.6-r3
+PASS zlib=1.4-r0
+bash tests/obs-manifests.sh
+date_utc: 2026-11-26T09:27:45Z
+PASS  10-rbac.yaml exists and is not empty
+PASS  20-prometheus.yaml exists and is not empty
+PASS  30-ksm.yaml exists and is not empty
+PASS  40-grafana.yaml exists and is not empty
+PASS  rbac has a ClusterRole (1)
+PASS  rbac has no write verb
+PASS  prometheus PVC is 2Gi (1)
+PASS  prometheus retention is 7d (1)
+PASS  prometheus scrapes the three patroni pods on 8008 (3)
+PASS  prometheus has a postgres-exporter job (1)
+PASS  prometheus scrapes the three exporters on 9187 (3)
+PASS  prometheus image placeholder (1)
+PASS  ksm image placeholder (1)
+PASS  grafana image placeholder (1)
+PASS  20-prometheus.yaml never uses latest
+PASS  20-prometheus.yaml imagePullPolicy IfNotPresent (1)
+PASS  20-prometheus.yaml runAsNonRoot (1)
+PASS  20-prometheus.yaml no privilege escalation (1)
+PASS  20-prometheus.yaml drops all capabilities (1)
+PASS  20-prometheus.yaml seccomp RuntimeDefault (1)
+PASS  30-ksm.yaml never uses latest
+PASS  30-ksm.yaml imagePullPolicy IfNotPresent (1)
+PASS  30-ksm.yaml runAsNonRoot (1)
+PASS  30-ksm.yaml no privilege escalation (1)
+PASS  30-ksm.yaml drops all capabilities (1)
+PASS  30-ksm.yaml seccomp RuntimeDefault (1)
+PASS  40-grafana.yaml never uses latest
+PASS  40-grafana.yaml imagePullPolicy IfNotPresent (1)
+PASS  40-grafana.yaml runAsNonRoot (1)
+PASS  40-grafana.yaml no privilege escalation (1)
+PASS  40-grafana.yaml drops all capabilities (1)
+PASS  40-grafana.yaml seccomp RuntimeDefault (1)
+PASS  prometheus runs as 65534 (1)
+PASS  ksm runs as 65534 (1)
+PASS  grafana runs as 472 (1)
+PASS  grafana admin password comes from a secretKeyRef
+PASS  grafana memory limit is 768Mi (1)
+PASS  grafana has a startupProbe (1)
+PASS  control: the counter sees a known string
+bash tests/obs-up-static.sh
+date_utc: 2026-11-26T09:27:46Z
+PASS  scripts/obs-up.sh exists and is executable
+PASS  scripts/gen-grafana-secret.sh exists and is executable
+PASS  obs-up has set -euo pipefail (1)
+PASS  obs-up sources versions.env (1)
+PASS  obs-up uses the tag form of PROMETHEUS_IMAGE (1)
+PASS  obs-up uses the tag form of KSM_IMAGE (1)
+PASS  obs-up uses the tag form of GRAFANA_IMAGE (1)
+PASS  obs-up fills the three image placeholders (3)
+PASS  obs-up applies the four manifest files (4)
+PASS  obs-up waits for the three rollouts (3)
+PASS  obs-up never deletes anything
+PASS  obs-up creates the Secret before it applies 40-grafana.yaml
+PASS  generator has set -euo pipefail (1)
+PASS  generator defaults to namespace pg-ha (1)
+PASS  generator writes the key admin-password (1)
+PASS  generator draws the value from openssl rand (1)
+PASS  generator keeps an existing Secret (1)
+PASS  generator names the Secret grafana-admin (5)
+PASS  generator never prints the value or traces
+PASS  control: the counter sees a known string
+bash tests/obs-rules-static.sh
+date_utc: 2026-11-26T09:27:46Z
+PASS  k8s/obs/25-rules.yaml exists and is not empty
+PASS  rules ConfigMap is named prometheus-rules (1)
+PASS  alert NoPrimary is defined (1)
+PASS  alert ReplicationLag is defined (1)
+PASS  alert SlotRetention is defined (1)
+PASS  alert WalArchiveFailure is defined (1)
+PASS  alert BackupTooOld is defined (1)
+PASS  every alert has a for: duration (5)
+PASS  prometheus config loads the rule files (1)
+PASS  prometheus mounts the rules (1)
+PASS  prometheus has the rules volume (1)
+PASS  promtool check rules is clean
+PASS  ReplicationLag has for 15s
+PASS  control: the counter sees a known string
+bash tests/sec-tls-static.sh
+date_utc: 2026-11-26T09:27:47Z
+PASS  pg_hba has 4 hostssl rules (4)
+PASS  pg_hba has no plain host rule
+PASS  ssl is on (1)
+PASS  ssl_cert_file is /tls/tls.crt (1)
+PASS  ssl_key_file is /tls/tls.key (1)
+PASS  replication verifies the primary CA (1)
+PASS  replication trusts the mounted CA (1)
+PASS  statefulset uses the Secret pg-tls (1)
+PASS  statefulset mounts /tls in postgres and pgserver (2)
+PASS  pg-up.sh calls the pg-tls generator (1)
+PASS  control: the counter sees a known string
+bash tests/sec-netpol-static.sh
+date_utc: 2026-11-26T09:27:47Z
+PASS  file has 2 documents
+PASS  policies are pg-ha-ingress and objstore-ingress
+PASS  both policies are in pg-ha
+PASS  policyTypes is Ingress only
+PASS  ports are 3900, 3903, 5432, 8008, 8432, 9187
+PASS  no ipBlock rule
+PASS  no 0.0.0.0/0
+PASS  objstore allows the pg-restore namespace
+PASS  control: the counter sees a known string
+bash tests/sec-rbac.sh
+date_utc: 2026-11-26T09:27:48Z
+PASS  control: admin identity can get secrets (the check can say yes)
+PASS  patroni can get configmaps in pg-ha
+PASS  patroni can patch pods in pg-ha
+PASS  patroni cannot get secrets in pg-ha
+PASS  patroni cannot create pods in pg-ha
+PASS  patroni cannot delete pods in pg-ha
+PASS  patroni cannot create deployments in pg-ha
+PASS  patroni cannot get secrets in pg-restore
+PASS  patroni cannot list nodes
+PASS  kube-state-metrics cannot get secrets
+PASS  kube-state-metrics cannot create pods
+PASS  default account in pg-ha cannot get secrets
+PASS  RBAC manifests name no secrets resource and no wildcard
+ACCEPTED (not asserted): patroni can delete configmaps: yes; deletecollection: yes. Need not tested.
+WARNING: the live suites below change the running cluster
+bash tests/rep-topology.sh
+date: 2026-11-26T09:27:53Z
++ Cluster: pg-ha (7712407402819432484) ----+-----------+----+-------------+-----+------------+-----+
+| Member  | Host            | Role         | State     | TL | Receive LSN | Lag | Replay LSN | Lag |
++---------+-----------------+--------------+-----------+----+-------------+-----+------------+-----+
+| pg-ha-0 | 192.168.179.195 | Replica      | streaming |  1 |   0/4032E18 |   0 |  0/4032E18 |   0 |
+| pg-ha-1 | 192.168.192.130 | Sync Standby | streaming |  1 |   0/4032E18 |   0 |  0/4032E18 |   0 |
+| pg-ha-2 | 192.168.78.196  | Leader       | running   |  1 |             |     |            |     |
++---------+-----------------+--------------+-----------+----+-------------+-----+------------+-----+
+PASS: 1 leader
+PASS: 2 streaming replicas
+PASS: PostgreSQL version number 180007 (>= 15)
+ALL CHECKS PASSED
+bash tests/con-endpoints.sh
+date: 2026-11-26T09:27:56Z
+PASS: pg-primary reaches a primary (pg_is_in_recovery = f)
+PASS: write through pg-primary works
+PASS: pg-replica reaches a replica (pg_is_in_recovery = t)
+PASS: write through pg-replica is rejected
+ALL CHECKS PASSED
+bash tests/bk-wal.sh
+date: 2026-11-26T09:27:59Z
+PASS: cluster reachable, object store ready
+PASS: secret values loaded (not printed); the log scanner fires on a planted secret and ignores the access key id
+PASS: leader is pg-ha-2, 2 streaming replicas
+PASS: archive_mode is on on every member (a promoted replica archives too)
+PASS: archive_command uses pgBackRest archive-push for stanza pg-ha and holds no secret
+PASS: stanza pg-ha exists in the repository
+PASS: pgbackrest check succeeds on pg-ha-2
+PASS: WAL segment 000000010000000000000005 appeared in the repository after pg_switch_wal
+PASS: archived_count rose from 5 to 7 and failed_count stayed at 3
+PASS: none of the four values in any repo file (working tree only, not history)
+PASS: none of the four values in any file under docs/evidence
+PASS: none of the four values in the Patroni configuration or any ConfigMap
+PASS: none of the three access-granting values in any pg-ha pod log
+INFO: the access key id appears in 0 lines of the pg-ha pod logs (count only)
+ALL CHECKS PASSED
+bash tests/rs-full.sh
+date: 2026-11-26T09:28:17Z
+PASS: pg-ha healthy: 1 leader and 2 streaming replicas
+PASS: CronJob pgbackrest-backup exists
+PASS: restore-full.sh and restore-down.sh are present and executable
+PASS: controls: the leak scanner and the timeline matcher fire on planted input
+NOTICE:  table "rs_sentinel" does not exist, skipping
+PASS: sentinel table rs_sentinel written in the live appdb: 1000 rows; the changed-value control differs
+INFO: full backups in the repository: 1
+PASS: a full backup made after the sentinel exists in the repository
+INFO: live timeline 1, newest timeline in the repository before the restore: 00000001
+PASS: pg-restore does not exist: the restore starts from an empty namespace
+PASS: restore-full.sh finished with exit 0
+PASS: 3 restored pods are ready; Patroni reports 1 leader and 2 streaming replicas
+PASS: pg-restore holds exactly the three expected Secrets, and objstore-ca holds only ca.crt (no private key copied)
+PASS: row count 1000 and checksum equal the live ones on all three restored pods
+PASS: control: the changed-value checksum matches its live twin and differs from the plain checksum
+PASS: archive_mode is off on every restored member
+INFO: restored timeline 00000002, newest repository timeline before 00000001 and after 00000001
+PASS: the restored cluster is on a newer timeline and the live archive got no newer timeline
+PASS: pg-ha was not restarted by the restore
+PASS: no secret value in the restored pod logs or the restore script output
+ALL CHECKS PASSED
+bash tests/sec-psa.sh
+date_utc: 2026-11-26T09:30:06Z
+PASS  control: the checker reports 4 violations for a synthetic bad container
+PASS  namespace pg-ha enforces restricted
+PASS  pg-ha: 8 pods, 19 containers, 0 violations
+PASS  namespace pg-restore enforces restricted
+PASS  pg-restore: 3 pods, 3 containers, 0 violations
+PASS  control: a privileged pod is rejected by Pod Security admission
+bash tests/bk-verify.sh
+date: 2026-11-26T09:30:09Z
+PASS: pg-ha healthy: 1 leader and 2 streaming replicas
+PASS: CronJob pgbackrest-backup exists
+PASS: the RS-3 restore test evidence exists and ends with ALL CHECKS PASSED
+PASS: controls: the leak scanner fires, the script matcher rejects a backup command and the old verify form, and the ok-line and error-line matchers tell good from bad reports
+PASS: the backup CronJob script runs pgbackrest verify --output=text --verbose and tests the report for status: ok
+INFO: baseline full=1 incr=0, the newest full backup is 82 s old
+PASS: the newest full backup is younger than 6 days, so the Jobs make incremental backups and nothing expires
+INFO: bk-verify-test-1 result=complete, log lines=11
+PASS: job 1 added one incremental backup (incr 0 to 1), logged the verify report with status: ok and verify ok
+PASS: a direct pgbackrest verify in a pg pod exits 0 and prints status: ok (independent of the script)
+INFO: verify of the missing set 19990101-000000F exited 0 (reported, not asserted)
+PASS: a direct verify of a backup set that does not exist prints status: error and no status: ok
+INFO: bk-verify-test-2 result=failed, log lines=5
+PASS: job 2 with a missing verify set failed, the backup still ran (incr 1 to 2), and the log says verify FAILED
+PASS: no secret value, key line or private key marker in the job logs
+ALL CHECKS PASSED
+bash tests/obs-live.sh
+date_utc: 2026-11-26T09:30:46Z
+PASS  deployment prometheus is available
+PASS  deployment kube-state-metrics is available
+PASS  deployment grafana is available
+PASS  prometheus is ready
+PASS  job patroni has 3 targets up
+PASS  job postgres-exporter has 3 targets up
+PASS  job kube-state-metrics has 1 targets up
+PASS  job prometheus has 1 targets up
+PASS  grafana health reports database ok
+PASS  control: the target counter returns 0 for input without targets
+bash tests/obs-alerts-live.sh
+date_utc: 2026-11-26T09:30:50Z
+PASS  group pg-ha has 5 rules
+PASS  alert NoPrimary is loaded
+PASS  alert ReplicationLag is loaded
+PASS  alert SlotRetention is loaded
+PASS  alert WalArchiveFailure is loaded
+PASS  alert BackupTooOld is loaded
+PASS  all 5 rules have health ok
+PASS  no alert is firing on a healthy cluster
+PASS  control: an absent rule counts 0

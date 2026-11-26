@@ -5,11 +5,14 @@ NS=pg-ha
 pass() { echo "PASS: $*"; }
 fail() { echo "FAIL: $*"; exit 1; }
 
-# Run SQL as the app user against a service, from inside pg-ha-0.
+# Use the opposite role as the client so a Service never loops back to the client pod.
 # Single quotes are intended: the variables expand inside the pod, not here.
 # shellcheck disable=SC2016
 q() {
-  kubectl -n "$NS" exec -i pg-ha-0 -c postgres -- sh -c \
+  local role=replica client
+  if [[ "$1" == pg-replica ]]; then role=primary; fi
+  client=$(kubectl -n "$NS" get pods -l "cluster-name=pg-ha,role=$role" -o jsonpath='{.items[0].metadata.name}') || return 1
+  kubectl -n "$NS" exec -i "$client" -c postgres -- sh -c \
     'PGPASSWORD="$APP_PASSWORD" psql -h "$0" -U app -d appdb -Atq -v ON_ERROR_STOP=1' "$1" <<<"$2"
 }
 

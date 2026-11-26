@@ -1,0 +1,30 @@
+yes
+node/kind-control-plane condition met
+node/kind-worker condition met
+node/kind-worker2 condition met
+node/kind-worker3 condition met
+yes
+node/kind-control-plane condition met
+node/kind-worker condition met
+node/kind-worker2 condition met
+node/kind-worker3 condition met
+job.batch/item2-verify-1795690182 created
+job.batch/item2-verify-1795690182 condition met
+backup-cronjob: verify ok
+NAME                                  READY   STATUS      RESTARTS        AGE
+grafana-5444dbdb9c-8zsj2              1/1     Running     9 (7m13s ago)   44h
+item2-verify-1795690182-wl75h         0/1     Completed   0               32s
+kube-state-metrics-549dc7f774-5bbbq   1/1     Running     14 (6m ago)     44h
+objstore-0                            2/2     Running     0               3m42s
+objstore-init-pmcp6                   0/1     Completed   0               3m26s
+pg-ha-0                               4/4     Running     0               2m45s
+pg-ha-1                               4/4     Running     0               2m55s
+pg-ha-2                               4/4     Running     0               3m8s
+pgbackrest-backup-29926465-trvzk      0/1     Completed   0               28h
+pgbackrest-backup-29927640-9kpxd      0/1     Completed   0               7h5m
+prometheus-7dcd9ff69-9tgfc            1/1     Running     5 (7m14s ago)   27h
+true
+true
+true
+true
+PASS original cluster rollout and verified backup

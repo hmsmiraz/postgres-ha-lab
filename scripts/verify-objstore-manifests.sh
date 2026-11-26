@@ -22,7 +22,7 @@ trap cleanup EXIT
 
 echo "date_utc: $(date -u +%FT%TZ)"
 
-sed -e "s|__GARAGE_IMAGE__|${OBJSTORE_IMAGE}|g" -e "s|__PROXY_IMAGE__|${OBJSTORE_TLS_PROXY_IMAGE}|g" k8s/objstore/30-statefulset.yaml >"$r/30.yaml"
+sed -e "s|__GARAGE_IMAGE__|${OBJSTORE_IMAGE}|g" -e "s|__PROXY_IMAGE__|${OBJSTORE_PROXY_RUNTIME_IMAGE}|g" k8s/objstore/30-statefulset.yaml >"$r/30.yaml"
 sed "s|__IMAGE__|${IMAGE_NAME}:${IMAGE_TAG}|g" k8s/objstore/40-init-job.yaml >"$r/40.yaml"
 cp k8s/objstore/10-config.yaml k8s/objstore/20-service.yaml "$r/"
 
@@ -59,7 +59,7 @@ chmod 644 "$r/tls/"*
 : >"$r/empty.conf"
 chmod 644 "$r/default.conf" "$r/empty.conf"
 if out=$(docker run --rm --user 101:101 -v "$r/default.conf:/etc/nginx/conf.d/default.conf:ro" -v "$r/tls:/etc/nginx/tls:ro" \
-    "$OBJSTORE_TLS_PROXY_IMAGE" nginx -T 2>&1); then
+    "$OBJSTORE_PROXY_RUNTIME_IMAGE" nginx -T 2>&1); then
   if grep -q 'test is successful' <<<"$out" && grep -q 'listen 3900 ssl' <<<"$out" && grep -q 'listen 3903 ssl' <<<"$out"; then
     pass "nginx -T loads the ConfigMap config: both TLS server blocks appear in the loaded configuration"
   else
@@ -69,7 +69,7 @@ else
   bad "nginx -T failed: $(tail -n 3 <<<"$out")"
 fi
 out=$(docker run --rm --user 101:101 -v "$r/empty.conf:/etc/nginx/conf.d/default.conf:ro" -v "$r/tls:/etc/nginx/tls:ro" \
-    "$OBJSTORE_TLS_PROXY_IMAGE" nginx -T 2>&1 || true)
+    "$OBJSTORE_PROXY_RUNTIME_IMAGE" nginx -T 2>&1 || true)
 if grep -q 'listen 3900' <<<"$out"; then
   bad "control: with an empty config the check still sees a 3900 listener, so the nginx check proves nothing"
 else

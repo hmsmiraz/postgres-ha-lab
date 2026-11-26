@@ -1,0 +1,10 @@
+nginx version: nginx/1.31.7
+PASS brotli-libs=1.2.1-r0
+PASS curl=8.23.0-r0
+PASS libcurl=8.23.0-r0
+PASS libexpat=2.11.0-r0
+PASS libxml2=2.13.9-r3
+PASS libxslt=1.1.43-r4
+PASS musl=1.2.6-r3
+PASS musl-utils=1.2.6-r3
+PASS zlib=1.4-r0

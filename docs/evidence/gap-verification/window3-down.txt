@@ -1,0 +1,29 @@
+bash scripts/restore-down.sh
+restore-down: deleting namespace pg-restore, which holds:
+  statefulset.apps/pg-restore
+  pod/pg-restore-0
+  pod/pg-restore-1
+  pod/pg-restore-2
+  persistentvolumeclaim/data-pg-restore-0
+  persistentvolumeclaim/data-pg-restore-1
+  persistentvolumeclaim/data-pg-restore-2
+  secret/objstore-ca
+  secret/objstore-credentials
+  secret/pg-credentials
+  configmap/kube-root-ca.crt
+  configmap/patroni-static-config
+  configmap/pg-restore-config
+  configmap/pg-restore-leader
+  configmap/pg-restore-sync
+  configmap/pgbackrest-env
+  service/pg-primary
+  service/pg-replica
+  service/pg-restore-headless
+  role.rbac.authorization.k8s.io/patroni
+  rolebinding.rbac.authorization.k8s.io/patroni
+  serviceaccount/default
+  serviceaccount/patroni
+namespace "pg-restore" deleted
+restore-down: namespace pg-restore deleted
+kubectl delete namespace pg-ha --wait=true --timeout=600s
+namespace "pg-ha" deleted

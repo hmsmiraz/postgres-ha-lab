@@ -18,6 +18,7 @@ down:
 	kubectl delete namespace pg-ha --wait=true --timeout=600s
 
 test-quick:
+	bash tests/proxy-image.sh
 	bash tests/obs-manifests.sh
 	bash tests/obs-up-static.sh
 	bash tests/obs-rules-static.sh

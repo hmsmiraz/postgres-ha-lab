@@ -1,0 +1,7 @@
+Deleting cluster "ha-gap-window3" ...
+Deleted nodes: ["ha-gap-window3-worker3" "ha-gap-window3-worker" "ha-gap-window3-control-plane" "ha-gap-window3-worker2"]
+kind-control-plane
+kind-worker
+kind-worker2
+kind-worker3
+Error from server (Forbidden): statefulsets.apps "pg-ha" is forbidden: User "kubernetes-admin" cannot get resource "statefulsets" in API group "apps" in the namespace "pg-ha"

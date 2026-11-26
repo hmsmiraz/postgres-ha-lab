@@ -1,0 +1,6 @@
+ARG BASE_IMAGE
+FROM ${BASE_IMAGE}
+USER root
+ARG PATCH_PACKAGES
+RUN apk add --no-cache --upgrade ${PATCH_PACKAGES}
+USER 101

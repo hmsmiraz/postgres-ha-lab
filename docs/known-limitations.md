@@ -33,7 +33,7 @@ The latest live reruns were on 25 November 2026. [Drill results](evidence/ITEM30
 - Fencing is software only (leader lock plus self-demotion). kind has no hardware watchdog, so a hung Patroni process on a partitioned node is not covered (ADR-0003).
 - The split-brain test samples the three pods about 0.3 s apart. It shows no sustained overlap of two writable primaries; it is not a proof for single instants. The guarantee rests on the lock design.
 - FO-2, first run: all 44 acknowledged writes were reported missing. The rerun passed with the same data and a more careful read. The first run's probe log was not saved, so the cause is unproven (my best guess is a read error in the test helper). Kept as FO-2-run1-FAILED.txt.
-- FO-1 recovered writes within 12.190 s. The same pod held leadership after recovery, so replica promotion on primary pod loss remains unverified in this run. FO-2 and FO-3 demonstrated promotion on worker and storage loss.
+- FO-1 recovered writes within 12.190 s. The same pod held leadership after recovery, so a later drill delayed pod replacement and confirmed promotion with all 151 acknowledged writes preserved. FO-2 and FO-3 demonstrated promotion on worker and storage loss.
 - FO-4 observed at most one writable primary over 26 sampling rounds. Sub-sample overlap cannot be excluded. FO-5 demonstrated rejoin with pg_rewind.
 
 ## Configuration
@@ -113,8 +113,8 @@ The latest live reruns were on 25 November 2026. [Drill results](evidence/ITEM30
 
 - A full PC shutdown and cold start (24 Nov) recovered the Patroni cluster without intervention (timeline 11 to 12, SEC-1 clean afterwards); the 02:00 UTC backup did not run because the PC was off.
 - OPS-1 (docs/evidence/OPS-1-rerun-FAILED.txt): "make up" was run on the existing cluster and exited 0. Timeline (12), every container restart count, all StatefulSet and Deployment revisions, the CronJob schedule and the Secret count were identical before and after. The only change was the name of the objstore-init pod, because objstore-up.sh deletes and recreates that Job on every run. The evidence file says FAIL because my comparison included that pod name; the file was kept unedited.
-- OPS-1/2: clean-machine bring-up and teardown are unverified. The deploy order on an empty cluster and the full make test entry point still need a clean-run demonstration.
-- OPS-3, minor-version upgrade: not run live. On 24 Nov 2026 the pinned PostgreSQL 18.7 was already the newest 18.x tag, so there was nothing to upgrade to. The runbook section is written from commands used in other rollouts and is untested as an upgrade (decision B by the human).
+- OPS-1/2: the 26 November run verified bring-up, the full test target and teardown on a fresh kind cluster using the existing local Docker installation. A first-time host installation remains untested.
+- OPS-3, original 24 November run: the minor-version upgrade was subsequently verified on an isolated three-member cluster (18.6 to 18.7). On 24 Nov 2026 the pinned PostgreSQL 18.7 was already the newest 18.x tag, so there was nothing to upgrade to. The runbook section is written from commands used in other rollouts and is untested as an upgrade (decision B by the human).
 - OPS-3: the switchover rollback (switching back) was not tested, and the switchover write gap was 16047 ms in one run.
 
 ## Final test exceptions
@@ -127,3 +127,9 @@ The latest live reruns were on 25 November 2026. [Drill results](evidence/ITEM30
 ### Follow-up verification on 25 November
 
 The dated results in README.md supersede earlier observations about replication certificate verification, slot recovery, alert firing, schema validation and the two stale backup checks. The original drill evidence remains available.
+
+On 26 November the patched nginx runtime scan reported zero findings. The PostgreSQL r4 runtime still reported one critical and 102 high findings. These counts describe the scanned images and vulnerability database at scan time. The local CronJob completed a missed 02:00 UTC backup through its catch-up window. The submission records the observed catch-up. An on-time 02:00 UTC start is unverified and further overnight observation is outside the agreed scope.
+
+On the original cluster a replica querying the replica Service received a PostgreSQL host-authentication rejection for a kind node address. This is consistent with a Service connection looping back to the client pod. The endpoint test now originates connections from the opposite database role to verify cross-pod routing. Same-pod Service access remains unverified. [Initial rejection](evidence/gap-verification/item2-endpoints-hairpin.txt) and [cross-pod checks](evidence/gap-verification/item2-endpoints.txt).
+
+Item 28 was excluded from the final scope by the project owner.

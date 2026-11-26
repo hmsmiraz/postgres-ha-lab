@@ -12,3 +12,8 @@ docker build -f image/Dockerfile \
   --build-arg PATRONI_VERSION="$PATRONI_VERSION" \
   --build-arg POSTGRES_VERSION="$POSTGRES_VERSION" \
   -t "${IMAGE_NAME}:${IMAGE_TAG}" .
+
+docker build -f image/proxy.Dockerfile \
+  --build-arg BASE_IMAGE="$OBJSTORE_TLS_PROXY_IMAGE" \
+  --build-arg PATCH_PACKAGES="$OBJSTORE_PROXY_APK_PACKAGES" \
+  -t "$OBJSTORE_PROXY_RUNTIME_IMAGE" .
