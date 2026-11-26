@@ -1,0 +1,14 @@
+date: 2026-11-26T03:45:18Z
+PASS: pg-ha healthy: 1 leader and 2 streaming replicas
+PASS: restore-test.sh and its pod manifest are present
+PASS: controls: the leak scanner and the timeline matcher fire on planted input
+PASS: live rs_scratch written (300 rows, the changed-value control differs); WAL segment 0000001E00000000000000AA is archived
+INFO: newest timeline in the live archive before the restore test: 0000001E
+PASS: restore-test.sh finished with exit 0 and kept the scratch pod for inspection
+PASS: the scratch instance is ready, recovery has ended, and row count 300 and checksum equal the live ones (control matches)
+INFO: scratch timeline 0000001F, newest live archive timeline before 0000001E and after 0000001E
+PASS: archive_mode is off, the scratch instance is on a newer timeline, and the live archive got no newer timeline
+PASS: pg-ha was not restarted and the 3-pod cluster in pg-restore is unchanged
+PASS: negative control: with a wrong expected value the script fails and removes its pod
+PASS: no secret value in the script output or the scratch pod log
+ALL CHECKS PASSED

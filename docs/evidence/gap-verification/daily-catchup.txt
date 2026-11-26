@@ -1,0 +1,2 @@
+PASS pgbackrest-backup-29927640 was scheduled for 02:00 UTC, completed, and verified its backup.
+pgbackrest-backup-29927640	2026-11-26T02:00:00Z	2026-11-26T03:44:40Z	2026-11-26T03:45:18Z

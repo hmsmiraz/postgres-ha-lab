@@ -1,0 +1,3 @@
+CRITICAL	no vendor fix listed	1
+HIGH	no vendor fix listed	102
+HIGH	fix listed	2

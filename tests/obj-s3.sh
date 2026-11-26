@@ -26,7 +26,7 @@ secret_field() { k get secret "$1" -o "jsonpath={.data.$2}" 2>/dev/null | base64
 pat=$(mktemp)
 cleanup() {
   rm -f "$pat" "$pat.three"
-  k delete pod "$CLIENT" --ignore-not-found --wait=false >/dev/null 2>&1 || true
+  k delete job "$CLIENT" --ignore-not-found --wait=false >/dev/null 2>&1 || true
 }
 trap cleanup EXIT
 
@@ -68,102 +68,107 @@ pod_ip=$(k get pod "${SVC}-0" -o jsonpath='{.status.podIP}' 2>/dev/null || true)
 uid=$(k get sts pg-ha -o jsonpath='{.spec.template.spec.securityContext.runAsUser}' 2>/dev/null || true)
 uid=${uid:-999}
 
-k delete pod "$CLIENT" --ignore-not-found --wait=true >/dev/null
+k delete job "$CLIENT" --ignore-not-found --wait=true >/dev/null
 sed -e "s|__CLIENT__|$CLIENT|" -e "s|__IMAGE__|${IMAGE_NAME}:${IMAGE_TAG}|" -e "s|__UID__|$uid|" \
     -e "s|__HOST__|$HOST|g" -e "s|__POD_IP__|$pod_ip|g" \
     -e "s|__BUCKET__|$BUCKET|" -e "s|__STANZA__|$STANZA|" <<'YAML' | k apply -f - >/dev/null
-apiVersion: v1
-kind: Pod
+apiVersion: batch/v1
+kind: Job
 metadata:
   name: __CLIENT__
 spec:
-  restartPolicy: Never
-  securityContext:
-    runAsNonRoot: true
-    runAsUser: __UID__
-    seccompProfile:
-      type: RuntimeDefault
-  containers:
-    - name: client
-      image: __IMAGE__
-      imagePullPolicy: IfNotPresent
+  backoffLimit: 0
+  activeDeadlineSeconds: 240
+  template:
+    spec:
+      automountServiceAccountToken: false
+      restartPolicy: Never
       securityContext:
-        allowPrivilegeEscalation: false
-        capabilities:
-          drop: ["ALL"]
-      volumeMounts:
-        - {name: tls, mountPath: /certs, readOnly: true}
-      env:
-        - {name: PGBACKREST_STANZA, value: __STANZA__}
-        - {name: PGBACKREST_PG1_PATH, value: /tmp/pgdata}
-        - {name: PGBACKREST_LOG_LEVEL_CONSOLE, value: warn}
-        - {name: PGBACKREST_LOG_LEVEL_FILE, value: "off"}
-        - {name: PGBACKREST_REPO1_TYPE, value: s3}
-        - {name: PGBACKREST_REPO1_PATH, value: /obj2-test}
-        - {name: PGBACKREST_REPO1_S3_BUCKET, value: __BUCKET__}
-        - {name: PGBACKREST_REPO1_S3_ENDPOINT, value: __HOST__}
-        - {name: PGBACKREST_REPO1_STORAGE_PORT, value: "3900"}
-        - {name: PGBACKREST_REPO1_S3_REGION, value: garage}
-        - {name: PGBACKREST_REPO1_S3_URI_STYLE, value: path}
-        - {name: PGBACKREST_REPO1_STORAGE_CA_FILE, value: /certs/ca.crt}
-        - name: PGBACKREST_REPO1_S3_KEY
-          valueFrom: {secretKeyRef: {name: objstore-credentials, key: access-key-id}}
-        - name: PGBACKREST_REPO1_S3_KEY_SECRET
-          valueFrom: {secretKeyRef: {name: objstore-credentials, key: secret-access-key}}
-      command: ["sh", "-c"]
-      args:
-        - |
-          set -u
-          step_fail() { echo "STEP=$1 RESULT=FAIL"; exit 1; }
-          probe() {
-            r=$(python3 -c '
-          import socket, sys
-          s = socket.socket()
-          s.settimeout(3)
-          try:
-              s.connect((sys.argv[1], int(sys.argv[2])))
-              print("open")
-          except Exception as e:
-              print("closed")
-          ' "$1" "$2" 2>&1 | tail -n 1)
-            echo "PROBE host=$1 port=$2 RESULT=$r"
-          }
-          probe __HOST__ 3900
-          probe __HOST__ 3903
-          probe __POD_IP__ 3910
-          probe __POD_IP__ 3913
-          probe __POD_IP__ 3901
-          neg=$(env -u PGBACKREST_REPO1_STORAGE_CA_FILE pgbackrest repo-ls backup </dev/null 2>&1) && step_fail negative-control
-          case "$neg" in *certificate*) echo "STEP=negative-control RESULT=OK" ;; *) echo "STEP=negative-control RESULT=FAIL (unexpected error)"; exit 1 ;; esac
-          mkdir -p /tmp/pgdata
-          initdb -D /tmp/pgdata >/dev/null 2>&1 || step_fail initdb
-          echo "STEP=initdb RESULT=OK"
-          pgbackrest --no-online stanza-create || step_fail stanza-create
-          echo "STEP=stanza-create RESULT=OK"
-          listing=$(pgbackrest repo-ls "backup/$PGBACKREST_STANZA" </dev/null) || step_fail ls
-          case "$listing" in *backup.info*) echo "STEP=ls RESULT=OK" ;; *) step_fail ls ;; esac
-          got=$(pgbackrest repo-get "backup/$PGBACKREST_STANZA/backup.info" </dev/null) || step_fail get
-          case "$got" in *"[backrest]"*) echo "STEP=get RESULT=OK" ;; *) step_fail get ;; esac
-          pgbackrest stop || step_fail stop
-          pgbackrest stanza-delete || step_fail stanza-delete
-          echo "STEP=stanza-delete RESULT=OK"
-          after=$(pgbackrest repo-ls backup </dev/null) || step_fail cleanup
-          case "$after" in *"$PGBACKREST_STANZA"*) step_fail cleanup ;; *) echo "STEP=cleanup RESULT=OK" ;; esac
-  volumes:
-    - name: tls
-      secret:
-        secretName: objstore-tls
-        items:
-          - {key: ca.crt, path: ca.crt}
+        runAsNonRoot: true
+        runAsUser: __UID__
+        seccompProfile:
+          type: RuntimeDefault
+      containers:
+        - name: client
+          image: __IMAGE__
+          imagePullPolicy: IfNotPresent
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop: ["ALL"]
+          volumeMounts:
+            - {name: tls, mountPath: /certs, readOnly: true}
+          env:
+            - {name: PGBACKREST_STANZA, value: __STANZA__}
+            - {name: PGBACKREST_PG1_PATH, value: /tmp/pgdata}
+            - {name: PGBACKREST_LOG_LEVEL_CONSOLE, value: warn}
+            - {name: PGBACKREST_LOG_LEVEL_FILE, value: "off"}
+            - {name: PGBACKREST_REPO1_TYPE, value: s3}
+            - {name: PGBACKREST_REPO1_PATH, value: /obj2-test}
+            - {name: PGBACKREST_REPO1_S3_BUCKET, value: __BUCKET__}
+            - {name: PGBACKREST_REPO1_S3_ENDPOINT, value: __HOST__}
+            - {name: PGBACKREST_REPO1_STORAGE_PORT, value: "3900"}
+            - {name: PGBACKREST_REPO1_S3_REGION, value: garage}
+            - {name: PGBACKREST_REPO1_S3_URI_STYLE, value: path}
+            - {name: PGBACKREST_REPO1_STORAGE_CA_FILE, value: /certs/ca.crt}
+            - name: PGBACKREST_REPO1_S3_KEY
+              valueFrom: {secretKeyRef: {name: objstore-credentials, key: access-key-id}}
+            - name: PGBACKREST_REPO1_S3_KEY_SECRET
+              valueFrom: {secretKeyRef: {name: objstore-credentials, key: secret-access-key}}
+          command: ["sh", "-c"]
+          args:
+            - |
+              set -u
+              step_fail() { echo "STEP=$1 RESULT=FAIL"; exit 1; }
+              probe() {
+                r=$(python3 -c '
+              import socket, sys
+              s = socket.socket()
+              s.settimeout(3)
+              try:
+                  s.connect((sys.argv[1], int(sys.argv[2])))
+                  print("open")
+              except Exception as e:
+                  print("closed")
+              ' "$1" "$2" 2>&1 | tail -n 1)
+                echo "PROBE host=$1 port=$2 RESULT=$r"
+              }
+              probe __HOST__ 3900
+              probe __HOST__ 3903
+              probe __POD_IP__ 3910
+              probe __POD_IP__ 3913
+              probe __POD_IP__ 3901
+              neg=$(env -u PGBACKREST_REPO1_STORAGE_CA_FILE pgbackrest repo-ls backup </dev/null 2>&1) && step_fail negative-control
+              case "$neg" in *certificate*) echo "STEP=negative-control RESULT=OK" ;; *) echo "STEP=negative-control RESULT=FAIL (unexpected error)"; exit 1 ;; esac
+              mkdir -p /tmp/pgdata
+              initdb -D /tmp/pgdata >/dev/null 2>&1 || step_fail initdb
+              echo "STEP=initdb RESULT=OK"
+              pgbackrest --no-online stanza-create || step_fail stanza-create
+              echo "STEP=stanza-create RESULT=OK"
+              listing=$(pgbackrest repo-ls "backup/$PGBACKREST_STANZA" </dev/null) || step_fail ls
+              case "$listing" in *backup.info*) echo "STEP=ls RESULT=OK" ;; *) step_fail ls ;; esac
+              got=$(pgbackrest repo-get "backup/$PGBACKREST_STANZA/backup.info" </dev/null) || step_fail get
+              case "$got" in *"[backrest]"*) echo "STEP=get RESULT=OK" ;; *) step_fail get ;; esac
+              pgbackrest stop || step_fail stop
+              pgbackrest stanza-delete || step_fail stanza-delete
+              echo "STEP=stanza-delete RESULT=OK"
+              after=$(pgbackrest repo-ls backup </dev/null) || step_fail cleanup
+              case "$after" in *"$PGBACKREST_STANZA"*) step_fail cleanup ;; *) echo "STEP=cleanup RESULT=OK" ;; esac
+      volumes:
+        - name: tls
+          secret:
+            secretName: objstore-tls
+            items:
+              - {key: ca.crt, path: ca.crt}
 YAML
 
 phase=""
 for _ in $(seq 1 120); do
-  phase=$(k get pod "$CLIENT" -o jsonpath='{.status.phase}' 2>/dev/null || true)
+  phase=$(k get pods -l "batch.kubernetes.io/job-name=$CLIENT" -o jsonpath='{.items[0].status.phase}' 2>/dev/null || true)
   if [ "$phase" = Succeeded ] || [ "$phase" = Failed ]; then break; fi
   sleep 2
 done
-out=$(k logs "$CLIENT" 2>&1 || true)
+out=$(k logs "job/$CLIENT" 2>&1 || true)
 echo "--- client log (final phase: ${phase:-unknown})"
 echo "$out"
 echo "---"

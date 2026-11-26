@@ -4,8 +4,7 @@ SHELL := /bin/bash
 .PHONY: up down pull test-quick test
 
 pull:
-	set -a; source versions.env; set +a; \
-	for i in "$${OBJSTORE_IMAGE%%@*}" "$${OBJSTORE_TLS_PROXY_IMAGE%%@*}" "$${PROMETHEUS_IMAGE%%@*}" "$${PG_EXPORTER_IMAGE%%@*}" "$${KSM_IMAGE%%@*}" "$${GRAFANA_IMAGE%%@*}"; do docker pull "$$i"; done
+	source versions.env && bash scripts/pull-pinned.sh "$$OBJSTORE_IMAGE" "$$OBJSTORE_TLS_PROXY_IMAGE" "$$PROMETHEUS_IMAGE" "$$PG_EXPORTER_IMAGE" "$$KSM_IMAGE" "$$GRAFANA_IMAGE"
 
 up: pull
 	bash scripts/cluster-up.sh

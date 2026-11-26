@@ -62,7 +62,8 @@ spec:
   schedule: "0 2 * * *"
   timeZone: Etc/UTC
   concurrencyPolicy: Forbid
-  startingDeadlineSeconds: 3600
+  # A sleeping local PC may resume after the original one-hour window.
+  startingDeadlineSeconds: 82800
   successfulJobsHistoryLimit: 3
   failedJobsHistoryLimit: 3
   jobTemplate:

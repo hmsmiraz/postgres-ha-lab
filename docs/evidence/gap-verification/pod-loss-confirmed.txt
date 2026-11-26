@@ -1,0 +1,28 @@
+date: 2026-11-26T03:46:38Z
+leader before: pg-ha-2
+PASS: probe writing before the kill (23 acknowledged writes)
+node/kind-worker cordoned
+killing pg-ha-2 (force delete, grace period 0) at 1795664809581
+PASS: pg-ha-1 promoted while replacement of pg-ha-2 was held
+node/kind-worker uncordoned
+pod/pg-ha-2 condition met
+PASS: writes through pg-primary resumed without any manual change
+leader after: pg-ha-1
+NOTE: replica pg-ha-1 was promoted
++ Cluster: pg-ha (7710621595341348900) ----+-----------+----+-------------+-----+------------+-----+
+| Member  | Host            | Role         | State     | TL | Receive LSN | Lag | Replay LSN | Lag |
++---------+-----------------+--------------+-----------+----+-------------+-----+------------+-----+
+| pg-ha-0 | 192.168.110.137 | Sync Standby | streaming | 31 |  0/AB014178 |   0 | 0/AB014178 |   0 |
+| pg-ha-1 | 192.168.195.255 | Leader       | running   | 31 |             |     |            |     |
+| pg-ha-2 | 192.168.162.152 | Replica      | streaming | 31 |  0/AB014178 |   0 | 0/AB014178 |   0 |
++---------+-----------------+--------------+-----------+----+-------------+-----+------------+-----+
+PASS: cluster is back to 1 leader + 2 streaming replicas
+acknowledged writes: 151, failed attempts: 40
+time from kill to first successful write: 22886 ms
+largest gap between acknowledged writes (RTO): 22891 ms
+PASS: RTO 22891 ms is within the 60 s target
+DIAG: acknowledged in log: 151, rows read from table: 154
+DIAG: first missing: 
+PASS: no acknowledged write was lost (0 missing out of 151)
+PASS: exactly one pod accepts writes
+ALL CHECKS PASSED

@@ -1,0 +1,26 @@
+Image: "pg-ha:18.7-patroni4.1.5-pgbackrest2.60.0-r2" with ID "sha256:f1cb2e21a2147f9f3f43dae636ec69b84b4ce3355164d58320b3303e08a80530" found to be already present on all nodes.
+Image: "quay.io/prometheuscommunity/postgres-exporter:v0.21.1" with ID "sha256:d75080f7313a9dece64a6070c554616fec0648bfa9fc35edfb4a0cdd17fd8e9d" found to be already present on all nodes.
+namespace/pg-ha unchanged
+secret pg-credentials already exists, keeping it
+secret objstore-credentials already exists, keeping it
+secret objstore-admin already exists, keeping it
+secret objstore-tls already exists, keeping it
+secret pgbackrest-tls-server already exists, keeping it
+secret pgbackrest-tls-client already exists, keeping it
+secret pg-tls already exists, keeping it
+serviceaccount/patroni unchanged
+role.rbac.authorization.k8s.io/patroni unchanged
+rolebinding.rbac.authorization.k8s.io/patroni unchanged
+configmap/patroni-static-config unchanged
+configmap/pgbackrest-env unchanged
+configmap/pgbackrest-scripts unchanged
+service/pg-primary unchanged
+service/pg-replica unchanged
+service/pg-ha-headless unchanged
+poddisruptionbudget.policy/pg-ha configured
+networkpolicy.networking.k8s.io/pg-ha-ingress unchanged
+networkpolicy.networking.k8s.io/objstore-ingress unchanged
+statefulset.apps/pg-ha configured
+partitioned roll out complete: 3 new pods have been updated...
+configmap/pgbackrest-cronjob-scripts unchanged
+cronjob.batch/pgbackrest-backup configured

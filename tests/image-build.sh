@@ -41,4 +41,11 @@ pass "pg_rewind present"
 run tini "$IMG" --version >/dev/null || fail "tini missing"
 pass "tini present"
 
+run sh "$IMG" -c '! command -v gosu >/dev/null 2>&1' || fail "unused root-switching helper is installed"
+pass "no unused gosu binary in the Patroni runtime"
+for pkg in libzstd1 zstd; do
+  actual=$(run dpkg-query "$IMG" -W -f='${Version}' "$pkg")
+  [ "$actual" = "$ZSTD_APT_VERSION" ] || fail "$pkg version differs from the security pin"
+done
+pass "both zstd packages match the security pin"
 echo "ALL CHECKS PASSED"

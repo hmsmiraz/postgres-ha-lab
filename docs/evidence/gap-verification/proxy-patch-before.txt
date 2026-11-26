@@ -1,0 +1,1 @@
+tests/proxy-image.sh: line 6: OBJSTORE_PROXY_RUNTIME_IMAGE: missing proxy image pin

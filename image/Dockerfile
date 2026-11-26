@@ -3,6 +3,7 @@ FROM ${BASE_IMAGE}
 
 ARG BASE_IMAGE
 ARG PGBACKREST_APT_VERSION
+ARG ZSTD_APT_VERSION
 ARG PATRONI_VERSION
 ARG POSTGRES_VERSION
 
@@ -15,6 +16,7 @@ LABEL org.opencontainers.image.title="pg-ha" \
 RUN apt-get update \
  && apt-get install -y --no-install-recommends \
       python3 python3-venv tini \
+      "libzstd1=${ZSTD_APT_VERSION}" "zstd=${ZSTD_APT_VERSION}" \
       "pgbackrest=${PGBACKREST_APT_VERSION}" \
  && rm -rf /var/lib/apt/lists/*
 
@@ -26,7 +28,9 @@ RUN python3 -m venv /opt/patroni \
 
 ENV PATH="/opt/patroni/bin:${PATH}"
 
-RUN mkdir -p /pgdata /etc/patroni \
+# The non-root Patroni entrypoint never invokes the stock root-switch helper.
+RUN rm -f /usr/local/bin/gosu \
+ && mkdir -p /pgdata /etc/patroni \
  && chown postgres:postgres /pgdata \
  && chmod 700 /pgdata
 

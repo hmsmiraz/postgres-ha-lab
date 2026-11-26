@@ -1,0 +1,56 @@
+date_utc: 2026-11-26T03:42:31Z
+timeline before: 29
+secret pg-tls already exists, keeping it
+PASS  Secret pg-tls exists with the three keys
+PASS  rollout completed
+PASS  cluster is back to 1 leader + 2 streaming replicas
+timeline after: 30 (before 29)
+leader after: pg-ha-2
+acknowledged writes: 262, failed attempts: 14, largest gap between writes: 5369 ms
+DIAG: acknowledged in log: 262, rows read from table: 276
+DIAG: first missing: 
+acknowledged writes missing from the table: 0
+PASS  no acknowledged write is missing
+PASS  exactly one writable primary
+archiver failed_count on the leader: 0
+restarts per container (pod container restarts):
+pg-ha-0 backup 0
+pg-ha-0 pgserver 0
+pg-ha-0 postgres 0
+pg-ha-0 postgres-exporter 0
+pg-ha-1 backup 0
+pg-ha-1 pgserver 0
+pg-ha-1 postgres 0
+pg-ha-1 postgres-exporter 0
+pg-ha-2 backup 0
+pg-ha-2 pgserver 0
+pg-ha-2 postgres 0
+pg-ha-2 postgres-exporter 0
+=== tests/sec-tls.sh ===
+date_utc: 2026-11-26T03:44:11Z
+PASS  pg-ha-0 ssl is on
+PASS  pg-ha-0 has no non-SSL host rule
+PASS  pg-ha-1 ssl is on
+PASS  pg-ha-1 has no non-SSL host rule
+PASS  pg-ha-2 ssl is on
+PASS  pg-ha-2 has no non-SSL host rule
+PASS  Secret pg-tls holds exactly ca.crt, tls.crt, tls.key
+PASS  client connection with sslmode=require uses TLS
+PASS  client connection with sslmode=disable is rejected
+PASS  both replicas verify the primary CA
+PASS  all 2 walsender connections use TLS
+PASS  control: a local socket connection reports ssl false
+=== tests/obs-exporter-live.sh ===
+date_utc: 2026-11-26T03:44:23Z
+PASS  pg-ha-0 answers on 9187 (1374 lines)
+PASS  pg-ha-0 pg_up is 1
+PASS  pg-ha-0 has archiver metrics
+PASS  pg-ha-0 has replication slot metrics
+PASS  pg-ha-1 answers on 9187 (1374 lines)
+PASS  pg-ha-1 pg_up is 1
+PASS  pg-ha-1 has archiver metrics
+PASS  pg-ha-1 has replication slot metrics
+PASS  pg-ha-2 answers on 9187 (1382 lines)
+PASS  pg-ha-2 pg_up is 1
+PASS  pg-ha-2 has archiver metrics
+PASS  pg-ha-2 has replication slot metrics

@@ -1,0 +1,6 @@
+Deleting cluster "ha-gap-window" ...
+Deleted nodes: ["ha-gap-window-control-plane" "ha-gap-window-worker" "ha-gap-window-worker3" "ha-gap-window-worker2"]
+kind-control-plane
+kind-worker
+kind-worker2
+kind-worker3

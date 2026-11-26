@@ -1,0 +1,16 @@
+date: 2026-11-26T03:44:52Z
+PASS: cluster reachable, object store ready
+PASS: secret values loaded (not printed); the log scanner fires on a planted secret and ignores the access key id
+PASS: leader is pg-ha-2, 2 streaming replicas
+PASS: archive_mode is on on every member (a promoted replica archives too)
+PASS: archive_command uses pgBackRest archive-push for stanza pg-ha and holds no secret
+PASS: stanza pg-ha exists in the repository
+PASS: pgbackrest check succeeds on pg-ha-2
+PASS: WAL segment 0000001E00000000000000A9 appeared in the repository after pg_switch_wal
+PASS: archived_count rose from 16 to 18 and failed_count stayed at 0
+PASS: none of the four values in any repo file (working tree only, not history)
+PASS: none of the four values in any file under docs/evidence
+PASS: none of the four values in the Patroni configuration or any ConfigMap
+PASS: none of the three access-granting values in any pg-ha pod log
+INFO: the access key id appears in 0 lines of the pg-ha pod logs (count only)
+ALL CHECKS PASSED

@@ -46,3 +46,7 @@ Why: pgBackRest 2.60.0 verify exits 0 when it reports "status: error" (observed 
 --output=text is given, so the old script could not fail on a reported error.
 Not verified: that verify reports "status: error" for a damaged backup or archive file (only the missing-set error is produced
 here); that another pgBackRest version keeps the wording "status: ok" (a different wording would fail the Job, the safe direction).
+
+### Catch-up on the local PC (26 November 2026)
+
+Keep the daily 02:00 UTC schedule and Forbid concurrency. Allow the controller to start a missed Job for 23 hours, ending before the next daily slot. The previous one-hour deadline expired on this PC. The first catch-up Job completed and verified its backup. [Evidence](../evidence/gap-verification/daily-catchup.txt)

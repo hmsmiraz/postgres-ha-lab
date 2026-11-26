@@ -1,0 +1,40 @@
+ghcr.io/nginx/nginx-unprivileged@sha256:bc2c6cf6c2ec2ca26ee495cb23e4599adc8a5d0b90abbd5621c4605abc59ddd5: Pulling from nginx/nginx-unprivileged
+e2de96513ba9: Already exists
+0a28a1b33c6a: Pulling fs layer
+fc60e95d9fda: Pulling fs layer
+97e6e8b32cb3: Pulling fs layer
+b2f2dae37873: Pulling fs layer
+2975e19e114d: Pulling fs layer
+3df29948451e: Pulling fs layer
+050e9e5b2044: Pulling fs layer
+23b7d386851b: Pulling fs layer
+2975e19e114d: Waiting
+3df29948451e: Waiting
+050e9e5b2044: Waiting
+23b7d386851b: Waiting
+b2f2dae37873: Waiting
+fc60e95d9fda: Verifying Checksum
+97e6e8b32cb3: Download complete
+fc60e95d9fda: Download complete
+b2f2dae37873: Verifying Checksum
+b2f2dae37873: Download complete
+2975e19e114d: Verifying Checksum
+2975e19e114d: Download complete
+050e9e5b2044: Download complete
+3df29948451e: Verifying Checksum
+3df29948451e: Download complete
+0a28a1b33c6a: Verifying Checksum
+0a28a1b33c6a: Download complete
+0a28a1b33c6a: Pull complete
+fc60e95d9fda: Pull complete
+97e6e8b32cb3: Pull complete
+b2f2dae37873: Pull complete
+2975e19e114d: Pull complete
+3df29948451e: Pull complete
+050e9e5b2044: Pull complete
+23b7d386851b: Verifying Checksum
+23b7d386851b: Download complete
+23b7d386851b: Pull complete
+Digest: sha256:bc2c6cf6c2ec2ca26ee495cb23e4599adc8a5d0b90abbd5621c4605abc59ddd5
+Status: Downloaded newer image for ghcr.io/nginx/nginx-unprivileged@sha256:bc2c6cf6c2ec2ca26ee495cb23e4599adc8a5d0b90abbd5621c4605abc59ddd5
+ghcr.io/nginx/nginx-unprivileged:1.31.7-alpine@sha256:bc2c6cf6c2ec2ca26ee495cb23e4599adc8a5d0b90abbd5621c4605abc59ddd5

@@ -1,0 +1,29 @@
+tests/lib/probe.sh: line 52: 185448 Hangup                     make up > "$d/window2-up.txt" 2>&1
++ Cluster: pg-ha (7710621595341348900) ----+-----------+----+-------------+-----+------------+-----+
+| Member  | Host            | Role         | State     | TL | Receive LSN | Lag | Replay LSN | Lag |
++---------+-----------------+--------------+-----------+----+-------------+-----+------------+-----+
+| pg-ha-0 | 192.168.110.139 | Sync Standby | streaming | 32 |  0/AC000438 |   0 | 0/AC000438 |   0 |
+| pg-ha-1 | 192.168.195.197 | Leader       | running   | 32 |             |     |            |     |
+| pg-ha-2 | 192.168.162.155 | Replica      | streaming | 32 |  0/AC000438 |   0 | 0/AC000438 |   0 |
++---------+-----------------+--------------+-----------+----+-------------+-----+------------+-----+
+NAME                 STATUS   ROLES           AGE     VERSION
+kind-control-plane   Ready    control-plane   6d13h   v1.37.0
+kind-worker          Ready    <none>          6d13h   v1.37.0
+kind-worker2         Ready    <none>          6d13h   v1.37.0
+kind-worker3         Ready    <none>          6d13h   v1.37.0
+date: 2026-11-26T04:15:23Z
+psql: error: connection to server at "pg-primary" (10.96.65.34), port 5432 failed: Connection refused
+	Is the server running on that host and accepting TCP/IP connections?
+command terminated with exit code 2
+FAIL: cannot connect through pg-primary
+date: 2026-11-26T04:15:35Z
+psql: error: connection to server at "pg-primary" (10.96.65.34), port 5432 failed: FATAL:  the database system is starting up
+command terminated with exit code 2
+FAIL: cannot connect through pg-primary
+date: 2026-11-26T04:15:44Z
+PASS: pg-primary reaches a primary (pg_is_in_recovery = f)
+NOTICE:  relation "con_probe" already exists, skipping
+PASS: write through pg-primary works
+PASS: pg-replica reaches a replica (pg_is_in_recovery = t)
+PASS: write through pg-replica is rejected
+ALL CHECKS PASSED

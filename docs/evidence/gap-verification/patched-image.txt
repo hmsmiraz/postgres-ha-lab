@@ -1,0 +1,15 @@
+date: 2026-11-26T03:59:56Z
+image: pg-ha:18.7-patroni4.1.5-pgbackrest2.60.0-r4
+PASS: image exists
+PASS: runs as non-root (uid 999)
+postgres (PostgreSQL) 18.7 (Debian 18.7-1.pgdg13+5)
+PASS: postgres 18.7
+patroni 4.1.5
+PASS: patroni 4.1.5
+pgBackRest 2.60.0
+PASS: pgbackrest 2.60.0
+PASS: pg_rewind present
+PASS: tini present
+PASS: no unused gosu binary in the Patroni runtime
+PASS: both zstd packages match the security pin
+ALL CHECKS PASSED
