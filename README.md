@@ -82,14 +82,14 @@ The final live check on 25 November 2026 showed one primary, two streaming stand
 | Fencing and rejoin | At most one pod was writable across 26 sampling rounds. In the divergence drill the former primary rejoined using pg_rewind. [Fencing](docs/evidence/ITEM30-final-8swvNeLT/fo-split-brain.txt) and [rejoin](docs/evidence/ITEM30-final-8swvNeLT/fo-rejoin.txt) |
 | Backup and recovery | A controller-triggered backup passed verification. Full restore matched the 1,000-row checksum on all three pods. PITR retained all 500 pre-target rows and zero post-target rows. The socket-only scratch restore passed after its startup fix. [Backup](docs/evidence/ITEM30-final-8swvNeLT/bk-cron-live.txt), [full restore](docs/evidence/ITEM30-final-8swvNeLT/rs-full.txt), [PITR](docs/evidence/ITEM30-final-8swvNeLT/rs-pitr.txt) and [scratch restore](docs/evidence/ITEM30-final-8swvNeLT/rs-restore-test-retry.txt) |
 
-**Follow-up verification on 25 November**
+**Follow-up verification**
 
 - An isolated three-member cluster completed a rolling PostgreSQL 18.6-to-18.7 upgrade with zero missing acknowledged writes. [Upgrade rehearsal](docs/evidence/gap-verification/minor-upgrade.txt)
 - Both streaming replicas now verify the primary certificate against the mounted CA. A lagging replica fetched archived WAL and resumed streaming after the slot cap released its required segment. [TLS check](docs/evidence/gap-verification/tls-after.txt) and [slot recovery](docs/evidence/gap-verification/slot-recovery.txt)
 - Prometheus recorded all five configured alerts firing. For BackupTooOld, firing overlapped a measured scheduled-backup age above 36 hours. [Alert history](docs/evidence/gap-verification/alert-history-detailed.txt) and [backup-age evidence](docs/evidence/gap-verification/alert-36h.txt)
 - All 84 Kubernetes resources passed strict kubeconform validation. Both formerly stale backup checks passed, including a new full backup while retention held the full count at two. [Manifest validation](docs/evidence/gap-verification/manifests.txt), [backup configuration](docs/evidence/gap-verification/backup-static.txt) and [retention-aware schedule check](docs/evidence/gap-verification/backup-schedule.txt)
 
-**26 November backup and rollout checks**
+**Backup and rollout checks**
 
 - The Job scheduled for 02:00 UTC started at 03:44:40 UTC and finished at 03:45:18 UTC with a verified backup. The 23-hour catch-up window allows a missed local run to start later that day. Starting on time still depends on the PC and controller being available. [Controller evidence](docs/evidence/gap-verification/daily-catchup.txt)
 - The updated proxy passed the S3 write, read and delete test under the deployed ingress policy. The database rollout preserved all 262 acknowledged writes. Both the WAL and scratch restore checks passed. [Object-store test](docs/evidence/gap-verification/secure-store-job.txt), [rollout](docs/evidence/gap-verification/secure-rollout.txt) and [scratch recovery](docs/evidence/gap-verification/secure-scratch.txt)
