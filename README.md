@@ -47,7 +47,7 @@ Run from the repository root in WSL with Docker, Make, kind, kubectl, jq and Ope
     make down         # removes pg-restore and pg-ha, keeps the kind cluster
 
 On 26 November a fresh four-node kind cluster on the local PC completed `make up`, `make test` and `make down`. The suite exercised a full restore, and teardown removed both lab namespaces. The PC already had Docker and cached images. [Bring-up](docs/evidence/gap-verification/window3-up.txt), [acceptance tests](docs/evidence/gap-verification/window3-test.txt) and [teardown](docs/evidence/gap-verification/window3-down.txt).
-Open the UIs on this PC only: `bash scripts/obs-open.sh` (Prometheus http://localhost:9090, Grafana http://localhost:3000, user admin, password copied to the Windows clipboard).
+Open the UIs on this PC only: `bash scripts/obs-open.sh` (Prometheus http://localhost:9090, Grafana http://localhost:3000).
 Restore, switchover and upgrade procedures: [docs/runbook.md](docs/runbook.md).
 
 ## What it looks like
